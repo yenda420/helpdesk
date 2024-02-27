@@ -7,7 +7,7 @@ session_start();
 if(isset($_SESSION['admin_id'])) {
    $admin_id = $_SESSION['admin_id'];
 } else {
-   header('location:start.php'); 
+   header('location:index.php'); 
 }
 if(isset($_POST['delete_request'])) {
    $request_id = $_POST['request_id'];
