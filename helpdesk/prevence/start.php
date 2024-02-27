@@ -52,19 +52,18 @@ if(isset($_POST['request'])){
 <body>
 <h1>Tickets</h1>
     <form action="" method="post">
-        <input type="text" name="req_name" placeholder="First name">
-        <input type="text" name="req_surname" placeholder="Last name">
-        <input type="password" name="req_password" placeholder="Password">
+        <input type="text" name="req_name" placeholder="First name" required>
+        <input type="text" name="req_surname" placeholder="Last name" required>
+        <input type="password" name="req_password" placeholder="Password" required>
         <input type="submit" name="request" value="Send">
     </form>
 <h1>Login</h1>
 <form action="" method="post">
-        <input type="text" name="first_name" placeholder="First name">
-        <input type="text" name="last_name" placeholder="Last name">
-        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="first_name" placeholder="First name" required>
+        <input type="text" name="last_name" placeholder="Last name" required>
+        <input type="password" name="password" placeholder="Password" required>
     
         <input type="submit" name="login" value="Login">
-       
-    </form>
+</form>
 </body>
 </html>
