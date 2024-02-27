@@ -5,36 +5,29 @@ session_start();
 
 if(isset($_POST['submit'])){
 
+   $pass = hash('sha256',mysqli_real_escape_string($conn, $_POST['password']));
    $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
+   //echo $name . " " . $last_name . " " . $pass . "<br>";
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
-
-   if(mysqli_num_rows($select_users) > 0){
-
-      $row = mysqli_fetch_assoc($select_users);
-
-      if($row['user_type'] == 'admin'){
-
-         $_SESSION['admin_name'] = $row['userName'];
-         $_SESSION['admin_surname'] = $row['userSurame'];
-         $_SESSION['admin_email'] = $row['email'];
-         $_SESSION['admin_id'] = $row['userId'];
-         header('location:admin_page.php');
-
-      }elseif($row['user_type'] == 'user'){
-
-         $_SESSION['admin_name'] = $row['userName'];
-         $_SESSION['admin_surname'] = $row['userSurame'];
-         $_SESSION['admin_email'] = $row['email'];
-         $_SESSION['admin_id'] = $row['userId'];
-         header('location:home.php');
-
-      }
-
-   }else{
-      $message[] = 'Wrong login data.';
-   }
+  $select_users = mysqli_query($conn, "SELECT * FROM `users` where userPasswd = '$pass' and email='$email'") or die('query failed');
+  //$select_users = mysqli_query($conn, "SELECT * FROM `users` ") or die('query failed');
+  if(mysqli_num_rows($select_users) > 0){
+   while($fetch_users = mysqli_fetch_assoc($select_users)){
+       echo $fetch_users['userName'] . " " . $fetch_users['userSurname'] . " " . $fetch_users['userPasswd'] . " " . $fetch_users['userType'] . "<br>";
+       if($fetch_users['userType'] == 'backend'){
+           $_SESSION['admin_name'] = $fetch_users['userName'];
+           $_SESSION['admin_email'] = $fetch_users['email'];
+           $_SESSION['admin_id'] = $fetch_users['userId'];
+          header('location:admin_page.php');
+       }
+       if($fetch_users['userType'] == 'frontend'){
+           $_SESSION['user_name'] = $fetch_users['userName'];
+           $_SESSION['user_email'] = $fetch_users['email'];
+           $_SESSION['user_id'] = $fetch_users['userId'];
+          header('location:home.php');
+       }
+   }   
+}
 
 }
 
