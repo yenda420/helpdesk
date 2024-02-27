@@ -18,10 +18,8 @@ if(isset($message)){
       <a href="admin_page.php" class="logo">Admin<span>Space</span></a>
 
       <nav class="navbar">
-         <a href="admin_page.php">Domů</a>
-         <a href="admin_products.php">Produkty</a>
-         <a href="admin_orders.php">Objednávky</a>
-         <a href="admin_users.php">Účty</a>
+            <a href="admin_page.php">Requests</a>
+            <a href="admin_page.php">Users</a>
       </nav>
 
       <div class="icons">
