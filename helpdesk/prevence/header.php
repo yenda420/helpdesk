@@ -20,9 +20,8 @@ if(isset($message)){
          <a href="home.php" class="logo">Algaeland</a>
 
          <nav class="navbar">
-            <a href="about.php">My tickets</a>
-            <a href="shop.php">Send a ticket</a>
-            <a href="orders.php">My account</a>
+            <a href=".php">My tickets</a>
+            <a href=".php">Send a ticket</a>
          </nav>
 
          <div class="icons">
