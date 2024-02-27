@@ -3,39 +3,39 @@
 include 'config.php';
 session_start();
 
-if(isset($_POST['login'])){
+if (isset($_POST['login'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['first_name']);
     $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
     $pass = mysqli_real_escape_string($conn, $_POST['password']);
     //echo $name . " " . $last_name . " " . $pass . "<br>";
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` where userName = '$name' and userSurname = '$last_name' and userPasswd = '$pass'") or die('query failed');
-   //$select_users = mysqli_query($conn, "SELECT * FROM `users` ") or die('query failed');
-   if(mysqli_num_rows($select_users) > 0){
-    while($fetch_users = mysqli_fetch_assoc($select_users)){
-        echo $fetch_users['userName'] . " " . $fetch_users['userSurname'] . " " . $fetch_users['userPasswd'] . " " . $fetch_users['userType'] . "<br>";
-        if($fetch_users['userType'] == 'backend'){
-            $_SESSION['admin_name'] = $fetch_users['userName'];
-            $_SESSION['admin_email'] = $fetch_users['userSurname'];
-            $_SESSION['admin_id'] = $fetch_users['userId'];
-            header('location:admin_page.php');
+    $select_users = mysqli_query($conn, "SELECT * FROM `users` where userName = '$name' and userSurname = '$last_name' and userPasswd = '$pass'") or die('query failed');
+    //$select_users = mysqli_query($conn, "SELECT * FROM `users` ") or die('query failed');
+    if (mysqli_num_rows($select_users) > 0) {
+        while ($fetch_users = mysqli_fetch_assoc($select_users)) {
+            echo $fetch_users['userName'] . " " . $fetch_users['userSurname'] . " " . $fetch_users['userPasswd'] . " " . $fetch_users['userType'] . "<br>";
+            if ($fetch_users['userType'] == 'backend') {
+                $_SESSION['admin_name'] = $fetch_users['userName'];
+                $_SESSION['admin_email'] = $fetch_users['userSurname'];
+                $_SESSION['admin_id'] = $fetch_users['userId'];
+                header('location:admin_page.php');
+            }
+            if ($fetch_users['userType'] == 'frontend') {
+                $_SESSION['user_name'] = $fetch_users['userName'];
+                $_SESSION['user_email'] = $fetch_users['userSurname'];
+                $_SESSION['user_id'] = $fetch_users['userId'];
+                header('location:home.php');
+            }
         }
-        if($fetch_users['userType'] == 'frontend'){
-            $_SESSION['user_name'] = $fetch_users['userName'];
-            $_SESSION['user_email'] = $fetch_users['userSurname'];
-            $_SESSION['user_id'] = $fetch_users['userId'];
-            header('location:home.php');
-        }
-    }   
+    }
 }
-}
-if(isset($_POST['request'])){
+if (isset($_POST['request'])) {
     $req_name = mysqli_real_escape_string($conn, $_POST['req_name']);
     $req_surname = mysqli_real_escape_string($conn, $_POST['req_surname']);
-    $req_password = hash('sha256',mysqli_real_escape_string($conn, $_POST['req_password']));
+    $req_password = hash('sha256', mysqli_real_escape_string($conn, $_POST['req_password']));
     $insert_request = mysqli_query($conn, "INSERT INTO `requests` (reqName, reqSurname, reqPasswd) VALUES ('$req_name', '$req_surname', '$req_password')") or die('query failed');
-    if($insert_request){
+    if ($insert_request) {
         echo "Request sent";
     }
 }
@@ -43,27 +43,36 @@ if(isset($_POST['request'])){
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/styles_start.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles_start.css">
     <title>Helpdesk</title>
 </head>
+
 <body>
-<h1>Tickets</h1>
+    <h1 id="h1tickets">Tickets</h1>
+    <div class="form-container">
+        <form action="" method="post">
+            <input type="text" name="req_name" placeholder="First name" required class="box">
+            <input type="text" name="req_surname" placeholder="Last name" required class="box">
+            <input type="password" name="req_password" placeholder="Password" required class="box">
+            <input type="submit" name="request" value="Send" class="btn">
+        </form>
+    </div>
+    <h1 id="h1login">Login</h1>
+    <div class="form-container">
     <form action="" method="post">
-        <input type="text" name="req_name" placeholder="First name" required>
-        <input type="text" name="req_surname" placeholder="Last name" required>
-        <input type="password" name="req_password" placeholder="Password" required>
-        <input type="submit" name="request" value="Send">
+        <input type="text" name="first_name" placeholder="First name" required class="box">
+        <input type="text" name="last_name" placeholder="Last name" required class="box">
+        <input type="password" name="password" placeholder="Password" required class="box">
+
+        <input type="submit" name="login" value="Login" class="btn">
+
     </form>
-<h1>Login</h1>
-<form action="" method="post">
-        <input type="text" name="first_name" placeholder="First name" required>
-        <input type="text" name="last_name" placeholder="Last name" required>
-        <input type="password" name="password" placeholder="Password" required>
-    
-        <input type="submit" name="login" value="Login">
-</form>
+    </div>
 </body>
+
 </html>
