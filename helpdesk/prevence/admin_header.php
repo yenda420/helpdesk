@@ -19,7 +19,7 @@ if(isset($message)){
 
       <nav class="navbar">
             <a href="admin_page.php">Requests</a>
-            <a href="admin_page.php">Users</a>
+            <a href="users.php">Users</a>
       </nav>
 
       <div class="icons">

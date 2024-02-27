@@ -17,13 +17,12 @@ if(isset($message)){
 
    <div class="header-2">
       <div class="flex">
-         <a href="home.php" class="logo">Algaeland.</a>
+         <a href="home.php" class="logo">Algaeland</a>
 
          <nav class="navbar">
-            <a href="home.php">Domů</a>
-            <a href="about.php">O nás</a>
-            <a href="shop.php">Obchod</a>
-            <a href="orders.php">Objednávky</a>
+            <a href="about.php">My tickets</a>
+            <a href="shop.php">Send a ticket</a>
+            <a href="orders.php">My account</a>
          </nav>
 
          <div class="icons">
