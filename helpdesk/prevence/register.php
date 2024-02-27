@@ -10,7 +10,7 @@ if(isset($_POST['submit'])){
    $pass = mysqli_real_escape_string($conn, hash('sha256', $_POST['password']));
    $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['cpassword']));
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND password = '$pass'") or die('query failed');
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email' AND userPasswd = '$pass'") or die('query failed');
 
    if(mysqli_num_rows($select_users) > 0){
       $message[] = 'User already exists!';
@@ -18,7 +18,7 @@ if(isset($_POST['submit'])){
       if($pass != $cpass){
          $message[] = 'Passwords don\'t match!';
       }else{
-         mysqli_query($conn, "INSERT INTO `users` SET userName='$name', userSurname='$surname', email='$email', userPasswd='$pass', userType='frontend'") or die('query failed');
+         mysqli_query($conn, "INSERT INTO `requests` SET reqName='$name', reqSurname='$surname', reqEmail='$email', reqPasswd='$pass'") or die('query failed');
          $message[] = 'Request for an account was successful!';
          header('location:index.php');
       }
