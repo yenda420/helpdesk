@@ -16,16 +16,18 @@ if(isset($_POST['submit'])){
 
       if($row['user_type'] == 'admin'){
 
-         $_SESSION['admin_name'] = $row['name'];
+         $_SESSION['admin_name'] = $row['userName'];
+         $_SESSION['admin_surname'] = $row['userSurame'];
          $_SESSION['admin_email'] = $row['email'];
-         $_SESSION['admin_id'] = $row['id'];
+         $_SESSION['admin_id'] = $row['userId'];
          header('location:admin_page.php');
 
       }elseif($row['user_type'] == 'user'){
 
-         $_SESSION['user_name'] = $row['name'];
-         $_SESSION['user_email'] = $row['email'];
-         $_SESSION['user_id'] = $row['id'];
+         $_SESSION['admin_name'] = $row['userName'];
+         $_SESSION['admin_surname'] = $row['userSurame'];
+         $_SESSION['admin_email'] = $row['email'];
+         $_SESSION['admin_id'] = $row['userId'];
          header('location:home.php');
 
       }
@@ -67,11 +69,11 @@ if(isset($message)){
 <div class="form-container">
 
    <form action="" method="post">
-      <h3>přihlášení</h3>
-      <input type="email" name="email" placeholder="zadej svůj email" required class="box">
-      <input type="password" name="password" placeholder="zadej svoje heslo" required class="box">
-      <input type="submit" name="submit" value="login" class="btn">
-      <p>Nemáš účet? <a href="register.php">registrace</a></p>
+      <h3>Login</h3>
+      <input type="email" name="email" placeholder="Email"  class="box" required>
+      <input type="password" name="password" placeholder="Password" class="box" required>
+      <input type="submit" name="submit" value="Login" class="btn">
+      <p>Don't have an account? <a href="register.php">Request an account</a></p>
    </form>
 
 </div>
