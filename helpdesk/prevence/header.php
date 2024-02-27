@@ -40,6 +40,7 @@ if(isset($message)){
          <a href="logout.php" class="delete-btn">logout</a>
          <div><a href="register.php">register</a></div>
          </div>
+         grrr
       </div>
    </div>
 
