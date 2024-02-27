@@ -53,18 +53,20 @@ if (isset($_POST['request'])) {
 </head>
 
 <body>
-    <h1 id="h1tickets">Tickets</h1>
+    
     <div class="form-container">
         <form action="" method="post">
+        <h1>Tickets</h1>
             <input type="text" name="req_name" placeholder="First name" required class="box">
             <input type="text" name="req_surname" placeholder="Last name" required class="box">
             <input type="password" name="req_password" placeholder="Password" required class="box">
             <input type="submit" name="request" value="Send" class="btn">
         </form>
     </div>
-    <h1 id="h1login">Login</h1>
+    
     <div class="form-container">
     <form action="" method="post">
+    <h1>Login</h1>
         <input type="text" name="first_name" placeholder="First name" required class="box">
         <input type="text" name="last_name" placeholder="Last name" required class="box">
         <input type="password" name="password" placeholder="Password" required class="box">
@@ -75,4 +77,4 @@ if (isset($_POST['request'])) {
     </div>
 </body>
 
-</html>
+</html> 
