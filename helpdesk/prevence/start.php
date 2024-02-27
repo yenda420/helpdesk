@@ -30,12 +30,13 @@ if (isset($_POST['login'])) {
         }
     }
 }
-if (isset($_POST['request'])) {
+if(isset($_POST['request'])){
     $req_name = mysqli_real_escape_string($conn, $_POST['req_name']);
     $req_surname = mysqli_real_escape_string($conn, $_POST['req_surname']);
-    $req_password = hash('sha256', mysqli_real_escape_string($conn, $_POST['req_password']));
-    $insert_request = mysqli_query($conn, "INSERT INTO `requests` (reqName, reqSurname, reqPasswd) VALUES ('$req_name', '$req_surname', '$req_password')") or die('query failed');
-    if ($insert_request) {
+    $req_password = hash('sha256',mysqli_real_escape_string($conn, $_POST['req_password']));
+    $req_email = mysqli_real_escape_string($conn, $_POST['req_email']);
+    $insert_request = mysqli_query($conn, "INSERT INTO `requests` (reqName, reqSurname, reqPasswd,reqEmail) VALUES ('$req_name', '$req_surname', '$req_password','$req_email')") or die('query failed');
+    if($insert_request){
         echo "Request sent";
     }
 }
@@ -60,6 +61,7 @@ if (isset($_POST['request'])) {
             <input type="text" name="req_name" placeholder="First name" required class="box">
             <input type="text" name="req_surname" placeholder="Last name" required class="box">
             <input type="password" name="req_password" placeholder="Password" required class="box">
+            <input type="email" name="req_email" placeholder="Email" required class="box">
             <input type="submit" name="request" value="Send" class="btn">
         </form>
     </div>

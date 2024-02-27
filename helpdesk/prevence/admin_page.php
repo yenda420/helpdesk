@@ -28,7 +28,8 @@ if(isset($_POST['accept_request'])) {
    $req_name = $fetch_request['reqName'];
    $req_surname = $fetch_request['reqSurname'];
    $req_password = $fetch_request['reqPasswd'];
-   $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userPasswd, userType) VALUES ('$req_name', '$req_surname', '$req_password', 'frontend')") or die('query failed');
+   $req_email = $fetch_request['reqEmail'];
+   $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userPasswd, userType,email) VALUES ('$req_name', '$req_surname', '$req_password', 'frontend','$req_email')") or die('query failed');
    if($insert_user) {
        // Perform the deletion query
        $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
@@ -78,6 +79,7 @@ if(isset($_POST['accept_request'])) {
          <p> ID : <span><?php echo $fetch_requests['requestId']; ?></span> </p>
          <p> Name : <span><?php echo $fetch_requests['reqName']; ?></span> </p>
          <p> Surname : <span><?php echo $fetch_requests['reqSurname']; ?></span> </p>
+         <p> Email : <span><?php echo $fetch_requests['reqEmail']; ?></span> </p>
          <!-- Add the delete button -->
          <form method="POST">
             <input type="hidden" name="request_id" value="<?php echo $fetch_requests['requestId']; ?>">
