@@ -7,13 +7,43 @@ session_start();
 if(isset($_SESSION['admin_id'])) {
    $admin_id = $_SESSION['admin_id'];
 } else {
-   header('location:start.php');
+   header('location:start.php'); 
 }
-if(isset($_GET['delete'])){
-   $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = '$delete_id'") or die('query failed');
-   header('location:admin_users.php');
+if(isset($_POST['delete_request'])) {
+   $request_id = $_POST['request_id'];
+   // Perform the deletion query
+   $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
+   if($delete_query) {
+       // Refresh the page after deletion
+       header("Refresh:0");
+   } else {
+       echo "Error deleting request.";
+   }
 }
+//if you press accept, the user is created and inputted into the users table
+if(isset($_POST['accept_request'])) {
+   $request_id = $_POST['request_id'];
+   $select_request = mysqli_query($conn, "SELECT * FROM `requests` WHERE requestId = $request_id") or die('query failed');
+   $fetch_request = mysqli_fetch_assoc($select_request);
+   $req_name = $fetch_request['reqName'];
+   $req_surname = $fetch_request['reqSurname'];
+   $req_password = $fetch_request['reqPasswd'];
+   $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userPasswd, userType) VALUES ('$req_name', '$req_surname', '$req_password', 'frontend')") or die('query failed');
+   if($insert_user) {
+       // Perform the deletion query
+       $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
+       if($delete_query) {
+           // Refresh the page after deletion
+           header("Refresh:0");
+       } else {
+           echo "Error deleting request.";
+       }
+   } else {
+       echo "Error inserting user.";
+   }
+}
+
+
 
 ?>
 
@@ -35,9 +65,6 @@ if(isset($_GET['delete'])){
 <?php include 'admin_header.php'; ?>
 
 <section class="dashboard">
-
-   <h1 class="title">informace</h1>
-
    <section class="users">
 
    <h1 class="title">Requests</h1>
@@ -51,17 +78,19 @@ if(isset($_GET['delete'])){
          <p> ID : <span><?php echo $fetch_requests['requestId']; ?></span> </p>
          <p> Name : <span><?php echo $fetch_requests['reqName']; ?></span> </p>
          <p> Surname : <span><?php echo $fetch_requests['reqSurname']; ?></span> </p>
-         <a href="admin_users.php?delete=<?php echo $fetch_requests['requestId']; ?>" onclick="return confirm('odstranit tohoto uživatele?');" class="delete-btn">odstranit</a>
+         <!-- Add the delete button -->
+         <form method="POST">
+            <input type="hidden" name="request_id" value="<?php echo $fetch_requests['requestId']; ?>">
+            <button type="submit" name="delete_request" class="btn">Delete</button>
+            <button type="submit" name="accept_request" class="btn">Accept</button>
+         </form>
       </div>
       <?php
          };
       ?>
    </div>
-
 </section>
-
 </section>
-
 <script src="js/admin_script.js"></script>
 <?php include 'footer.php'; ?>
 </body>
