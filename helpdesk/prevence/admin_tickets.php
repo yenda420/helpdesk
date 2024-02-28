@@ -12,6 +12,18 @@ if (isset($_POST["users"])) {
     $tickets = returtnAllTickets($conn);
 }
 
+if(isset($_POST['delete_ticket'])) {
+    $ticket_id = $_POST['ticket_id'];
+    // Perform the deletion query
+    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
+    if($delete_query) {
+        // Refresh the page after deletion
+        header("Refresh:0");   
+    } else {
+        echo "Error deleting request.";
+    }
+ }
+
 require("admin_header.php");
 ?>
 
@@ -82,6 +94,10 @@ require("admin_header.php");
                         <p>Description: <span>
                                 <?= $ticket["ticketDesc"] ?>
                             </span></p>
+                            <form method="POST">
+                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
+                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
+                            </form>
                     </div>
                 <?php } ?>
             </div>
