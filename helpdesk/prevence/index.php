@@ -24,6 +24,7 @@ if(isset($_POST['submit'])){
            $_SESSION['user_name'] = $fetch_users['userName'];
            $_SESSION['user_email'] = $fetch_users['email'];
            $_SESSION['user_id'] = $fetch_users['userId'];
+           $_SESSION['user_surname'] = $fetch_users['userSurname'];
           header('location:home.php');
        }
    }   

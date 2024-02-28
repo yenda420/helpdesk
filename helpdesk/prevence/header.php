@@ -35,8 +35,9 @@ if(isset($message)){
          </div>
 
          <div class="user-box">
-         <p>Jméno : <span><?php echo $_SESSION['user_name']; ?></span></p>
-         <p>Email : <span><?php echo $_SESSION['user_email']; ?></span></p>
+         <p>First Name: <span><?php echo $_SESSION['user_name']; ?></span></p>
+         <p>Last Name: <span><?php echo $_SESSION['user_surname']; ?></span></p>
+         <p>Email: <span><?php echo $_SESSION['user_email']; ?></span></p>
          <a href="logout.php" class="delete-btn">logout</a>
          <div><a href="register.php">register</a></div>
          </div>
