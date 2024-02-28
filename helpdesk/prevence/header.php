@@ -18,8 +18,8 @@ if (isset($message)) {
          <a href="home.php" class="logo">Techbase</a>
 
          <nav class="navbar">
-            <a href=".php">My tickets</a>
-            <a href=".php">Send a ticket</a>
+            <a href="home.php">My tickets</a>
+            <a href="user_send.php">Send a ticket</a>
          </nav>
 
          <div class="icons">
