@@ -51,6 +51,7 @@ if(isset($_POST['delete_user'])) {
       <?php
          $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
          while($fetch_users = mysqli_fetch_assoc($select_users)){
+            if ($fetch_users['userType'] != 'backend') {
       ?>
     <div class="box">
          <p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p>
@@ -65,7 +66,7 @@ if(isset($_POST['delete_user'])) {
          </form>
       </div>
       <?php
-         };
+         }};
          if(mysqli_num_rows($select_users) == 0) {
             echo '<p class="empty">No requests</p>';
          }
