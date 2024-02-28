@@ -209,7 +209,7 @@ section {
   border: var(--border);
   background-color: var(--white);
   display: none;
-  /*mation: fadeIn 0.2s linear;*/
+  /*animation: fadeIn 0.2s linear;*/
 }
 
 .header .flex .account-box.active {
