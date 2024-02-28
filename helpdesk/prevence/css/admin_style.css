@@ -21,7 +21,7 @@
   outline: none;
   border: none;
   text-decoration: none;
-  transition: all 0.2s linear;
+  /*transition: all 0.2s linear;*/
 }
 
 *::selection {
@@ -209,7 +209,7 @@ section {
   border: var(--border);
   background-color: var(--white);
   display: none;
-  /*animation: fadeIn 0.2s linear;*/
+  animation: fadeIn 0.2s linear;
 }
 
 .header .flex .account-box.active {
