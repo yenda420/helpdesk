@@ -76,19 +76,22 @@ if(isset($_POST['accept_request'])) {
          while($fetch_requests = mysqli_fetch_assoc($select_requests)){
       ?>
       <div class="box">
-         <p> ID: <span><?php echo $fetch_requests['requestId']; ?></span> </p>
-         <p> Name: <span><?php echo $fetch_requests['reqName']; ?></span> </p>
-         <p> Surname: <span><?php echo $fetch_requests['reqSurname']; ?></span> </p>
-         <p> Email: <span><?php echo $fetch_requests['reqEmail']; ?></span> </p>
+         <p> ID : <span><?php echo $fetch_requests['requestId']; ?></span> </p>
+         <p> Name : <span><?php echo $fetch_requests['reqName']; ?></span> </p>
+         <p> Surname : <span><?php echo $fetch_requests['reqSurname']; ?></span> </p>
+         <p> Email : <span><?php echo $fetch_requests['reqEmail']; ?></span> </p>
          <!-- Add the delete button -->
          <form method="POST">
             <input type="hidden" name="request_id" value="<?php echo $fetch_requests['requestId']; ?>">
-            <button type="submit" name="delete_request" class="btn">Delete</button>
+            <button type="submit" name="delete_request" class="delete-btn">Delete</button>
             <button type="submit" name="accept_request" class="btn">Accept</button>
          </form>
       </div>
       <?php
          };
+         if(mysqli_num_rows($select_requests) == 0) {
+            echo '<p class="empty">No requests</p>';
+         }
       ?>
    </div>
 </section>
