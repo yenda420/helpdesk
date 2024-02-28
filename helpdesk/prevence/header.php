@@ -28,26 +28,10 @@ if (isset($message)) {
          </div>
 
          <div class="user-box">
-         <?php
-            $user_email =  $_SESSION['user_email'];
-            $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
-            while ($fetch_users = mysqli_fetch_assoc($select_users)) {
-               ?>
-               <div class="box">
-               <?php 
-               if($fetch_users['email'] == $user_email)
-               {
-                  echo "<p> ID: <span>".$fetch_users['userId']."</span> </p>";
-               echo "<p> Name: <span>".$fetch_users['userName']."</span> </p>";
-               echo "<p> Surname: <span>".$fetch_users['userSurname']."</span> </p>";
-               echo "<p> Email: <span>".$fetch_users['email']."</span> </p>";
-               echo "<p> Type: <span>".$fetch_users['userType']."</span> </p>";
-               }
-            }
-            ;
-            ?>
+            <p>Name : <span><?php echo $_SESSION['user_name']; ?></span></p>
+            <p>Surname: <span><?php echo $_SESSION['user_surname']; ?></span></p>
+            <p>Email : <span><?php echo $_SESSION['user_email']; ?></span></p>
             <a href="logout.php" class="delete-btn">logout</a>
-            <div><a href="register.php">register</a></div>
          </div>
       </div>
    </div>
