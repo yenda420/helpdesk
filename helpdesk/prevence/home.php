@@ -32,7 +32,7 @@ session_start();
             <?php
             $user_email = $_SESSION['user_email'];
             $userId = $_SESSION['user_id'];
-            if (numberOfTickets1($conn, $userId) != 0) {
+            if (numberOfTicketsForUserId($conn, $userId) != 0) {
             $select_tickets = mysqli_query($conn, "SELECT * FROM `tickets`") or die('query failed');
             while ($fetch_tickets = mysqli_fetch_assoc($select_tickets)) {
 

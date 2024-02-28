@@ -53,7 +53,7 @@
         return $user[0];
     }
 
-    function numberOfTickets($conn, $data) {
+    function numberOfTicketsForUser($conn, $data) {
         $sql = "
             SELECT *
             FROM users u, tickets t
@@ -67,13 +67,22 @@
         return $numberOfRecords;
     }
 
-    function numberOfTickets1($conn, $userId) {
+    function numberOfTicketsForUserId($conn, $userId) {
         $sql = "
             SELECT *
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND u.userId = $userId;
         ";
+
+        $sqlResult = mysqli_query($conn, $sql);
+        $numberOfRecords = mysqli_num_rows($sqlResult);
+
+        return $numberOfRecords;
+    }
+
+    function numberOfTickets($conn) {
+        $sql = "SELECT * FROM tickets;";
 
         $sqlResult = mysqli_query($conn, $sql);
         $numberOfRecords = mysqli_num_rows($sqlResult);

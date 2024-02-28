@@ -65,48 +65,54 @@ require("admin_header.php");
 
         </form>
 
-        <?php if (empty($_POST["users"])) { ?>
-
-            <div class="box-container">
-                <?php
-                foreach ($tickets as $ticket) {
-                    $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
-                    ?>
-                    <div class="box">
-                        <p>ID: <span>
-                                <?= $ticket["ticketId"] ?>
-                            </span></p>
-                        <p>Title: <span>
-                                <?= $ticket["title"] ?>
-                            </span></p>
-                        <p>Users name: <span>
-                                <?= $user["userName"] ?>
-                            </span></p>
-                        <p>Users surname: <span>
-                                <?= $user["userSurname"] ?>
-                            </span></p>
-                        <p>Users email: <span>
-                                <?= $user["email"] ?>
-                            </span></p>
-                        <p>Ticket type: <span>
-                                <?= $ticket["ticketType"] ?>
-                            </span></p>
-                        <p>Description: <span>
-                                <?= $ticket["ticketDesc"] ?>
-                            </span></p>
-                            <form method="POST">
-                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                            </form>
+        <?php if (empty($_POST["users"])) { 
+                
+                if (numberOfTickets($conn) != 0) {
+        ?>
+                    <div class="box-container">
+                        <?php
+                        foreach ($tickets as $ticket) {
+                            $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
+                            ?>
+                            <div class="box">
+                                <p>ID: <span>
+                                        <?= $ticket["ticketId"] ?>
+                                    </span></p>
+                                <p>Title: <span>
+                                        <?= $ticket["title"] ?>
+                                    </span></p>
+                                <p>Users name: <span>
+                                        <?= $user["userName"] ?>
+                                    </span></p>
+                                <p>Users surname: <span>
+                                        <?= $user["userSurname"] ?>
+                                    </span></p>
+                                <p>Users email: <span>
+                                        <?= $user["email"] ?>
+                                    </span></p>
+                                <p>Ticket type: <span>
+                                        <?= $ticket["ticketType"] ?>
+                                    </span></p>
+                                <p>Description: <span>
+                                        <?= $ticket["ticketDesc"] ?>
+                                    </span></p>
+                                    <form method="POST">
+                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
+                                        <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
+                                    </form>
+                            </div>
+                        <?php } ?>
                     </div>
-                <?php } ?>
-            </div>
-
+            <?php } else { ?>
+                    <h1 class="title">
+                        No ticket instances in database
+                    </h1>
+            <?php } ?>
         <?php } else {
             if (isset($_POST["users"]) && $_POST["users"] != 0) {
                 $user = returnUser($conn, $_POST["users"]);
 
-                if (numberOfTickets($conn, $_POST) != 0) {
+                if (numberOfTicketsForUser($conn, $_POST) != 0) {
                     ?>
                     <h1 class="title">Tickets for
                         <?= $user["userName"] ?>
