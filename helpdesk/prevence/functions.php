@@ -3,14 +3,18 @@
         $sql = "SELECT * FROM tickets";
 
         $sqlResult = mysqli_query($conn, $sql);
-        return mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+        $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        return $tickets;
     }
 
     function returnAllUsers($conn) {
         $sql = "SELECT * FROM users";
 
         $sqlResult = mysqli_query($conn, $sql);
-        return mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        return $users;
     }
 
     function returnTicketsForSelectedUser($conn, $data) {
@@ -22,5 +26,6 @@
         ";
 
         $sqlResult = mysqli_query($conn, $sql);
-        return mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+        $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+        return $tickets;
     }

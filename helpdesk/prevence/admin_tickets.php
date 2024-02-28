@@ -19,7 +19,7 @@
     <select name="users" required>
         <option value="">--- Choose a user ---</option>
         <?php foreach ($tickets as $ticket) { ?>
-            <option value="<?= $tickets["ticketId"] ?>"><?= $tickets["title"] ?></option>
+            <option value="<?= $tickets["ticketId"] ?>">ahoj</option>
         <?php } ?>
     </select>
 
