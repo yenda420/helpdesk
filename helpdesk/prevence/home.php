@@ -27,6 +27,7 @@ session_start();
       <section class="users">
          <h1 class="title">Account</h1>
          <div class="box-container">
+                  <div class="box">
 
             <?php
             $user_email = $_SESSION['user_email'];
@@ -37,18 +38,18 @@ session_start();
                $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
                while ($fetch_users = mysqli_fetch_assoc($select_users)) {
                   ?>
-                  <div class="box">
                      <?php
                      if ($fetch_users['email'] == $user_email) {
                         $userId = $fetch_users['userId'];
                         //echo $userId;
                         if ($userId == $fetch_tickets['userId']) {
-                           echo "<p> Ticket ID: <span>" . $fetch_tickets['ticketId'] . "</span> </p>";
-                           echo "<p> Title: <span>" . $fetch_tickets['title'] . "</span> </p>";
-                           echo "<p> Type: <span>" . $fetch_tickets['ticketType'] . "</span> </p>";
-                           echo "<p> Description: <span>" . $fetch_tickets['ticketDesc'] . "</span> </p>";
-                           echo "<p> Date: <span>" . $fetch_tickets['ticketDate'] . "</span> </p>";
-                           echo "<p> User ID: <span>" . $fetch_tickets['userId'] . "</span> </p>";
+                           ?> <p> Ticket ID: <span> <?php echo $fetch_tickets['ticketId']; ?></span> </p>
+                           <p> Title: <span><?php echo $fetch_tickets['title']; ?></span> </p>
+                           <p> Type: <span><?php echo $fetch_tickets['ticketType']; ?></span> </p>
+                           <p> Description: <span><?php echo $fetch_tickets['ticketDesc']; ?></span> </p>
+                           <p> Date: <span><?php echo $fetch_tickets['ticketDate']; ?></span> </p>
+                           <p> User ID: <span><?php echo $fetch_tickets['userId']; ?> </span> </p>
+                           <?php
                         }
                      }
                }
@@ -56,6 +57,7 @@ session_start();
             ;
             ?>
 
+            </div>
             </div>
       </section>
    </section>
