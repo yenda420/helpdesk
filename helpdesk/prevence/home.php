@@ -28,30 +28,10 @@ session_start();
          <h1 class="title">Account</h1>
          <div class="box-container">
 
-            <?php
-            $user_email =  $_SESSION['user_email'];
-            $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
-            while ($fetch_users = mysqli_fetch_assoc($select_users)) {
-               ?>
-               <div class="box">
-               <?php 
-               if($fetch_users['email'] == $user_email)
-               {
-                  echo "<p> ID: <span>".$fetch_users['userId']."</span> </p>";
-               echo "<p> Name: <span>".$fetch_users['userName']."</span> </p>";
-               echo "<p> Surname: <span>".$fetch_users['userSurname']."</span> </p>";
-               echo "<p> Email: <span>".$fetch_users['email']."</span> </p>";
-               }
-               ?>
-               <?php
-            }
-            ;
-            ?>
-
          </div>
       </section>
    </section>
-   <script src="js/admin_script.js"></script>
+   <script src="js/script.js"></script>
    <?php include 'footer.php'; ?>
 </body>
 
