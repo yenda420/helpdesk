@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap");
 
 :root {
-  --green: #368845;
+  --orange: #368845;
   --red: #c0392b;
   --orange: #f39c12;
   --black: #333;
@@ -25,7 +25,7 @@
 }
 
 *::selection {
-  background-color: var(--green);
+  background-color: var(--orange);
   color: var(--white);
 }
 
@@ -39,7 +39,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--green);
+  background-color: var(--orange);
 }
 
 html {
@@ -123,7 +123,7 @@ section {
 
 .white-btn,
 .btn {
-  background-color: var(--green);
+  background-color: var(--orange);
 }
 
 .option-btn {
@@ -172,7 +172,7 @@ section {
 }
 
 .header .flex .logo span {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .header .flex .navbar a {
@@ -182,7 +182,7 @@ section {
 }
 
 .header .flex .navbar a:hover {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .header .flex .icons div {
@@ -193,7 +193,7 @@ section {
 }
 
 .header .flex .icons div:hover {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .header .flex .account-box {
@@ -223,7 +223,7 @@ section {
 }
 
 .header .flex .account-box p span {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .header .flex .account-box .delete-btn {
@@ -275,7 +275,7 @@ section {
   margin-top: 1.5rem;
   padding: 1.5rem;
   background-color: var(--light-bg);
-  color: var(--green);
+  color: var(--orange);
   font-size: 2rem;
   border-radius: 0.5rem;
   border: var(--border);
@@ -335,7 +335,7 @@ section {
 
 .show-products .box-container .box img {
   height: 25.5rem;
-  border: var(--green) 2px solid;
+  border: var(--orange) 2px solid;
   border-radius: 1rem;
 }
 
@@ -414,7 +414,7 @@ section {
 }
 
 .orders .box-container .box p span {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .orders .box-container .box form {
@@ -458,7 +458,7 @@ section {
 }
 
 .users .box-container .box p span {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .users .box-container .box .delete-btn {
@@ -479,7 +479,7 @@ section {
 }
 
 .footer .credit span {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .dashboard {
@@ -533,4 +533,35 @@ section {
   .title {
     font-size: 3rem;
   }
+}
+
+form {
+  align-items: center;
+}
+
+form .flex {
+  display: block;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+form .flex select {
+   border: var(--border);
+   width: 20%;
+   border-radius: .5rem;
+   width: 20%;
+   background-color: var(--white);
+   padding: 1.2rem 1.4rem;
+   font-size: 1.8rem;
+   margin: 1rem 0;
+}
+
+form .flex .inputBox {
+  flex: 1 1 40rem;
+}
+
+form .flex input[type="submit"] {
+  margin-bottom: 1.4rem;
 }
