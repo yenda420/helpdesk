@@ -40,18 +40,18 @@ session_start();
                      if ($userId == $fetch_tickets['userId']) {
                         ?>
                         <div class="box">
-                           <p> Title: <span>
+                           <div class="breaking"><p> Title: <span>
                                  <?php echo $fetch_tickets['title']; ?>
-                              </span> </p>
+                              </span> </p></div>
                            <p> Type: <span>
                                  <?php echo $fetch_tickets['ticketType']; ?>
                               </span> </p>
                            <p> Date: <span>
                                  <?php echo $fetch_tickets['ticketDate']; ?>
                               </span> </p>
-                           <p> Description: <span>
+                           <div class="breaking"><p> Description: <span>
                                  <?php echo $fetch_tickets['ticketDesc']; ?>
-                              </span> </p>
+                              </span> </p></div>
                         </div>
                         <?php
                      }

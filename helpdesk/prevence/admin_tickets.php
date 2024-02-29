@@ -127,16 +127,16 @@ require("admin_header.php");
                     <?php foreach ($tickets as $ticket) { ?>
                         
                     <div class="box">
-                        <p>ID: <span>
+                        <div class="breaking"><p>ID: <span>
                                 <?= $ticket["ticketId"] ?>
-                            </span></p>
+                            </span></p></div>
                         <p>Title: <span>
                                 <?= $ticket["title"] ?>
                             </span></p>
                         <p>Ticket type: <span>
                                 <?= $ticket["ticketType"] ?>
                             </span></p>
-                            <div class="desc"><p>Description: <span>
+                        <div class="breaking"><p>Description: <span>
                                 <?= $ticket["ticketDesc"] ?>
                             </span></p></div>
                     </div>
