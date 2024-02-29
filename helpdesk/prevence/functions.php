@@ -26,6 +26,15 @@
         if (mysqli_num_rows($sqlResult) == 0) return 0;
         else return $users;
     }
+    function returnAllBackendUsers($conn) {
+        $sql = "SELECT * FROM users WHERE userType = 'backend'";
+
+        $sqlResult = mysqli_query($conn, $sql);
+        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        if (mysqli_num_rows($sqlResult) == 0) return 0;
+        else return $users;
+    }
 
     function returnTicketsForSelectedUser($conn, $data) {
         $sql = "
