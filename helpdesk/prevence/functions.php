@@ -17,6 +17,15 @@
         return $users;
     }
 
+    function returnAllFrontendUsers($conn) {
+        $sql = "SELECT * FROM users WHERE userType = 'frontend'";
+
+        $sqlResult = mysqli_query($conn, $sql);
+        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        return $users;
+    }
+
     function returnTicketsForSelectedUser($conn, $data) {
         $sql = "
             SELECT *
