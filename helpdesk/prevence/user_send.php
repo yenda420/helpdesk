@@ -66,7 +66,8 @@ if(isset($_POST['send_btn'])) {
 
 </section>
    <script src="js/script.js"></script>
-   <?php include 'footer.php'; ?>
+   <div class="footer2"><?php include 'footer.php'; ?></div>
+
 </body>
 
 </html>

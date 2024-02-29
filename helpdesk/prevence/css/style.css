@@ -807,7 +807,13 @@ section {
 
 .footer {
    background-color: var(--light-bg);
+   margin-top: auto;
 }
+
+.footer2 {
+   background-color: var(--light-bg);
+   margin-top: auto;
+ }
 
 .footer .credit {
    text-align: center;
@@ -822,7 +828,11 @@ section {
    color: var(--orange);
 }
 
-
+body {
+   min-height: 100vh;
+   display: flex;
+    flex-direction: column;
+}
 
 
 
