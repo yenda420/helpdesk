@@ -46,7 +46,7 @@ if(isset($_POST['send_btn'])) {
       <div class="flex">
          <div class="inputBox">
             <span>Ticket title: </span>
-            <input type="text" name="title" required placeholder="Software issues">
+            <input type="text" name="title" required placeholder="An issue with...">
          </div>
          <div class="inputBox">
             <span>Ticket type :</span>
