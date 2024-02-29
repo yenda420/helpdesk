@@ -277,10 +277,14 @@ section {
   margin-top: 1.5rem;
   padding: 1.5rem;
   background-color: var(--light-bg);
-  color: var(--orange);
+  color: var(--black);
   font-size: 2rem;
   border-radius: 0.5rem;
   border: var(--border);
+}
+
+.dashboard .box-container .box p span {
+  color: var(--orange);
 }
 
 .add-products form {
