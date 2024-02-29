@@ -58,7 +58,7 @@ session_start();
                   }
                   
             } else { ?>
-               <p class="empty">No requests</p>
+               <p class="empty">No tickets</p>
             <?php } ?>
 
          </div>
