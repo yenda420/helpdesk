@@ -22,7 +22,6 @@ if(isset($_POST['submit'])){
          $message[] = 'Request for an account was successful.';
       }
    }
-
 }
 
 ?>
