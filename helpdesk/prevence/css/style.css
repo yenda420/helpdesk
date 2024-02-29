@@ -773,6 +773,10 @@ section {
    margin: 1rem 0;
 }
 
+textarea {
+   resize:vertical;
+}
+
 .placed-orders .box-container {
    max-width: 1200px;
    margin: 0 auto;
