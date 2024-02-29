@@ -571,3 +571,9 @@ form .flex .inputBox {
 form .flex input[type="submit"] {
   margin-bottom: 1.4rem;
 }
+
+.desc {
+  inline-size: inherit;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}

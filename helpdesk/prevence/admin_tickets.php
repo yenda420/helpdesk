@@ -98,9 +98,9 @@ require("admin_header.php");
                                 <p>Ticket type: <span>
                                         <?= $ticket["ticketType"] ?>
                                     </span></p>
-                                <p>Description: <span>
-                                        <?= $ticket["ticketDesc"] ?>
-                                    </span></p>
+                                    <div class="desc"><p>Description: <span>
+                                <?= $ticket["ticketDesc"] ?>
+                            </span></p></div>
                                     <form method="POST">
                                         <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
                                         <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
@@ -136,9 +136,9 @@ require("admin_header.php");
                         <p>Ticket type: <span>
                                 <?= $ticket["ticketType"] ?>
                             </span></p>
-                        <p>Description: <span>
+                            <div class="desc"><p>Description: <span>
                                 <?= $ticket["ticketDesc"] ?>
-                            </span></p>
+                            </span></p></div>
                     </div>
 
                     <?php }
