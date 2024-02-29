@@ -73,10 +73,10 @@ if(isset($_POST['accept_request'])) {
          while($fetch_requests = mysqli_fetch_assoc($select_requests)){
       ?>
       <div class="box">
-         <p> ID : <span><?php echo $fetch_requests['requestId']; ?></span> </p>
-         <p> Name : <span><?php echo $fetch_requests['reqName']; ?></span> </p>
-         <p> Surname : <span><?php echo $fetch_requests['reqSurname']; ?></span> </p>
-         <p> Email : <span><?php echo $fetch_requests['reqEmail']; ?></span> </p>
+      <div class="breaking"><p> ID : <span><?php echo $fetch_requests['requestId']; ?></span> </p></div>
+         <div class="breaking"><p> Name : <span><?php echo $fetch_requests['reqName']; ?></span> </p></div>
+         <div class="breaking"><p> Surname : <span><?php echo $fetch_requests['reqSurname']; ?></span> </p></div>
+         <div class="breaking"><p> Email : <span><?php echo $fetch_requests['reqEmail']; ?></span> </p></div>
          <!-- Add the delete button -->
          <form method="POST">
             <input type="hidden" name="request_id" value="<?php echo $fetch_requests['requestId']; ?>">
