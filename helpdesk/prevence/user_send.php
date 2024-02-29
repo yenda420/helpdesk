@@ -51,9 +51,15 @@ if(isset($_POST['send_btn'])) {
          <div class="inputBox">
             <span>Ticket type :</span>
             <select name="type">
-               <option value="x">x</option>
-               <option value="y">y</option>
-               <option value="z">z</option>
+              <?php
+               //select all ticket types (ticketType, enum) from table tickets
+               $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
+               $type_row = mysqli_fetch_assoc($type_query);
+               $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
+               foreach($types as $type) {
+                  echo "<option value='$type'>$type</option>";
+               }
+               ?>
             </select>
          </div>
          <div class="inputBox">
@@ -66,8 +72,7 @@ if(isset($_POST['send_btn'])) {
 
 </section>
    <script src="js/script.js"></script>
-   <div class="footer2"><?php include 'footer.php'; ?></div>
-
+   <?php include 'footer.php'; ?>
 </body>
 
 </html>

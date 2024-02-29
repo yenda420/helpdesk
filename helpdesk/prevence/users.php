@@ -50,27 +50,25 @@ if(isset($_POST['delete_user'])) {
    <div class="box-container">
       <?php
          $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
-         while ($fetch_users = mysqli_fetch_assoc($select_users)) {
+         while($fetch_users = mysqli_fetch_assoc($select_users)){
             if ($fetch_users['userType'] != 'backend') {
       ?>
-               <div class="box">
-                  <p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p>
-                  <p> Name : <span><?php echo $fetch_users['userName']; ?></span> </p>
-                  <p> Surname : <span><?php echo $fetch_users['userSurname']; ?></span> </p>
-                  <p> Email : <span><?php echo $fetch_users['email']; ?></span> </p>
-                  <p> Type : <span><?php echo $fetch_users['userType']; ?></span> </p>
-                  <!-- Add the delete button -->
-                  <form method="POST">
-                     <input type="hidden" name="user_id" value="<?php echo $fetch_users['userId']; ?>"> <br>
-                     <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                  </form>
-               </div>
+    <div class="box">
+         <p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p>
+         <p> Name : <span><?php echo $fetch_users['userName']; ?></span> </p>
+         <p> Surname : <span><?php echo $fetch_users['userSurname']; ?></span> </p>
+         <p> Email : <span><?php echo $fetch_users['email']; ?></span> </p>
+         <p> Type : <span><?php echo $fetch_users['userType']; ?></span> </p>
+         <!-- Add the delete button -->
+         <form method="POST">
+            <input type="hidden" name="user_id" value="<?php echo $fetch_users['userId']; ?>"> <br>
+            <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+         </form>
+      </div>
       <?php
-            }
-         }
-         
-         if (mysqli_num_rows($select_users) == 0) {
-            echo '<p class="empty">No requests</p>';
+         }};
+         if(mysqli_num_rows($select_users) == 0) {
+            echo '<p class="empty">No users</p>';
          }
       ?>
    </div>
