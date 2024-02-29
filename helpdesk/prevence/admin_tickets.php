@@ -50,7 +50,7 @@ require("admin_header.php");
             <div class="flex">
             <div class="inputBox">
                 <select name="users" required>
-                    <option selected value="">--- Choose a user ---</option>
+                    <option value="" selected>--- Choose a user ---</option>
                     <?php foreach ($users as $user) { 
                             if ($user["userType"] != 'backend') {
                     ?>
@@ -63,6 +63,11 @@ require("admin_header.php");
                             }
                         }
                     ?>
+                </select>
+
+                <select name="types" required>
+                    <option value="" selected>--- Choose a type ---</option>
+                    
                 </select>
             </div>
             <input type="submit" value="Show tickets" class="btn" name="show_tickets">
