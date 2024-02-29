@@ -20,7 +20,6 @@ if(isset($_POST['submit'])){
       }else{
          mysqli_query($conn, "INSERT INTO `requests` SET reqName='$name', reqSurname='$surname', reqEmail='$email', reqPasswd='$pass'") or die('query failed');
          $message[] = 'Request for an account was successful.';
-         header('location:index.php');
       }
    }
 
