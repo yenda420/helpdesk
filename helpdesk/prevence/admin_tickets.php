@@ -109,7 +109,7 @@ require("admin_header.php");
                         <?php } ?>
                     </div>
             <?php } else { ?>
-                    <div class="box-container">
+                    <div class="box-container notickets">
                         <p class="empty">
                             No tickets
                         </p>
