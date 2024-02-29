@@ -4,23 +4,20 @@ include 'config.php';
 require('functions.php');
 
 session_start();
-
-$frontendUsers = returnAllFrontendUsers($conn);
-
-if(isset($_SESSION['admin_id'])) {
+if (isset($_SESSION['admin_id'])) {
    $admin_id = $_SESSION['admin_id'];
 } else {
    header('location:index.php');
 }
-if(isset($_POST['delete_user'])) {
+if (isset($_POST['delete_user'])) {
    $user_id = $_POST['user_id'];
    // Perform the deletion query
    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = '$user_id'");
-   if($delete_query) {
-       mysqli_query($conn,"DELETE FROM `users` where userId = '$user_id'");
-       $message[] = "User deleted successfully";
+   if ($delete_query) {
+      mysqli_query($conn, "DELETE FROM `users` where userId = '$user_id'");
+      $message[] = "User deleted successfully";
    } else {
-       $message[] = "Error deleting user";
+      $message[] = "Error deleting user";
    }
 }
 
@@ -30,6 +27,7 @@ if(isset($_POST['delete_user'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,43 +39,81 @@ if(isset($_POST['delete_user'])) {
    <link rel="stylesheet" href="css/admin_style.css">
 
 </head>
+
 <body>
-   
-<?php include 'admin_header.php'; ?>
-<section class="dashboard">
-<section class="users">
 
-   <h1 class="title">Users</h1>
+   <?php include 'admin_header.php'; ?>
+   <section class="dashboard">
+      <section class="users">
 
-   <div class="box-container">
-      <?php
-         $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
-         while($fetch_users = mysqli_fetch_assoc($select_users)){
-            if ($fetch_users['userType'] != 'backend') {
-      ?>
-    <div class="box">
-    <div class="breaking"><p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p></div>
-    <div class="breaking"><p> Name : <span><?php echo $fetch_users['userName']; ?></span> </p></div>
-    <div class="breaking"><p> Surname : <span><?php echo $fetch_users['userSurname']; ?></span> </p></div>
-    <div class="breaking"><p> Email : <span><?php echo $fetch_users['email']; ?></span> </p></div>
-    <div class="breaking"><p> Type : <span><?php echo $fetch_users['userType']; ?></span> </p></div>
-         <!-- Add the delete button -->
-         <form method="POST">
-            <input type="hidden" name="user_id" value="<?php echo $fetch_users['userId']; ?>"> <br>
-            <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-         </form>
-      </div>
-      <?php
-         }};
-         if($frontendUsers == 0) {
-            echo '<p class="empty">No users</p>';
-         }
-      ?>
-   </div>
+         <h1 class="title">Users</h1>
+         <form method="post">
+            <div class="flex">
+               <div class="inputBox">
+                  <select name="users" required>
+                     <option selected value="all">--- Choose a user type ---</option>
+                     <option value="frontend">Frontend</option>
+                     <option value="backend">Backend</option>
+                  </select>
+               </div>
+               <div class="inputBox">
+                  <button type="submit" name="filter" class="btn">Filter</button>
+               </div><br>
+            </div>
 
-</section>
-</section>
-<script src="js/admin_script.js"></script>
-<?php include 'footer.php'; ?>
+         <div class="box-container">
+            <?php
+            if (isset($_POST['filter']) && $_POST['users'] == 'frontend') {
+               $frontendUsers = returnAllFrontendUsers($conn);
+               foreach ($frontendUsers as $user) {
+                  echo '<div class="box">
+                  <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
+                  <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
+                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
+                  <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
+                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                  </div>';
+               }
+            }
+            else if (isset($_POST['filter']) && $_POST['users'] == 'backend') {
+               $backendUsers = returnAllBackendUsers($conn);
+               foreach ($backendUsers as $user) {
+                  echo '<div class="box">
+                  <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
+                  <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
+                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
+                  <div class="breaking"><p> Department : <span>'.$user['department'].'</span> </p></div>
+                  <input type="hidden" name="user_id" value="' . $user['userId'] . '"> <br>
+                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                  </div>';
+               }
+            }
+            else{
+               $allUsers = returnAllUsers($conn);
+               foreach ($allUsers as $user) {
+                  echo '<div class="box">
+                  <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
+                  <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
+                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
+                  <div class="breaking"><p> Type : <span>'.$user['userType'].'</span> </p></div>
+                  ';
+                  if($user['userType'] == "backend") {
+                     echo'<div class="breaking"><p> Department : <span>'.$user['department'].'</span> </p></div>';
+                  }
+                  echo'<input type="hidden" name="user_id" value="' . $user['userId'] . '"> <br>
+                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                  </div>';
+               }
+            }
+            ?>
+         </div>
+
+      </section>
+   </section>
+   <script src="js/admin_script.js"></script>
+   <?php include 'footer.php'; ?>
 </body>
+
 </html>
+
+
