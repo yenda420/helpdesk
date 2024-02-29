@@ -69,7 +69,7 @@ if(isset($_POST['delete_user'])) {
       </div>
       <?php
          }};
-         if(mysqli_num_rows($frontendUsers) == 0) {
+         if($frontendUsers == 0) {
             echo '<p class="empty">No users</p>';
          }
       ?>
