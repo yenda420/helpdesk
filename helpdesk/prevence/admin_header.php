@@ -30,6 +30,7 @@ if(isset($message)){
             <a href="admin_page.php">Requests</a>
             <a href="users.php">Users</a>
             <a href="admin_tickets.php">Tickets</a>
+            <a href="create_admin.php">Create an Admin</a>
       </nav>
 
       <div class="icons">
