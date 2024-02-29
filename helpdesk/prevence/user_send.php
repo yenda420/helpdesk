@@ -50,15 +50,17 @@ if(isset($_POST['send_btn'])) {
          </div>
          <div class="inputBox">
             <span>Ticket type :</span>
-            <select name="type">
+            <select name="type" required>
+               <option value="" selected>---Select type---</option>
               <?php
-               //select all ticket types (ticketType, enum) from table tickets
-               $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
-               $type_row = mysqli_fetch_assoc($type_query);
-               $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
-               foreach($types as $type) {
-                  echo "<option value='$type'>$type</option>";
-               }
+                  //select all ticket types (ticketType, enum) from table tickets
+                  $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
+                  $type_row = mysqli_fetch_assoc($type_query);
+                  $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
+                  
+                  foreach($types as $type) {
+                     echo "<option value='$type'>$type</option>";
+                  }
                ?>
             </select>
          </div>
