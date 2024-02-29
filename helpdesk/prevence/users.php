@@ -29,7 +29,7 @@ if(isset($_POST['delete_user'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">

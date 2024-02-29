@@ -49,7 +49,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -64,16 +64,25 @@
 
 
 <?php
-if(isset($message)){
-   foreach($message as $message){
-      echo '
-      <div class="message">
-         <span>'.$message.'</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-      </div>
-      ';
+   if (isset($message)) {
+      foreach ($message as $message) {
+         echo '
+         <div class="message">
+            <span>' . $message . '</span>
+            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+            <script>
+               setTimeout(function() {
+                  document.querySelector(".message").style.opacity = "0";
+                  document.querySelector(".message").style.transition = "all 0.5s";
+                  setTimeout(function() {
+                     document.querySelector(".message").remove();
+                  }, 500);
+               }, 3500);
+            </script>
+         </div>
+         ';
+      }
    }
-}
 ?>
    
 <div class="form-container">
