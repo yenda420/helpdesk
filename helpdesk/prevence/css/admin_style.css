@@ -49,6 +49,9 @@ html {
 
 body {
   background-color: var(--light-bg);
+  min-height: 100vh;
+   display: flex;
+    flex-direction: column;
 }
 
 section {
@@ -467,6 +470,7 @@ section {
 
 .footer {
   background-color: var(--white);
+  margin-top: auto;
 }
 
 .footer .credit {
@@ -505,7 +509,6 @@ section {
   }
 
   .header .flex .navbar {
-    position: absolute;
     top: 99%;
     left: 0;
     right: 0;

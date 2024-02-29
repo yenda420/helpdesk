@@ -852,7 +852,6 @@ body {
    }
 
    .header .header-2 .flex .navbar {
-      position: absolute;
       top: 99%;
       left: 0;
       right: 0;
