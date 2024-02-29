@@ -146,14 +146,12 @@ require("admin_header.php");
                     <?php }
                 } else { ?>
                     </div>
-                    <section class="users">
-                        <div class="box-container">
+                        <div class="box-container notickets">
                             <p class="empty">
                                 <?= $user["userName"] ?>
                                 <?= $user["userSurname"] ?> currently has no tickets
                             </p>
                         </div>
-                    </section>
                 <?php }
             }
         } ?>

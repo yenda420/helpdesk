@@ -577,3 +577,7 @@ form .flex input[type="submit"] {
   overflow-wrap: break-word;
   hyphens: auto;
 }
+
+.notickets {
+  inline-size: fit-content;
+}
