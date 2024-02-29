@@ -109,9 +109,11 @@ require("admin_header.php");
                         <?php } ?>
                     </div>
             <?php } else { ?>
-                    <h1 class="title">
-                        No ticket instances in database
-                    </h1>
+                    <div class="box-container">
+                        <p class="empty">
+                            No tickets
+                        </p>
+                    </div>
             <?php } ?>
         <?php } else {
             if (isset($_POST["users"]) && $_POST["users"] != 0) {
@@ -144,12 +146,14 @@ require("admin_header.php");
                     <?php }
                 } else { ?>
                     </div>
-                    <div class="box-container">
-                        <p class="empty">
-                            <?= $user["userName"] ?>
-                            <?= $user["userSurname"] ?> currently has no tickets
-                        </p>
-                    </div>
+                    <section class="users">
+                        <div class="box-container">
+                            <p class="empty">
+                                <?= $user["userName"] ?>
+                                <?= $user["userSurname"] ?> currently has no tickets
+                            </p>
+                        </div>
+                    </section>
                 <?php }
             }
         } ?>
