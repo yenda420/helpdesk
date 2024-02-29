@@ -80,24 +80,24 @@ require("admin_header.php");
                             $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
                             ?>
                             <div class="box">
-                                <p>ID: <span>
+                            <div class="breaking"><p>ID: <span>
                                         <?= $ticket["ticketId"] ?>
-                                    </span></p>
-                                <p>Title: <span>
+                                    </span></p></div>
+                                    <div class="breaking"><p>Title: <span>
                                         <?= $ticket["title"] ?>
-                                    </span></p>
-                                <p>Users name: <span>
+                                    </span></p></div>
+                                    <div class="breaking"><p>Users name: <span>
                                         <?= $user["userName"] ?>
-                                    </span></p>
-                                <p>Users surname: <span>
+                                    </span></p></div>
+                                    <div class="breaking"><p>Users surname: <span>
                                         <?= $user["userSurname"] ?>
-                                    </span></p>
-                                <p>Users email: <span>
+                                    </span></p></div>
+                                    <div class="breaking"><p>Users email: <span>
                                         <?= $user["email"] ?>
-                                    </span></p>
-                                <p>Ticket type: <span>
+                                    </span></p></div>
+                                    <div class="breaking"> <p>Ticket type: <span>
                                         <?= $ticket["ticketType"] ?>
-                                    </span></p>
+                                    </span></p></div>
                                     <div class="desc"><p>Description: <span>
                                 <?= $ticket["ticketDesc"] ?>
                             </span></p></div>
@@ -130,12 +130,12 @@ require("admin_header.php");
                         <div class="breaking"><p>ID: <span>
                                 <?= $ticket["ticketId"] ?>
                             </span></p></div>
-                        <p>Title: <span>
+                            <div class="breaking"><p>Title: <span>
                                 <?= $ticket["title"] ?>
-                            </span></p>
-                        <p>Ticket type: <span>
+                            </span></p></div>
+                        <div class="breaking"><p>Ticket type: <span>
                                 <?= $ticket["ticketType"] ?>
-                            </span></p>
+                            </span></p></div>
                         <div class="breaking"><p>Description: <span>
                                 <?= $ticket["ticketDesc"] ?>
                             </span></p></div>

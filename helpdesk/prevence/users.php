@@ -53,11 +53,11 @@ if(isset($_POST['delete_user'])) {
             if ($fetch_users['userType'] != 'backend') {
       ?>
     <div class="box">
-         <p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p>
-         <p> Name : <span><?php echo $fetch_users['userName']; ?></span> </p>
-         <p> Surname : <span><?php echo $fetch_users['userSurname']; ?></span> </p>
-         <p> Email : <span><?php echo $fetch_users['email']; ?></span> </p>
-         <p> Type : <span><?php echo $fetch_users['userType']; ?></span> </p>
+    <div class="breaking"><p> ID : <span><?php echo $fetch_users['userId']; ?></span> </p></div>
+    <div class="breaking"><p> Name : <span><?php echo $fetch_users['userName']; ?></span> </p></div>
+    <div class="breaking"><p> Surname : <span><?php echo $fetch_users['userSurname']; ?></span> </p></div>
+    <div class="breaking"><p> Email : <span><?php echo $fetch_users['email']; ?></span> </p></div>
+    <div class="breaking"><p> Type : <span><?php echo $fetch_users['userType']; ?></span> </p></div>
          <!-- Add the delete button -->
          <form method="POST">
             <input type="hidden" name="user_id" value="<?php echo $fetch_users['userId']; ?>"> <br>

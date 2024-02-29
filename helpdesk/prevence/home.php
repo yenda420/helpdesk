@@ -43,12 +43,12 @@ session_start();
                            <div class="breaking"><p> Title: <span>
                                  <?php echo $fetch_tickets['title']; ?>
                               </span> </p></div>
-                           <p> Type: <span>
+                              <div class="breaking"><p> Type: <span>
                                  <?php echo $fetch_tickets['ticketType']; ?>
-                              </span> </p>
-                           <p> Date: <span>
+                              </span> </p></div>
+                              <div class="breaking"><p> Date: <span>
                                  <?php echo $fetch_tickets['ticketDate']; ?>
-                              </span> </p>
+                              </span> </p></div>
                            <div class="breaking"><p> Description: <span>
                                  <?php echo $fetch_tickets['ticketDesc']; ?>
                               </span> </p></div>
