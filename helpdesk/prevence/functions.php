@@ -89,3 +89,30 @@
 
         return $numberOfRecords;
     }
+
+    function emailInDatabase($dbConnect, $email) {
+
+        $sqlUsers = "
+            SELECT *
+            FROM users
+            WHERE email = '{$email}';
+        ";
+
+        $sqlRequests = "
+            SELECT *
+            FROM requests
+            WHERE reqEmail = '{$email}';
+        ";
+
+        $sqlResultUsers = mysqli_query($dbConnect, $sqlUsers);
+        $numberOfRecordsUsers = mysqli_num_rows($sqlResultUsers);
+
+        $sqlResultRequests = mysqli_query($dbConnect, $sqlRequests);
+        $numberOfRecordsRequests = mysqli_num_rows($sqlResultRequests);
+
+        if ($numberOfRecordsRequests == 0 && $numberOfRecordsUsers == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
