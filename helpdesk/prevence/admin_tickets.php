@@ -51,13 +51,18 @@ require("admin_header.php");
             <div class="inputBox">
                 <select name="users" required>
                     <option selected value="">--- Choose a user ---</option>
-                    <?php foreach ($users as $user) { ?>
+                    <?php foreach ($users as $user) { 
+                            if ($user["userType"] != 'backend') {
+                    ?>
                         <option value="<?= $user["userId"] ?>">
                             <?= $user["userName"] ?>
                             <?= $user["userSurname"] ?>
                             <?= $user["email"] ?>
                         </option>
-                    <?php } ?>
+                    <?php 
+                            }
+                        }
+                    ?>
                 </select>
             </div>
             <input type="submit" value="Show tickets" class="btn" name="show_tickets">
