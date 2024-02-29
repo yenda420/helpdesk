@@ -14,10 +14,9 @@ if(isset($_POST['delete_request'])) {
    // Perform the deletion query
    $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
    if($delete_query) {
-       // Refresh the page after deletion
-       header("Refresh:0");
+      $message[] = "Request deleted successfully";
    } else {
-       echo "Error deleting request.";
+      $message[] = "Error deleting request";
    }
 }
 //if you press accept, the user is created and inputted into the users table
@@ -31,16 +30,14 @@ if(isset($_POST['accept_request'])) {
    $req_email = $fetch_request['reqEmail'];
    $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userPasswd, userType,email) VALUES ('$req_name', '$req_surname', '$req_password', 'frontend','$req_email')") or die('query failed');
    if($insert_user) {
-       // Perform the deletion query
        $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
        if($delete_query) {
-           // Refresh the page after deletion
-           header("Refresh:0");
+         $message[] = "User created successfully";
        } else {
-           echo "Error deleting request.";
+         $message[] = "Error deleting request";
        }
    } else {
-       echo "Error inserting user.";
+      $message[] = "Error creating user"; 
    }
 }
 

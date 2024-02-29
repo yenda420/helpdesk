@@ -14,11 +14,10 @@ if(isset($_POST['delete_user'])) {
    // Perform the deletion query
    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = '$user_id'");
    if($delete_query) {
-       // Refresh the page after deletion
        mysqli_query($conn,"DELETE FROM `users` where userId = '$user_id'");
-       header("Refresh:0");   
+       $message[] = "User deleted successfully";
    } else {
-       echo "Error deleting request.";
+       $message[] = "Error deleting user";
    }
 }
 
