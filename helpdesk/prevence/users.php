@@ -4,6 +4,8 @@ include 'config.php';
 
 session_start();
 
+$frontendUsers = returnAllFrontendUsers($conn);
+
 if(isset($_SESSION['admin_id'])) {
    $admin_id = $_SESSION['admin_id'];
 } else {
@@ -66,7 +68,7 @@ if(isset($_POST['delete_user'])) {
       </div>
       <?php
          }};
-         if(mysqli_num_rows($select_users) == 0) {
+         if(mysqli_num_rows($frontendUsers) == 0) {
             echo '<p class="empty">No users</p>';
          }
       ?>
