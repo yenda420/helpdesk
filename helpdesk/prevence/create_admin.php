@@ -1,30 +1,57 @@
 <?php
-session_start();
 
-require("config.php");
-require("functions.php");
+   include 'config.php';
+   require('functions.php');
 
-$users = returnAllUsers($conn);
+   session_start(); 
 
-if (isset($_POST["users"])) {
-    $tickets = empty($_POST["users"]) ? returtnAllTickets($conn) : returnTicketsForSelectedUser($conn, $_POST);
-} else {
-    $tickets = returtnAllTickets($conn);
-}
-
-if(isset($_POST['delete_ticket'])) {
-    $ticket_id = $_POST['ticket_id'];
-    // Perform the deletion query
-    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
-    if($delete_query) {
-        // Refresh the page after deletion
-        header("Refresh:0");   
-    } else {
-        echo "Error deleting request.";
-    }
+   if(isset($_SESSION['admin_id'])) {
+    $admin_id = $_SESSION['admin_id'];
+ } else {
+    header('location:index.php'); 
  }
 
-require("admin_header.php");
+   if (isset($_POST['submit'])) {
+
+      $name = mysqli_real_escape_string($conn, $_POST['createAdminName']);
+      $surname = mysqli_real_escape_string($conn, $_POST['createAdminSurname']);
+      $email = mysqli_real_escape_string($conn, $_POST['createAdminEmail']);
+      $pass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswd']));
+      $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswdConf']));
+      $depmnt = mysqli_real_escape_string($conn, $_POST['type']);
+
+      $sqlInsert = "INSERT INTO `users` (userName, userSurname, userPasswd, userType, email, department) VALUES ('$name', '$surname', '$pass', 'backend','$email', '$depmnt')";
+
+      if ($pass == $cpass) {
+         if (strlen($_POST['createAdminPasswd']) >= 8) {
+            if (preg_match('/[A-Z]/', $_POST['createAdminPasswd'])) {
+               if (preg_match('/\d/', $_POST['createAdminPasswd'])) {
+                  if (preg_match("/[^a-zA-Z0-9]/", $_POST['createAdminPasswd'])) {
+                     if (!emailInDatabase($conn, $email)) {
+                        if (mysqli_query($conn, $sqlInsert)) {
+                           $message[] = 'Account was succesfully created.';
+                        } else {
+                           $message[] = 'Query failed.';
+                        }
+                     } else {
+                        $message[] = 'Account with this email already exists.';
+                     }
+                  } else {
+                     $message[] = 'Password needs at least 1 special character.';
+                  }
+               } else {
+                  $message[] = 'Password needs at least 1 number.';
+               }
+            } else {
+               $message[] = 'Password needs at least 1 upper case character.';
+            }
+         } else {
+            $message[] = 'Password needs at least 8 characters.';
+         }
+      } else {
+         $message[] = 'Passwords don\'t match!';
+      }
+   }
 ?>
 
 <!DOCTYPE html>
@@ -41,120 +68,74 @@ require("admin_header.php");
 
 <body>
 
+<?php
+   if (isset($message)) {
+      foreach ($message as $message) {
+         echo '
+         <div class="message">
+            <span>' . $message . '</span>
+            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+            <script>
+               setTimeout(function() {
+                  document.querySelector(".message").style.opacity = "0";
+                  document.querySelector(".message").style.transition = "all 0.5s";
+                  setTimeout(function() {
+                     document.querySelector(".message").remove();
+                  }, 500);
+               }, 3500);
+            </script>
+         </div>
+         ';
+      }
+   }
+?>
+
+<?php include 'admin_header.php'; ?>
+
     <section class="dashboard">
         <section class="tickets">
-            <h1 class="title">Tickets</h1>
+            <h1 class="title">Create an Admin</h1>
         </section>
 
-        <form method="post">
-            <div class="flex">
-            <div class="inputBox">
-                <select name="users" required>
-                    <option selected value="">--- Choose a user ---</option>
-                    <?php foreach ($users as $user) { 
-                            if ($user["userType"] != 'backend') {
-                    ?>
-                        <option value="<?= $user["userId"] ?>">
-                            <?= $user["userName"] ?>
-                            <?= $user["userSurname"] ?>
-                            <?= $user["email"] ?>
-                        </option>
-                    <?php 
+        <section class="checkout">
+
+            <form method="post" action="">
+                <div class="flex">
+                    <div class="inputBox">
+                        <input type="text" name="createAdminName" placeholder="Name" required />
+                    </div>
+                    <div class="inputBox">
+                        <input type="text" name="createAdminSurname" placeholder="Surname" required />
+                    </div>
+                    <div class="inputBox">
+                        <input type="email" name="createAdminEmail" placeholder="Email" required />
+                    </div>
+                    <div class="inputBox">
+                        <select name="type" required>
+                            <option value="" selected>---Select department---</option>
+                            <?php
+                            //select all ticket types (ticketType, enum) from table tickets
+                            $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'department'");
+                            $type_row = mysqli_fetch_assoc($type_query);
+                            $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE']) - 6))));
+
+                            foreach ($types as $type) {
+                                echo "<option value='$type'>$type</option>";
                             }
-                        }
-                    ?>
-                </select>
-            </div>
-            <input type="submit" value="Show tickets" class="btn" name="show_tickets">
-            </div>
-
-        </form>
-
-        <?php if (empty($_POST["users"])) { 
-                
-                if (numberOfTickets($conn) != 0) {
-        ?>
-                    <div class="box-container">
-                        <?php
-                        foreach ($tickets as $ticket) {
-                            $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
                             ?>
-                            <div class="box">
-                            <div class="breaking"><p>ID: <span>
-                                        <?= $ticket["ticketId"] ?>
-                                    </span></p></div>
-                                    <div class="breaking"><p>Title: <span>
-                                        <?= $ticket["title"] ?>
-                                    </span></p></div>
-                                    <div class="breaking"><p>Users name: <span>
-                                        <?= $user["userName"] ?>
-                                    </span></p></div>
-                                    <div class="breaking"><p>Users surname: <span>
-                                        <?= $user["userSurname"] ?>
-                                    </span></p></div>
-                                    <div class="breaking"><p>Users email: <span>
-                                        <?= $user["email"] ?>
-                                    </span></p></div>
-                                    <div class="breaking"> <p>Ticket type: <span>
-                                        <?= $ticket["ticketType"] ?>
-                                    </span></p></div>
-                                    <div class="desc"><p>Description: <span>
-                                <?= $ticket["ticketDesc"] ?>
-                            </span></p></div>
-                                    <form method="POST">
-                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                        <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                                    </form>
-                            </div>
-                        <?php } ?>
+                        </select>
                     </div>
-            <?php } else { ?>
-                    <div class="box-container notickets">
-                        <p class="empty">
-                            No tickets
-                        </p>
+                    <div class="inputBox">
+                        <input type="password" name="createAdminPasswd" placeholder="Password" required />
                     </div>
-            <?php } ?>
-        <?php } else {
-            if (isset($_POST["users"]) && $_POST["users"] != 0) {
-                $user = returnUser($conn, $_POST["users"]);
+                    <div class="inputBox">
+                        <input type="password" name="createAdminPasswdConf" placeholder="Confirm password" required />
+                    </div>
+                </div>
+                <input type="submit" value="Create" class="btn" name="submit">
+            </form>
 
-                if (numberOfTicketsForUser($conn, $_POST) != 0) {
-                    ?>
-                    <h1 class="title">Tickets for
-                        <?= $user["userName"] ?>
-                        <?= $user["userSurname"] ?>
-                    </h1>
-                    <div class="box-container">
-                    <?php foreach ($tickets as $ticket) { ?>
-                        
-                    <div class="box">
-                        <div class="breaking"><p>ID: <span>
-                                <?= $ticket["ticketId"] ?>
-                            </span></p></div>
-                            <div class="breaking"><p>Title: <span>
-                                <?= $ticket["title"] ?>
-                            </span></p></div>
-                        <div class="breaking"><p>Ticket type: <span>
-                                <?= $ticket["ticketType"] ?>
-                            </span></p></div>
-                        <div class="breaking"><p>Description: <span>
-                                <?= $ticket["ticketDesc"] ?>
-                            </span></p></div>
-                    </div>
-
-                    <?php }
-                } else { ?>
-                    </div>
-                        <div class="box-container notickets">
-                            <p class="empty">
-                                <?= $user["userName"] ?>
-                                <?= $user["userSurname"] ?> currently has no tickets
-                            </p>
-                        </div>
-                <?php }
-            }
-        } ?>
+        </section>
     </section>
     <script src="js/admin_script.js"></script>
     <?php include 'footer.php'; ?>

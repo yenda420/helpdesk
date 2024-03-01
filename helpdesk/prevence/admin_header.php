@@ -1,5 +1,6 @@
 <?php
 if(isset($message)){
+   error_reporting(E_ALL ^ E_WARNING);
    foreach($message as $message){
       echo '
       <div class="message">

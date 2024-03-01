@@ -28,7 +28,7 @@
                            $message[] = 'Query failed.';
                         }
                      } else {
-                        $message[] = 'Email for this account already exists.';
+                        $message[] = 'Aaccount with this email already exists.';
                      }
                   } else {
                      $message[] = 'Password needs at least 1 special character.';
