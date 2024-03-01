@@ -99,8 +99,8 @@ require("admin_header.php");
             <div class="inputBox">
                 <input type="date" name="date">
             </div>
-            <input type="submit" value="Show tickets" class="btn" name="show_tickets">
             </div>
+            <input type="submit" value="Show tickets" class="btn" name="show_tickets">
 
         </form>
 
