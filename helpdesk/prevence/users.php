@@ -42,7 +42,11 @@ if (isset($_POST['delete_user'])) {
 
 <body>
 
-   <?php include 'admin_header.php'; ?>
+   <?php include 'admin_header.php';
+   if (!isset($_POST['users'])) {
+      $_POST['users'] = null;
+   }
+   ?>
    <section class="dashboard">
       <section class="users">
 
@@ -51,9 +55,9 @@ if (isset($_POST['delete_user'])) {
             <div class="flex">
                <div class="inputBox">
                   <select name="users" required>
-                     <option selected value="all">--- Choose a user type ---</option>
-                     <option value="frontend">Frontend</option>
-                     <option value="backend">Backend</option>
+                     <option value="all">--- Choose a user type ---</option>
+                     <option <?php if($_POST['users'] == 'frontend') echo 'selected'?> value="frontend">Frontend</option>
+                     <option <?php if($_POST['users'] == 'backend') echo 'selected'?> value="backend">Backend</option>
                   </select>
                </div>
                <div class="inputBox">
