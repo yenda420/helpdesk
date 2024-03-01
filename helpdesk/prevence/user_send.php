@@ -51,7 +51,7 @@ if(isset($_POST['send_btn'])) {
       <div class="flex">
          <div class="inputBox">
             <span>Ticket title: </span>
-            <input type="text" name="title" required placeholder="An issue with...">
+            <input type="text" name="title" required placeholder="An issue with..." maxlength="45">
          </div>
          <div class="inputBox">
             <span>Ticket type :</span>
@@ -71,7 +71,7 @@ if(isset($_POST['send_btn'])) {
          </div>
          <div class="inputBox">
             <span>Description:</span> <br>
-            <textarea name="description" required placeholder="Describe the problem"></textarea>
+            <textarea name="description" required placeholder="Describe the problem" maxlength="10000"></textarea>
          </div>
       </div>
       <input type="submit" value="Send" class="btn" name="send_btn">
