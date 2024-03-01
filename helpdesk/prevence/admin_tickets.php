@@ -6,11 +6,27 @@ require("functions.php");
 
 $users = returnAllUsers($conn);
 
-if (isset($_POST["users"])) {
-    $tickets = empty($_POST["users"]) ? returtnAllTickets($conn) : returnTicketsForSelectedUser($conn, $_POST);
-} else {
-    $tickets = returtnAllTickets($conn);
+$fullQuery = "SELECT * FROM tickets WHERE 1 = 1";
+
+if (!empty($_POST['users'])) { 
+    $user = returnUser($conn, $_POST['users']);
+    
+    if (isset($user['userId'])) {
+        $userId = $user['userId'];
+        $fullQuery .= " AND userId = $userId";
+    }
 }
+
+if (!empty($_POST['types'])) {
+    $fullQuery .= " AND ticketType = '{$_POST['types']}'";
+}
+
+if (!empty($_POST["date"])) {
+    $fullQuery .= " AND ticketDate = '{$_POST['date']}'";
+}
+
+$fullQueryResult = mysqli_query($conn, $fullQuery);
+$tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
 
 if(isset($_POST['delete_ticket'])) {
     $ticket_id = $_POST['ticket_id'];
@@ -49,7 +65,7 @@ require("admin_header.php");
         <form method="post">
             <div class="flex">
             <div class="inputBox">
-                <select name="users" required>
+                <select name="users">
                     <option value="" selected>--- Choose a user ---</option>
                     <?php foreach ($users as $user) { 
                             if ($user["userType"] != 'backend') {
@@ -65,10 +81,20 @@ require("admin_header.php");
                     ?>
                 </select>
 
-                <select name="types" required>
+                <select name="types">
                     <option value="" selected>--- Choose a type ---</option>
-                    
+                    <?php
+                        $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
+                        $type_row = mysqli_fetch_assoc($type_query);
+                        $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
+
+                        foreach($types as $type) {
+                            echo "<option value='$type'>$type</option>";
+                         }
+                    ?>
                 </select>
+
+                <input type="date" name="date">
             </div>
             <input type="submit" value="Show tickets" class="btn" name="show_tickets">
             </div>
