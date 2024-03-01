@@ -20,7 +20,8 @@
       $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswdConf']));
       $depmnt = mysqli_real_escape_string($conn, $_POST['type']);
 
-      $sqlInsert = "INSERT INTO `users` (userName, userSurname, userPasswd, userType, email, department) VALUES ('$name', '$surname', '$pass', 'backend','$email', '$depmnt')";
+      $sqlInsert = "INSERT INTO `users` (userName, userSurname, userPasswd, userType, email, department) 
+                     VALUES ('$name', '$surname', '$pass', 'backend','$email', '$depmnt')";
 
       if ($pass == $cpass) {
          if (strlen($_POST['createAdminPasswd']) >= 8) {
@@ -68,28 +69,6 @@
 
 <body>
 
-<?php
-   if (isset($message)) {
-      foreach ($message as $message) {
-         echo '
-         <div class="message">
-            <span>' . $message . '</span>
-            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-            <script>
-               setTimeout(function() {
-                  document.querySelector(".message").style.opacity = "0";
-                  document.querySelector(".message").style.transition = "all 0.5s";
-                  setTimeout(function() {
-                     document.querySelector(".message").remove();
-                  }, 500);
-               }, 3500);
-            </script>
-         </div>
-         ';
-      }
-   }
-?>
-
 <?php include 'admin_header.php'; ?>
 
     <section class="dashboard">
@@ -112,7 +91,7 @@
                     </div>
                     <div class="inputBox">
                         <select name="type" required>
-                            <option value="" selected>---Select department---</option>
+                            <option value="" selected>--- Select department ---</option>
                             <?php
                             //select all ticket types (ticketType, enum) from table tickets
                             $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'department'");
