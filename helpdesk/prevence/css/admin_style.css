@@ -583,7 +583,7 @@ form .flex input[type="submit"] {
 }
 
 .checkout {
-  min-height: 100vh;
+  /*min-height: 100vh;*/
    background-color: var(--light-bg);
    display: flex;
    align-items: center;
