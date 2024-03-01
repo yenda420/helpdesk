@@ -40,6 +40,14 @@ if(isset($_POST['delete_ticket'])) {
     }
  }
 
+ if (!isset($_POST['users'])) {
+    $_POST['users'] = null;
+ }
+
+ if (!isset($_POST['types'])) {
+    $_POST['types'] = null;
+ }
+
 require("admin_header.php");
 ?>
 
@@ -64,14 +72,13 @@ require("admin_header.php");
 
         <form method="post">
             <div class="flex">
-            <div class="box-container">
             <div class="inputBox">
                 <select name="users">
                     <option value="" selected>--- Choose a user ---</option>
                     <?php foreach ($users as $user) { 
                             if ($user["userType"] != 'backend') {
                     ?>
-                        <option value="<?= $user["userId"] ?>">
+                        <option <?php if ($_POST['users'] == $user['userId']) echo "selected" ?> value="<?= $user["userId"] ?>">
                             <?= $user["userName"] ?>
                             <?= $user["userSurname"] ?>
                             <?= $user["email"] ?>
@@ -81,24 +88,30 @@ require("admin_header.php");
                         }
                     ?>
                 </select>
-                </div>
-            <div class="inputBox">
+
                 <select name="types">
                     <option value="" selected>--- Choose a type ---</option>
                     <?php
                         $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
                         $type_row = mysqli_fetch_assoc($type_query);
                         $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
-
+                    
                         foreach($types as $type) {
-                            echo "<option value='$type'>$type</option>";
-                         }
+                            $selected = ($_POST['types'] == $type) ? "selected" : "";
+                            echo "<option $selected value='$type'>$type</option>";
+                        }
                     ?>
                 </select>
+
+                <input type="date" id="date" name="date" value=" <?php if (isset($_POST['date'])) echo $_POST['date']; ?>">
             </div>
+<<<<<<< HEAD
+            <input type="submit" value="Show tickets" class="btn" name="show_tickets">
+=======
             <div class="inputBox">
-                <input type="date" name="date">
+                <input type="date" name="date" value=" <?php if (isset($_POST['date'])) echo $_POST['date']; ?>">
             </div>
+>>>>>>> 35f22d845bb49b76fb48fc2d05cb1faff77bd6df
             </div>
             <input type="submit" value="Show tickets" class="btn" name="show_tickets">
 
