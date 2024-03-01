@@ -43,6 +43,7 @@ if(isset($message)){
    
          <p>Name: <span><?php echo $_SESSION['admin_name']; ?></span></p>
          <p>Email: <span><?php echo $_SESSION['admin_email']; ?></span></p>
+         <p>Department: <span><?php echo $_SESSION['admin_department']; ?></span></p>
          <a href="logout.php" class="delete-btn">logout</a>
       </div>
 
