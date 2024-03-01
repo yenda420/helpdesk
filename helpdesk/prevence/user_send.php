@@ -13,7 +13,12 @@ if(isset($_POST['send_btn'])) {
    $type = $_POST['type'];
    $description = $_POST['description'];
    $date = date('Y-m-d');
-   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`, `ticketType`, `ticketDesc`,`ticketDate`,`userId`) VALUES ('$title', '$type', '$description','$date','$user_id')");
+   if($type == "Billing and Payments") {
+      $department = "Sales";
+   } else {
+      $department = "Logistics";
+   }
+   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`, `ticketType`, `ticketDesc`,`ticketDate`,`userId`,`department`) VALUES ('$title', '$type', '$description','$date','$user_id', '$department')");
    if($send_query) {
       $message[] = "Ticket sent successfully";
    } else {
