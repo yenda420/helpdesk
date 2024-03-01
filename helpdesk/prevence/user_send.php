@@ -56,7 +56,7 @@ if(isset($_POST['send_btn'])) {
          <div class="inputBox">
             <span>Ticket type :</span>
             <select name="type" required>
-               <option value="" selected>---Select type---</option>
+               <option value="" selected>--- Select type ---</option>
               <?php
                   //select all ticket types (ticketType, enum) from table tickets
                   $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
