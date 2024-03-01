@@ -64,6 +64,7 @@ require("admin_header.php");
 
         <form method="post">
             <div class="flex">
+            <div class="box-container">
             <div class="inputBox">
                 <select name="users">
                     <option value="" selected>--- Choose a user ---</option>
@@ -80,7 +81,8 @@ require("admin_header.php");
                         }
                     ?>
                 </select>
-
+                </div>
+            <div class="inputBox">
                 <select name="types">
                     <option value="" selected>--- Choose a type ---</option>
                     <?php
@@ -93,7 +95,8 @@ require("admin_header.php");
                          }
                     ?>
                 </select>
-
+            </div>
+            <div class="inputBox">
                 <input type="date" name="date">
             </div>
             <input type="submit" value="Show tickets" class="btn" name="show_tickets">

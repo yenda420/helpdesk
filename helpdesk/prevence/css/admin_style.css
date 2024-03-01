@@ -50,8 +50,8 @@ html {
 body {
   background-color: var(--light-bg);
   min-height: 100vh;
-   display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 section {
@@ -492,12 +492,15 @@ section {
 .dashboard {
   margin-bottom: 278px;
 }
+
 .orders {
   margin-bottom: 559px;
 }
+
 .users {
   margin-bottom: 375px;
 }
+
 /* media queries  */
 
 @media (max-width: 991px) {
@@ -553,15 +556,25 @@ form .flex {
   text-align: center;
 }
 
-form .flex select {
-   border: var(--border);
-   width: 20%;
-   border-radius: .5rem;
-   width: 20%;
-   background-color: var(--white);
-   padding: 1.2rem 1.4rem;
-   font-size: 1.8rem;
-   margin: 1rem 0;
+form .flex select,
+form .flex input[type="date"] {
+  border: var(--border);
+  border-radius: .5rem;
+  background-color: var(--white);
+  padding: 1.2rem 1.4rem;
+  font-size: 1.8rem;
+  margin: 1rem 0;
+}
+
+form .flex .select {
+  border: var(--border);
+  width: 20%;
+  border-radius: .5rem;
+  width: 20%;
+  background-color: var(--white);
+  padding: 1.2rem 1.4rem;
+  font-size: 1.8rem;
+  margin: 1rem 0;
 }
 
 form .flex .inputBox {
@@ -583,7 +596,7 @@ form .flex input[type="submit"] {
 }
 
 .checkout {
-  /*min-height: 100vh;*/
+  min-height: 100vh;
    background-color: var(--light-bg);
    display: flex;
    align-items: center;
