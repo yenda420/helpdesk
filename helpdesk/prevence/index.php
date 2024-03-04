@@ -26,6 +26,7 @@ if (isset($_POST['submit'])) {
          $_SESSION['admin_email'] = $fetch_admins['adminEmail'];
          $_SESSION['admin_id'] = $fetch_admins['adminId'];
          $_SESSION['admin_surname'] = $fetch_admins['adminSurname'];
+         $_SESSION['departmentId'] = $fetch_admins['departmentId'];
          $_SESSION['department'] = returnDepartmentName($conn, $fetch_admins['departmentId'])['departmentName'];
          header('location:admin_page.php');
       }
