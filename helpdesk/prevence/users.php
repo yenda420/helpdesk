@@ -72,7 +72,8 @@ if (isset($_POST['delete_user'])) {
                   <select name="users" class="select" required>
                      <option value="all">--- Choose a user type ---</option>
                      <option <?php if ($_POST['users'] == 'frontend')
-                        echo 'selected' ?> value="frontend">Frontend</option>
+                        echo 'selected' ?> value="frontend">Frontend
+                        </option>
                         <option <?php if ($_POST['users'] == 'backend')
                         echo 'selected' ?> value="backend">Backend</option>
                      </select>
@@ -119,6 +120,13 @@ if (isset($_POST['delete_user'])) {
                      if (count($frontendUsers) == 0 && count($backendUsers) == 0) {
                         echo '<p class="empty">No users</p>';
                      }
+                     if (count($frontendUsers) == 0 && $_POST['users'] == 'frontend') {
+                        echo '<p class="empty">No frontend users</p>';
+                     }
+                     if (count($backendUsers) == 0 && $_POST['users'] == 'backend') {
+                        echo '<p class="empty">No backend users</p>';
+                     }
+
 
                      ?>
             </div>
