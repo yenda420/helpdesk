@@ -8,7 +8,7 @@ if (isset($_POST['submit'])) {
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    //echo $name . " " . $last_name . " " . $pass . "<br>";
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` where userPasswd = '$pass' and email='$email'") or die('query failed');
+   $select_users = mysqli_query($conn, "SELECT * FROM `users` where userPasswd = '$pass' and userEmail='$email'") or die('query failed');
    //$select_users = mysqli_query($conn, "SELECT * FROM `users` ") or die('query failed');
    if (mysqli_num_rows($select_users) > 0) {
       while ($fetch_users = mysqli_fetch_assoc($select_users)) {
