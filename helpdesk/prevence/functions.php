@@ -7,6 +7,7 @@
 
       return $departments;
     }
+
     function returnDepartmentName($conn, $departmentId) {
         $sql = "SELECT * FROM departments WHERE departmentId = $departmentId";
 
@@ -14,7 +15,8 @@
         $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
         return $department[0];
-      }
+    }
+
     function returnAllFrontendUsers($conn) {
         $sql = "SELECT * FROM users";
 
@@ -23,6 +25,7 @@
 
         return $users;
     }
+
     function returnAllBackendUsers($conn) {
         $sql = "SELECT * FROM admins";
 
@@ -58,6 +61,23 @@
         $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
     
         return $user[0];
+    }
+
+    function returnTicketTypesForDepartmentName($conn, $departmentName) {
+        if ($departmentName == 'All') {    
+            $sql = "SELECT * FROM ticket_types";
+        } else {
+            $sql = "
+                SELECT * 
+                FROM ticket_types
+                WHERE departmentName = $departmentName;
+            ";
+        }
+
+        $sqlResult = mysqli_query($conn, $sql);
+        $ticketTypes = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        return $ticketTypes;
     }
     
     function returnUser($conn, $userId) {
@@ -104,6 +124,7 @@
 
         return $ticketType[0];
     }
+    
     function returnTicketTypes($conn) {
         $ticket_types = mysqli_query($conn, "SELECT * FROM `ticket_types`") or die('query failed');
         return $ticket_types;
