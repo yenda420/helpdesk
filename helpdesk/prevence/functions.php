@@ -68,9 +68,9 @@
             $sql = "SELECT * FROM ticket_types";
         } else {
             $sql = "
-                SELECT * 
-                FROM ticket_types
-                WHERE departmentName = $departmentName;
+                SELECT *
+                FROM ticket_types INNER JOIN departments USING (departmentId)
+                WHERE departmentName = '{$departmentName}';
             ";
         }
 
