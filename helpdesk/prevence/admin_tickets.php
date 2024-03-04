@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (isset($_SESSION['admin_id'])) {
+    $admin_id = $_SESSION['admin_id'];
+} else {
+    header('location:index.php');
+}
 
 require("config.php");
 require("functions.php");
@@ -84,7 +89,9 @@ require("admin_header.php");
                         <select name="users">
                             <option value="" selected>--- Choose a user ---</option>
                             <?php foreach ($users as $user) { ?>
-                                <option <?php if ($_POST['users'] == $user['userId']) echo "selected" ?> value="<?= $user["userId"] ?>">
+                                <option <?php if ($_POST['users'] == $user['userId'])
+                                    echo "selected" ?>
+                                        value="<?= $user["userId"] ?>">
                                     <?= $user["userName"] ?>
                                     <?= $user["userSurname"] ?>
                                     <?= $user["userEmail"] ?>
@@ -96,21 +103,19 @@ require("admin_header.php");
                     <div class="inputBox">
                         <select name="types">
                             <option value="" selected>--- Choose a type ---</option>
-                            <?php
-                                    
-                                foreach ($ticketTypes as $ticketType) {
-                                    $selected = ($_POST['types'] == '{$ticketType["ticketTypeName"]}') ? "selected" : "";
-                                    echo "<option $selected value='{$ticketType["ticketTypeId"]}'>{$ticketType["ticketTypeName"]}</option>";
-                                }
-                            ?>
+                            <?php foreach ($ticketTypes as $ticketType) { ?>
+                                <option <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
+                                    echo "selected" ?>
+                                        value="<?= $ticketType["ticketTypeId"] ?>">
+                                    <?= $ticketType["ticketTypeName"] ?>
+                                <?php } ?>
                         </select>
                     </div>
 
                     <div class="inputBox">
-                        <input type="date" id="date" name="date"
-                            value="<?php if (isset($_POST['date'])) {
-                                echo $_POST['date'];
-                            } ?>">
+                        <input type="date" id="date" name="date" value="<?php if (isset($_POST['date'])) {
+                            echo $_POST['date'];
+                        } ?>">
                     </div>
 
                 </div>
@@ -119,116 +124,116 @@ require("admin_header.php");
         </form>
 
         <?php
-            if (empty($_POST["users"]) && empty($_POST["types"]) && empty($_POST["date"])) {         //List of all tickets:
-                if (numberOfTickets($conn) != 0) { ?>
-                    <div class="box-container">
-                        <?php 
-                            foreach ($tickets as $ticket) {
-                                $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]); 
-                                $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
+        if (empty($_POST["users"]) && empty($_POST["types"]) && empty($_POST["date"])) {         //List of all tickets:
+            if (numberOfTickets($conn) != 0) { ?>
+                <div class="box-container">
+                    <?php
+                    foreach ($tickets as $ticket) {
+                        $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
+                        $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
 
-                                <div class="box">
-                                    <div class="breaking">
-                                        <p>ID: <span>
-                                                <?= $ticket["ticketId"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Title: <span>
-                                                <?= $ticket["title"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Users name: <span>
-                                                <?= $user["userName"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Users surname: <span>
-                                                <?= $user["userSurname"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Users email: <span>
-                                                <?= $user["userEmail"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Ticket type: <span>
-                                                <?= $ticketType ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Description: <span>
-                                                <?= $ticket["ticketDesc"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Ticket date: <span>
-                                                <?= $ticket['ticketDate'] ?>
-                                            </span></p>
-                                    </div>
-                                    <form method="POST">
-                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                        <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                                    </form>
-                                </div>
-                        <?php } ?>
-                    </div>
-                <?php } else { //No ticket instances database ?>
-                    <div class="box-container notickets">
-                        <p class="empty">
-                            No ticket instances database
-                        </p>
-                    </div>
-                <?php } ?>
-            <?php } else {
-                if (mysqli_num_rows($fullQueryResult) > 0) { ?>
-                    <div class="box-container">
-                        <?php foreach ($tickets as $ticket) { //List of selected tickets: 
-                                $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
+                        <div class="box">
+                            <div class="breaking">
+                                <p>ID: <span>
+                                        <?= $ticket["ticketId"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Title: <span>
+                                        <?= $ticket["title"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users name: <span>
+                                        <?= $user["userName"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users surname: <span>
+                                        <?= $user["userSurname"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users email: <span>
+                                        <?= $user["userEmail"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Ticket type: <span>
+                                        <?= $ticketType ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Description: <span>
+                                        <?= $ticket["ticketDesc"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Ticket date: <span>
+                                        <?= $ticket['ticketDate'] ?>
+                                    </span></p>
+                            </div>
+                            <form method="POST">
+                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
+                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } else { //No ticket instances database  ?>
+                <div class="box-container notickets">
+                    <p class="empty">
+                        No ticket instances database
+                    </p>
+                </div>
+            <?php } ?>
+        <?php } else {
+            if (mysqli_num_rows($fullQueryResult) > 0) { ?>
+                <div class="box-container">
+                    <?php foreach ($tickets as $ticket) { //List of selected tickets: 
+                                    $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
 
-                                <div class="box">
-                                    <div class="breaking">
-                                        <p>ID: <span>
-                                                <?= $ticket["ticketId"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Title: <span>
-                                                <?= $ticket["title"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Ticket type: <span>
-                                                <?= $ticketType ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Description: <span>
-                                                <?= $ticket["ticketDesc"] ?>
-                                            </span></p>
-                                    </div>
-                                    <div class="breaking">
-                                        <p>Ticket date: <span>
-                                                <?= $ticket['ticketDate'] ?>
-                                            </span></p>
-                                    </div>
-                                    <form method="POST">
-                                        <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                        <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                                    </form>
-                                </div>
-                        <?php } ?>
-                    </div>
-                <?php } else { ?>
-                    <div class="box-container notickets">
-                        <p class="empty">
-                            No tickets found
-                        </p>
-                    </div>
-                <?php }
-            } ?>
+                        <div class="box">
+                            <div class="breaking">
+                                <p>ID: <span>
+                                        <?= $ticket["ticketId"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Title: <span>
+                                        <?= $ticket["title"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Ticket type: <span>
+                                        <?= $ticketType ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Description: <span>
+                                        <?= $ticket["ticketDesc"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Ticket date: <span>
+                                        <?= $ticket['ticketDate'] ?>
+                                    </span></p>
+                            </div>
+                            <form method="POST">
+                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
+                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } else { ?>
+                <div class="box-container notickets">
+                    <p class="empty">
+                        No tickets found
+                    </p>
+                </div>
+            <?php }
+        } ?>
     </section>
     <script src="js/admin_script.js"></script>
     <?php include 'footer.php'; ?>
