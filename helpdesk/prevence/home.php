@@ -44,7 +44,7 @@ session_start();
                                  <?php echo $fetch_tickets['title']; ?>
                               </span> </p></div>
                               <div class="breaking"><p> Type: <span>
-                                 <?php echo $fetch_tickets['ticketType']; ?>
+                                 <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
                               </span> </p></div>
                               <div class="breaking"><p> Date: <span>
                                  <?php echo $fetch_tickets['ticketDate']; ?>

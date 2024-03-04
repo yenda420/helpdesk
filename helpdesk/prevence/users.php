@@ -67,48 +67,36 @@ if (isset($_POST['delete_user'])) {
 
          <div class="box-container">
             <?php
-            if (isset($_POST['filter']) && $_POST['users'] == 'frontend') {
-               $frontendUsers = returnAllFrontendUsers($conn);
+             $frontendUsers = returnAllFrontendUsers($conn);
+             $backendUsers = returnAllBackendUsers($conn);
+            if (isset($_POST['filter']) && $_POST['users'] == 'frontend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                foreach ($frontendUsers as $user) {
                   echo '<div class="box">
                   <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
                   <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
-                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
+                  <div class="breaking"><p> Email : <span>'.$user['userEmail'].'</span> </p></div>
                   <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
                   <button type="submit" name="delete_user" class="delete-btn">Delete</button>
                   </div>';
                }
             }
-            else if (isset($_POST['filter']) && $_POST['users'] == 'backend') {
-               $backendUsers = returnAllBackendUsers($conn);
+            if (isset($_POST['filter']) && $_POST['users'] == 'backend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                foreach ($backendUsers as $user) {
                   echo '<div class="box">
-                  <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
-                  <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
-                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
-                  <div class="breaking"><p> Department : <span>'.$user['department'].'</span> </p></div>
-                  <input type="hidden" name="user_id" value="' . $user['userId'] . '"> <br>
+                  <div class="breaking"><p> Name : <span>'.$user['adminName'].'</span> </p></div>
+                  <div class="breaking"><p> Surname : <span>'.$user['adminSurname'].'</span> </p></div>
+                  <div class="breaking"><p> Email : <span>'.$user['adminEmail'].'</span> </p></div>
+                  <div class="breaking"><p> Department : <span>'.returnDepartmentName($conn, $user['departmentId'])['departmentName'].'</span> </p></div>
+                  <input type="hidden" name="user_id" value="' . $user['adminId'] . '"> <br>
                   <button type="submit" name="delete_user" class="delete-btn">Delete</button>
                   </div>';
                }
             }
-            else{
-               $allUsers = returnAllUsers($conn);
-               foreach ($allUsers as $user) {
-                  echo '<div class="box">
-                  <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
-                  <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
-                  <div class="breaking"><p> Email : <span>'.$user['email'].'</span> </p></div>
-                  <div class="breaking"><p> Type : <span>'.$user['userType'].'</span> </p></div>
-                  ';
-                  if($user['userType'] == "backend") {
-                     echo'<div class="breaking"><p> Department : <span>'.$user['department'].'</span> </p></div>';
-                  }
-                  echo'<input type="hidden" name="user_id" value="' . $user['userId'] . '"> <br>
-                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                  </div>';
-               }
+            //if there are no users
+            if (count($frontendUsers) == 0 && count($backendUsers) == 0){
+               echo '<p class="empty">No users</p>';
             }
+
             ?>
          </div>
 

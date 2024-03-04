@@ -20,8 +20,8 @@
       $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswdConf']));
       $depmnt = mysqli_real_escape_string($conn, $_POST['type']);
 
-      $sqlInsert = "INSERT INTO `users` (userName, userSurname, userPasswd, userType, email, department) 
-                     VALUES ('$name', '$surname', '$pass', 'backend','$email', '$depmnt')";
+      $sqlInsert = "INSERT INTO `admins` (adminName, adminSurname, adminEmail, adminPasswd, departmentId) 
+                     VALUES ('$name', '$surname', '$email','$cpass', '$depmnt')";
 
       if ($pass == $cpass) {
          if (strlen($_POST['createAdminPasswd']) >= 8) {
@@ -91,17 +91,12 @@
                     </div>
                     <div class="inputBox">
                         <select name="type" required>
-                            <option value="" selected>--- Select department ---</option>
                             <?php
-                            //select all ticket types (ticketType, enum) from table tickets
-                            $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'users' AND COLUMN_NAME = 'department'");
-                            $type_row = mysqli_fetch_assoc($type_query);
-                            $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE']) - 6))));
-
-                            foreach ($types as $type) {
-                                echo "<option value='$type'>$type</option>";
-                            }
-                            ?>
+                                $departments = returnDepartments($conn);
+                                 foreach ($departments as $department) {
+                                       echo "<option value='{$department['departmentId']}'>{$department['departmentName']}</option>";
+                                 }
+                              ?>
                         </select>
                     </div>
                     <div class="inputBox">

@@ -28,7 +28,7 @@ if(isset($_POST['accept_request'])) {
    $req_surname = $fetch_request['reqSurname'];
    $req_password = $fetch_request['reqPasswd'];
    $req_email = $fetch_request['reqEmail'];
-   $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userPasswd, userType,email) VALUES ('$req_name', '$req_surname', '$req_password', 'frontend','$req_email')") or die('query failed');
+   $insert_user = mysqli_query($conn, "INSERT INTO `users` (userName, userSurname, userEmail, userPasswd) VALUES ('$req_name', '$req_surname', '$req_email','$req_password')") or die('query failed');
    if($insert_user) {
        $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
        if($delete_query) {

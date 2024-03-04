@@ -1,6 +1,7 @@
 <?php
 
 include 'config.php';
+require('functions.php');
 
 session_start();
 if(isset($_SESSION['user_id'])) {
@@ -13,12 +14,7 @@ if(isset($_POST['send_btn'])) {
    $type = $_POST['type'];
    $description = $_POST['description'];
    $date = date('Y-m-d');
-   if($type == "Billing and Payments") {
-      $department = "Sales";
-   } else {
-      $department = "Logistics";
-   }
-   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`, `ticketType`, `ticketDesc`,`ticketDate`,`userId`,`department`) VALUES ('$title', '$type', '$description','$date','$user_id', '$department')");
+   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`,`ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) VALUES ('$title', '$description','$date','$user_id', '$type')");
    if($send_query) {
       $message[] = "Ticket sent successfully";
    } else {
@@ -58,14 +54,11 @@ if(isset($_POST['send_btn'])) {
             <select name="type" required>
                <option value="" selected>--- Select type ---</option>
               <?php
-                  //select all ticket types (ticketType, enum) from table tickets
-                  $type_query = mysqli_query($conn, "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tickets' AND COLUMN_NAME = 'ticketType'");
-                  $type_row = mysqli_fetch_assoc($type_query);
-                  $types = explode(",", str_replace("'", "", substr($type_row['COLUMN_TYPE'], 5, (strlen($type_row['COLUMN_TYPE'])-6))));
-                  
-                  foreach($types as $type) {
-                     echo "<option value='$type'>$type</option>";
-                  }
+               $ticket_types = returnTicketTypes($conn);
+               foreach ($ticket_types as $ticket_type) {
+                  echo "<option value='{$ticket_type['ticketTypeId']}'>{$ticket_type['ticketTypeName']}</option>";
+               }
+                 
                ?>
             </select>
          </div>

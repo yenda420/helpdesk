@@ -1,39 +1,29 @@
 <?php
-    function returtnAllTickets($conn) {
-        $sql = "SELECT * FROM tickets";
-
-        $sqlResult = mysqli_query($conn, $sql);
-        $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-        return $tickets;
+   function returnDepartments($conn) {
+      $sql = "SELECT * FROM departments";
+      $sqlResult = mysqli_query($conn, $sql);
+      $departments = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+      return $departments;
     }
-
-    function returnAllUsers($conn) {
+    function returnDepartmentName($conn, $departmentId) {
+        $sql = "SELECT * FROM departments WHERE departmentId = $departmentId";
+        $sqlResult = mysqli_query($conn, $sql);
+        $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+        return $department[0];
+      }
+    function returnAllFrontendUsers($conn) {
         $sql = "SELECT * FROM users";
 
         $sqlResult = mysqli_query($conn, $sql);
         $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
         return $users;
     }
-
-    function returnAllFrontendUsers($conn) {
-        $sql = "SELECT * FROM users WHERE userType = 'frontend'";
-
-        $sqlResult = mysqli_query($conn, $sql);
-        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-        if (mysqli_num_rows($sqlResult) == 0) return 0;
-        else return $users;
-    }
     function returnAllBackendUsers($conn) {
-        $sql = "SELECT * FROM users WHERE userType = 'backend'";
+        $sql = "SELECT * FROM admins";
 
         $sqlResult = mysqli_query($conn, $sql);
         $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-        if (mysqli_num_rows($sqlResult) == 0) return 0;
-        else return $users;
+        return $users;
     }
 
     function returnTicketsForSelectedUser($conn, $data) {
@@ -99,6 +89,18 @@
 
         return $numberOfRecords;
     }
+    function returnTicketTypeName($conn, $ticketTypeId) {
+        $sql = "SELECT * FROM ticket_types WHERE ticketTypeId = $ticketTypeId";
+
+        $sqlResult = mysqli_query($conn, $sql);
+        $ticketType = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+        return $ticketType[0];
+    }
+    function returnTicketTypes($conn) {
+        $ticket_types = mysqli_query($conn, "SELECT * FROM `ticket_types`") or die('query failed');
+        return $ticket_types;
+     }
 
     function numberOfTickets($conn) {
         $sql = "SELECT * FROM tickets;";
