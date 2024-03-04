@@ -10,17 +10,28 @@ if (isset($_SESSION['admin_id'])) {
    header('location:index.php');
 }
 if (isset($_POST['delete_user'])) {
-   $user_id = $_POST['user_id'];
-   // Perform the deletion query
-   $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = '$user_id'");
-   if ($delete_query) {
-      mysqli_query($conn, "DELETE FROM `users` where userId = '$user_id'");
-      $message[] = "User deleted successfully";
-   } else {
-      $message[] = "Error deleting user";
+   if(isset($_POST['user_id'])){
+      $user_id = $_POST['user_id'];
+      $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = $user_id");
+      if($delete_query){
+         $delete_query = mysqli_query($conn, "DELETE FROM `users` WHERE userId = $user_id");
+         $message[] = "User deleted successfully";
+      } else {
+         $message[] = "Error deleting user";
    }
+ }
+   else if(isset($_POST['admin_id'])){
+      $admin_id = $_POST['admin_id'];
+      $delete_query = mysqli_query($conn, "DELETE FROM `admins` WHERE adminId = $admin_id");
+      if($delete_query){
+         $message[] = "Admin deleted successfully";
+      } else {
+         $message[] = "Error deleting admin";
+   }
+   
+  
+ }
 }
-
 
 
 ?>
@@ -72,23 +83,29 @@ if (isset($_POST['delete_user'])) {
             if (isset($_POST['filter']) && $_POST['users'] == 'frontend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                foreach ($frontendUsers as $user) {
                   echo '<div class="box">
+                  <div class="breaking"><p> ID : <span>'.$user['userId'].'</span> </p></div>
                   <div class="breaking"><p> Name : <span>'.$user['userName'].'</span> </p></div>
                   <div class="breaking"><p> Surname : <span>'.$user['userSurname'].'</span> </p></div>
                   <div class="breaking"><p> Email : <span>'.$user['userEmail'].'</span> </p></div>
+                  <form method="POST">
                   <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
                   <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                  </form>
                   </div>';
                }
             }
             if (isset($_POST['filter']) && $_POST['users'] == 'backend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                foreach ($backendUsers as $user) {
                   echo '<div class="box">
+                  <div class="breaking"><p> ID : <span>'.$user['adminId'].'</span> </p></div>
                   <div class="breaking"><p> Name : <span>'.$user['adminName'].'</span> </p></div>
                   <div class="breaking"><p> Surname : <span>'.$user['adminSurname'].'</span> </p></div>
                   <div class="breaking"><p> Email : <span>'.$user['adminEmail'].'</span> </p></div>
                   <div class="breaking"><p> Department : <span>'.returnDepartmentName($conn, $user['departmentId'])['departmentName'].'</span> </p></div>
-                  <input type="hidden" name="user_id" value="' . $user['adminId'] . '"> <br>
+                  <form method="POST">
+                  <input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
                   <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                  </form>
                   </div>';
                }
             }
