@@ -1,14 +1,18 @@
 <?php
    function returnDepartments($conn) {
       $sql = "SELECT * FROM departments";
+
       $sqlResult = mysqli_query($conn, $sql);
       $departments = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
       return $departments;
     }
     function returnDepartmentName($conn, $departmentId) {
         $sql = "SELECT * FROM departments WHERE departmentId = $departmentId";
+
         $sqlResult = mysqli_query($conn, $sql);
         $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
         return $department[0];
       }
     function returnAllFrontendUsers($conn) {
@@ -16,6 +20,7 @@
 
         $sqlResult = mysqli_query($conn, $sql);
         $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
         return $users;
     }
     function returnAllBackendUsers($conn) {
@@ -23,6 +28,7 @@
 
         $sqlResult = mysqli_query($conn, $sql);
         $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
         return $users;
     }
 
@@ -36,12 +42,13 @@
 
         $sqlResult = mysqli_query($conn, $sql);
         $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
         return $tickets;
     }
 
     function returnUserForSelectedTicket($conn, $ticketId) {
         $sql = "
-            SELECT u.userName, u.userSurname, u.email
+            SELECT u.userName, u.userSurname, u.userEmail
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND t.ticketId = $ticketId;
