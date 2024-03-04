@@ -114,7 +114,7 @@
         $sqlUsers = "
             SELECT *
             FROM users
-            WHERE email = '{$email}';
+            WHERE userEmail = '{$email}';
         ";
 
         $sqlRequests = "
