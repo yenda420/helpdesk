@@ -9,6 +9,18 @@ if (isset($_SESSION['admin_id'])) {
 require("config.php");
 require("functions.php");
 
+
+if (isset($_POST['delete_ticket'])) {
+    $ticket_id = $_POST['ticket_id'];
+    // Perform the deletion query
+    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
+    if ($delete_query) {
+        // Redirect to the same page after deletio
+        $message[] = "Ticket deleted successfully";
+    } else {
+        $message[] = "Failed to delete ticket";
+    }
+}
 $users = returnAllFrontendUsers($conn);
 
 $ticketTypes = returnTicketTypesForDepartmentName($conn, $_SESSION['department']);
@@ -38,18 +50,6 @@ if (!empty($_POST["date"])) {
 
 $fullQueryResult = mysqli_query($conn, $fullQuery);
 $tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
-
-if (isset($_POST['delete_ticket'])) {
-    $ticket_id = $_POST['ticket_id'];
-    // Perform the deletion query
-    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
-    if ($delete_query) {
-        // Refresh the page after deletion
-        header("Refresh:0");
-    } else {
-        echo "Error deleting request.";
-    }
-}
 
 if (!isset($_POST['users'])) {
     $_POST['users'] = null;
