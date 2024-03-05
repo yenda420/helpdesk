@@ -79,7 +79,7 @@ if (isset($_POST['delete_user'])) {
                      </select>
                   </div>
                   <div class="inputBox">
-                     <button type="submit" name="filter" class="btn">Filter</button>
+                     <button type="submit" name="filter" class="btn">Show users</button>
                   </div><br>
                </div>
 
@@ -93,27 +93,32 @@ if (isset($_POST['delete_user'])) {
                                     <div class="breaking"><p> ID : <span>' . $user['userId'] . '</span> </p></div>
                                     <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
                                     <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
-                                    <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>
-                     
-                                       <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
-                                       <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
-                                    
+                                    <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>';
+
+                           if ($_SESSION['department'] == 'All') {
+                                    echo '<input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
+                                    <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
                                  </div>';
+                           } else {
+                              echo '</div>';
+                           }
                         }
                      }
                      if (isset($_POST['filter']) && $_POST['users'] == 'backend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                         foreach ($backendUsers as $user) {
                            echo '<div class="box">
-                                 <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
-                                 <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
-                                 <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
-                                 <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
-                                 <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>
-                                   
-                                       <input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
+                                    <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
+                                    <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
+                                    <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
+                                    <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
+                                    <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>';
+                           if ($_SESSION['department'] == 'All') {
+                                       echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
                                        <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button>
-                                   
                                  </div>';
+                           } else {
+                              echo '</div>';
+                           }
                         }
                      }
                      //if there are no users
