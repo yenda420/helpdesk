@@ -91,6 +91,7 @@
                     </div>
                     <div class="inputBox">
                         <select name="type" required>
+                           <option value="" selected>--- Choose a department ---</option>
                             <?php
                                 $departments = returnDepartments($conn);
                                  foreach ($departments as $department) {
