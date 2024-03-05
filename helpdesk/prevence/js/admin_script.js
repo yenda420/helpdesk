@@ -15,3 +15,6 @@ window.onscroll = () =>{
    navbar.classList.remove('active');
    accountBox.classList.remove('active');
 }
+function confirmDelete(){
+  return confirm('Are you sure you want to delete this item?');
+}
