@@ -1,167 +1,192 @@
 <?php
-   function returnDepartments($conn) {
-      $sql = "SELECT * FROM departments";
+function returnDepartments($conn)
+{
+    $sql = "SELECT * FROM departments";
 
-      $sqlResult = mysqli_query($conn, $sql);
-      $departments = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $departments = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-      return $departments;
-    }
+    return $departments;
+}
 
-    function returnDepartmentName($conn, $departmentId) {
-        $sql = "SELECT * FROM departments WHERE departmentId = $departmentId";
+function returnDepartmentName($conn, $departmentId)
+{
+    $sql = "SELECT * FROM departments WHERE departmentId = $departmentId";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-        return $department[0];
-    }
+    return $department[0];
+}
 
-    function returnAllFrontendUsers($conn) {
-        $sql = "SELECT * FROM users";
+function returnAllFrontendUsers($conn)
+{
+    $sql = "SELECT * FROM users";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-        return $users;
-    }
+    return $users;
+}
 
-    function returnAllBackendUsers($conn) {
-        $sql = "SELECT * FROM admins";
+function returnAllBackendUsers($conn)
+{
+    $sql = "SELECT * FROM admins";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-        return $users;
-    }
+    return $users;
+}
 
-    function returnTicketsForSelectedUser($conn, $data) {
-        $sql = "
+function returnTicketsForSelectedUser($conn, $data)
+{
+    $sql = "
             SELECT *
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND u.userId = '{$data["users"]}';
         ";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $tickets = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-        return $tickets;
-    }
+    return $tickets;
+}
 
-    function returnUserForSelectedTicket($conn, $ticketId) {
-        $sql = "
+function returnUserForSelectedTicket($conn, $ticketId)
+{
+    $sql = "
             SELECT u.userName, u.userSurname, u.userEmail
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND t.ticketId = $ticketId;
         ";
-    
-        $sqlResult = mysqli_query($conn, $sql);
-        $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-    
-        return $user[0];
-    }
 
-    function returnTicketTypesForDepartmentName($conn, $departmentName) {
-        if ($departmentName == 'All') {    
-            $sql = "SELECT * FROM ticket_types";
-        } else {
-            $sql = "
+    $sqlResult = mysqli_query($conn, $sql);
+    $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $user[0];
+}
+
+function returnTicketTypesForDepartmentName($conn, $departmentName)
+{
+    if ($departmentName == 'All') {
+        $sql = "SELECT * FROM ticket_types";
+    } else {
+        $sql = "
                 SELECT *
                 FROM ticket_types INNER JOIN departments USING (departmentId)
                 WHERE departmentName = '{$departmentName}';
             ";
-        }
-
-        $sqlResult = mysqli_query($conn, $sql);
-        $ticketTypes = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-        return $ticketTypes;
-    }
-    
-    function returnUser($conn, $userId) {
-        $sql = "SELECT * FROM users WHERE userId = $userId";
-
-        $sqlResult = mysqli_query($conn, $sql);
-        $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-        return $user[0];
     }
 
-    function numberOfTicketsForUser($conn, $data) {
-        $sql = "
+    $sqlResult = mysqli_query($conn, $sql);
+    $ticketTypes = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $ticketTypes;
+}
+
+function returnUser($conn, $userId)
+{
+    $sql = "SELECT * FROM users WHERE userId = $userId";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $user[0];
+}
+
+function numberOfTicketsForUser($conn, $data)
+{
+    $sql = "
             SELECT *
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND u.userId = '{$data["users"]}';
         ";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $numberOfRecords = mysqli_num_rows($sqlResult);
+    $sqlResult = mysqli_query($conn, $sql);
+    $numberOfRecords = mysqli_num_rows($sqlResult);
 
-        return $numberOfRecords;
-    }
+    return $numberOfRecords;
+}
 
-    function numberOfTicketsForUserId($conn, $userId) {
-        $sql = "
+function numberOfTicketsForUserId($conn, $userId)
+{
+    $sql = "
             SELECT *
             FROM users u, tickets t
             WHERE u.userId = t.userId
                 AND u.userId = $userId;
         ";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $numberOfRecords = mysqli_num_rows($sqlResult);
+    $sqlResult = mysqli_query($conn, $sql);
+    $numberOfRecords = mysqli_num_rows($sqlResult);
 
-        return $numberOfRecords;
-    }
-    function returnTicketTypeName($conn, $ticketTypeId) {
-        $sql = "SELECT * FROM ticket_types WHERE ticketTypeId = $ticketTypeId";
+    return $numberOfRecords;
+}
+function returnTicketTypeName($conn, $ticketTypeId)
+{
+    $sql = "SELECT * FROM ticket_types WHERE ticketTypeId = $ticketTypeId";
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $ticketType = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    $sqlResult = mysqli_query($conn, $sql);
+    $ticketType = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-        return $ticketType[0];
-    }
-    
-    function returnTicketTypes($conn) {
-        $ticket_types = mysqli_query($conn, "SELECT * FROM `ticket_types`") or die('query failed');
-        return $ticket_types;
-     }
+    return $ticketType[0];
+}
 
-    function numberOfTickets($conn) {
-        $sql = "SELECT * FROM tickets;";
+function returnTicketTypes($conn)
+{
+    $ticket_types = mysqli_query($conn, "SELECT * FROM `ticket_types`") or die('query failed');
+    return $ticket_types;
+}
 
-        $sqlResult = mysqli_query($conn, $sql);
-        $numberOfRecords = mysqli_num_rows($sqlResult);
+function numberOfTickets($conn)
+{
+    $sql = "SELECT * FROM tickets;";
 
-        return $numberOfRecords;
-    }
+    $sqlResult = mysqli_query($conn, $sql);
+    $numberOfRecords = mysqli_num_rows($sqlResult);
 
-    function emailInDatabase($dbConnect, $email) {
+    return $numberOfRecords;
+}
 
-        $sqlUsers = "
+function emailInDatabase($dbConnect, $email)
+{
+
+    $sqlUsers = "
             SELECT *
             FROM users
             WHERE userEmail = '{$email}';
         ";
 
-        $sqlRequests = "
+    $sqlRequests = "
             SELECT *
             FROM requests
             WHERE reqEmail = '{$email}';
         ";
 
-        $sqlResultUsers = mysqli_query($dbConnect, $sqlUsers);
-        $numberOfRecordsUsers = mysqli_num_rows($sqlResultUsers);
+    $sqlRequests = "
+            SELECT *
+            FROM admins
+            WHERE adminEmail = '{$email}';
+        ";
 
-        $sqlResultRequests = mysqli_query($dbConnect, $sqlRequests);
-        $numberOfRecordsRequests = mysqli_num_rows($sqlResultRequests);
+    $sqlResultUsers = mysqli_query($dbConnect, $sqlUsers);
+    $numberOfRecordsUsers = mysqli_num_rows($sqlResultUsers);
 
-        if ($numberOfRecordsRequests == 0 && $numberOfRecordsUsers == 0) {
-            return 0;
-        } else {
-            return 1;
-        }
+    $sqlResultRequests = mysqli_query($dbConnect, $sqlRequests);
+    $numberOfRecordsRequests = mysqli_num_rows($sqlResultRequests);
+
+    $sqlResultAdmins = mysqli_query($dbConnect, $sqlRequests);
+    $numberOfRecordsAdmins = mysqli_num_rows($sqlResultRequests);
+
+    if ($numberOfRecordsRequests == 0 && 
+        $numberOfRecordsUsers == 0 && 
+        $numberOfRecordsRequests == 0) {
+        return 0;
+    } else {
+        return 1;
     }
+}
