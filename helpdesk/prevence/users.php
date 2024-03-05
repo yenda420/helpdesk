@@ -90,30 +90,30 @@ if (isset($_POST['delete_user'])) {
                      if (isset($_POST['filter']) && $_POST['users'] == 'frontend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                         foreach ($frontendUsers as $user) {
                            echo '<div class="box">
-                  <div class="breaking"><p> ID : <span>' . $user['userId'] . '</span> </p></div>
-                  <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
-                  <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
-                  <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>
-                  <form method="POST">
-                  <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
-                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                  </form>
-                  </div>';
+                                    <div class="breaking"><p> ID : <span>' . $user['userId'] . '</span> </p></div>
+                                    <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
+                                    <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
+                                    <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>
+                                    <form method="POST" onsubmit="return confirmDeletingUser();">
+                                       <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
+                                       <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                                    </form>
+                                 </div>';
                         }
                      }
                      if (isset($_POST['filter']) && $_POST['users'] == 'backend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                         foreach ($backendUsers as $user) {
                            echo '<div class="box">
-                  <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
-                  <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
-                  <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
-                  <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
-                  <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>
-                  <form method="POST">
-                  <input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
-                  <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                  </form>
-                  </div>';
+                                 <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
+                                 <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
+                                 <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
+                                 <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
+                                 <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>
+                                    <form method="POST" onsubmit="return confirmDeletingAdmin();">
+                                       <input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
+                                       <button type="submit" name="delete_user" class="delete-btn">Delete</button>
+                                    </form>
+                                 </div>';
                         }
                      }
                      //if there are no users

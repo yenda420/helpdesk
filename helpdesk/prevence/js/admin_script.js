@@ -15,6 +15,19 @@ window.onscroll = () =>{
    navbar.classList.remove('active');
    accountBox.classList.remove('active');
 }
-function confirmDelete(){
-  return confirm('Are you sure you want to delete this item?');
+
+function confirmDeletingUser(){
+  return confirm('Are you sure you want to delete this user?');
 }
+
+function confirmDeletingAdmin(){
+   return confirm('Are you sure you want to delete this admin user?');
+ }
+
+function confirmDeletingRequest(){
+   return confirm('Are you sure you want to delete this request?');
+ }
+
+ function confirmDeletingTicket(){
+   return confirm('Are you sure you want to delete this ticket?');
+ }
