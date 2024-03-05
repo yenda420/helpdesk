@@ -173,7 +173,7 @@ require("admin_header.php");
                                         <?= $ticket['ticketDate'] ?>
                                     </span></p>
                             </div>
-                            <form method="POST" onsubmit="return confirmDeletingAdmin();">
+                            <form method="POST" onsubmit="return confirmDeletingTicket();">
                                 <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
                                 <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
                             </form>
@@ -219,7 +219,7 @@ require("admin_header.php");
                                         <?= $ticket['ticketDate'] ?>
                                     </span></p>
                             </div>
-                            <form method="POST" onsubmit="return confirmDeletingAdmin();">
+                            <form method="POST" onsubmit="return confirmDeletingTicket();">
                                 <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
                                 <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
                             </form>

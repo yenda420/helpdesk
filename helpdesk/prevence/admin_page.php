@@ -80,7 +80,7 @@ if(isset($_POST['accept_request'])) {
          <!-- Add the delete button -->
          <form method="POST">
             <input type="hidden" name="request_id" value="<?php echo $fetch_requests['requestId']; ?>">
-            <button type="submit" name="delete_request" class="delete-btn" onclick="return confirmDelete()">Delete</button>
+            <button type="submit" name="delete_request" class="delete-btn" onclick="return confirmDeletingRequest()">Delete</button>
             <button type="submit" name="accept_request" class="btn">Accept</button>
          </form>
       </div>
