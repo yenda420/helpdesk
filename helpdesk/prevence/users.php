@@ -47,7 +47,7 @@ if (isset($_POST['delete_user'])) {
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Users</title>
+   <title>účty</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -94,10 +94,10 @@ if (isset($_POST['delete_user'])) {
                                     <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
                                     <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
                                     <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>
-                                    <form method="POST" onsubmit="return confirmDeletingUser();">
+                     
                                        <input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
-                                       <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                                    </form>
+                                       <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
+                                    
                                  </div>';
                         }
                      }
@@ -109,10 +109,10 @@ if (isset($_POST['delete_user'])) {
                                  <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
                                  <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
                                  <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>
-                                    <form method="POST" onsubmit="return confirmDeletingAdmin();">
+                                   
                                        <input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
-                                       <button type="submit" name="delete_user" class="delete-btn">Delete</button>
-                                    </form>
+                                       <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button>
+                                   
                                  </div>';
                         }
                      }
@@ -130,7 +130,7 @@ if (isset($_POST['delete_user'])) {
 
                      ?>
             </div>
-
+         </form>
       </section>
    </section>
    <script src="js/admin_script.js"></script>
