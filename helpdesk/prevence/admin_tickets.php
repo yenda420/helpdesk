@@ -77,7 +77,7 @@ require("admin_header.php");
     <title>Tickets</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
-    <link rel="stylesheet" href="css/searchbar.css">
+    <link rel="stylesheet" href="css/styly.css">
 </head>
 
 <body>
@@ -92,7 +92,7 @@ require("admin_header.php");
                 <div class="box-container">
 
                     <div class="inputBox">
-                        <select name="users" id="country" class="selectBar">
+                        <select name="users" id="usersid" class="selectBar">
                             <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
 
                             <?php foreach ($users as $user) { ?>
@@ -108,21 +108,29 @@ require("admin_header.php");
                             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         <script>
                             new SlimSelect({
-                                select: "select"
+                                select: "#usersid"
                             });
                         </script>
                     </div>
 
                     <div class="inputBox">
-                        <select name="types">
-                            <option value="" selected>--- Choose a type ---</option>
+                        <select name="types" id="typesid" class="selectBar">
+                            <option style="font-size: 1.8rem;" value="">Select a ticket type or type to search</option>
                             <?php foreach ($ticketTypes as $ticketType) { ?>
-                                <option <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
+                                <option style="font-size: 1.8rem;" <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
                                     echo "selected" ?>
                                         value="<?= $ticketType["ticketTypeId"] ?>">
                                     <?= $ticketType["ticketTypeName"] ?>
                                 <?php } ?>
                         </select>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
+                            integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
+                            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                        <script>
+                            new SlimSelect({
+                                select: "#typesid"
+                            });
+                        </script>
                     </div>
 
                     <div class="inputBox">
