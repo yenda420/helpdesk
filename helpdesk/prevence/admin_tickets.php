@@ -77,9 +77,7 @@ require("admin_header.php");
     <title>Tickets</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.min.css"
-        integrity="sha512-wCrId7bUEl7j1H60Jcn4imkkiIYRcoyq5Gcu3bpKAZYBJXHVMmkL4rhtyhelxSFuPMIoQjiVsanrHxcs2euu/w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/styly.css">
 </head>
 
 <body>
@@ -94,35 +92,24 @@ require("admin_header.php");
                 <div class="box-container">
 
                     <div class="inputBox">
-                        <select name="users" id="country">
-                            <option value="">Select your country</option>
+                        <select name="users" id="country" class="selectBar">
+                            <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
 
                             <?php foreach ($users as $user) { ?>
-                                <option <?php if ($_POST['users'] == $user['userId'])
+                                <option style="font-size: 1.8rem;" <?php if ($_POST['users'] == $user['userId'])
                                     echo "selected" ?>
                                         value="<?= $user["userId"] ?>">
-                                    <?= $user["userName"] ?>
-                                    <?= $user["userSurname"] ?>
                                     <?= $user["userEmail"] ?>
                                 </option>
                             <?php } ?>
                         </select>
-                        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
-                            integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
+                            integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
                             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                         <script>
-                            $(function () {
-                                $("#country").selectize();
+                            new SlimSelect({
+                                select: "select"
                             });
-                            /*var nameInput = document.getElementById('country');
-                            document.querySelector('form.pure-form').addEventListener('submit', function (e) {
-
-                                //prevent the normal submission of the form
-                                e.preventDefault();
-
-                                console.log(nameInput.value);
-                            });*/
                         </script>
                     </div>
 
@@ -206,7 +193,7 @@ require("admin_header.php");
                         </div>
                     <?php } ?>
                 </div>
-            <?php } else { //No ticket instances database     ?>
+            <?php } else { //No ticket instances database      ?>
                 <div class="box-container notickets">
                     <p class="empty">
                         No ticket instances database

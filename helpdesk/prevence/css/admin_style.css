@@ -579,6 +579,7 @@ form .flex .select {
 
 form .flex .inputBox {
   flex: 1 1 40rem;
+  inline-size: min-content;
 }
 
 form .flex input[type="submit"] {
