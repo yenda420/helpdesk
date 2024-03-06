@@ -41,6 +41,7 @@ if (!empty($_POST['users'])) {
 }
 
 if (!empty($_POST['types'])) {
+    echo $_POST['types'];
     $fullQuery .= " AND tps.ticketTypeId = '{$_POST['types']}' AND tps.ticketTypeId = tck.ticketTypeId";
 }
 
@@ -60,6 +61,10 @@ if (!isset($_POST['types'])) {
 }
 
 require("admin_header.php");
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -72,6 +77,9 @@ require("admin_header.php");
     <title>Tickets</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.min.css"
+        integrity="sha512-wCrId7bUEl7j1H60Jcn4imkkiIYRcoyq5Gcu3bpKAZYBJXHVMmkL4rhtyhelxSFuPMIoQjiVsanrHxcs2euu/w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -81,13 +89,14 @@ require("admin_header.php");
             <h1 class="title">Tickets</h1>
         </section>
 
-        <form method="post">
+        <form method="post" class="pure-form">
             <div class="flex">
                 <div class="box-container">
 
                     <div class="inputBox">
-                        <select name="users">
-                            <option value="" selected>--- Choose a user ---</option>
+                        <select name="users" id="country">
+                            <option value="">Select your country</option>
+
                             <?php foreach ($users as $user) { ?>
                                 <option <?php if ($_POST['users'] == $user['userId'])
                                     echo "selected" ?>
@@ -98,6 +107,23 @@ require("admin_header.php");
                                 </option>
                             <?php } ?>
                         </select>
+                        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+                            integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+                            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                        <script>
+                            $(function () {
+                                $("#country").selectize();
+                            });
+                            /*var nameInput = document.getElementById('country');
+                            document.querySelector('form.pure-form').addEventListener('submit', function (e) {
+
+                                //prevent the normal submission of the form
+                                e.preventDefault();
+
+                                console.log(nameInput.value);
+                            });*/
+                        </script>
                     </div>
 
                     <div class="inputBox">
@@ -180,7 +206,7 @@ require("admin_header.php");
                         </div>
                     <?php } ?>
                 </div>
-            <?php } else { //No ticket instances database  ?>
+            <?php } else { //No ticket instances database     ?>
                 <div class="box-container notickets">
                     <p class="empty">
                         No ticket instances database
