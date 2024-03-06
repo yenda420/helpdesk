@@ -191,7 +191,8 @@ section {
 .logo p{
   position: relative;
   left: 250px;
-  bottom: 51px
+  bottom: 51px;
+  width:150px;
 }
 
 .header .flex .navbar a {
