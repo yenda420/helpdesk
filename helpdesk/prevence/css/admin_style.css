@@ -156,18 +156,18 @@ section {
   z-index: 1000;
   background-color: var(--white);
   box-shadow: var(--box-shadow);
+  min-height: 12rem;
 }
 
 .header .flex {
   display: flex;
   align-items: center;
-  padding: 2rem;
+  padding: 0rem 1rem 0rem 1rem;
   justify-content: space-between;
   position: relative;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
-
 .header .flex .logo {
   font-size: 2.5rem;
   color: var(--black);
@@ -175,6 +175,23 @@ section {
 
 .header .flex .logo span {
   color: var(--orange);
+}
+
+.logo img{
+  max-width:  50%;
+  height: auto;
+  position: relative;
+  top:10px;
+}
+.logo {
+  order: -1;
+  width:30%;
+  margin-right: 0px;
+}
+.logo p{
+  position: relative;
+  left: 250px;
+  bottom: 51px
 }
 
 .header .flex .navbar a {
@@ -509,7 +526,7 @@ section {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1250px) {
   #menu-btn {
     display: inline-block;
   }

@@ -244,7 +244,7 @@ section {
 }
 
 .header .header-2 .flex {
-   padding: 2rem;
+   padding: 0rem 1rem 0rem 1rem;
    display: flex;
    align-items: center;
    justify-content: space-between;
@@ -276,14 +276,18 @@ section {
    text-decoration: underline;
 }
 
-.header .header-2 .flex .logo {
-   font-size: 2.5rem;
-   color: var(--orange);
+.logo img{
+   max-width:  50%;
+   height: auto;
+}
+.logo {
+   width:30%;
+   margin-right: 0px;
 }
 
 .header .header-2 .flex .navbar a {
    margin: 0 1rem;
-   font-size: 2rem;
+   font-size: 2.5rem;
    color: var(--light-color);
 }
 

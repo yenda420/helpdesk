@@ -24,7 +24,11 @@ if (isset($message)) {
 
    <div class="header-2">
       <div class="flex">
-         <a href="home.php" class="logo">Techbase</a>
+      <div class="logo">
+         <a href="home.php">
+            <img src="img/techbase_logo.png" alt="logo">
+         </a>
+      </div>
 
          <nav class="navbar">
             <a href="home.php">My tickets</a>

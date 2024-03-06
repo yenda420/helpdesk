@@ -21,13 +21,26 @@ if (isset($_POST['submit'])) {
             header('location:home.php');
       }
    } else if (mysqli_num_rows($select_admins) > 0) {
+      $_SESSION['admin_departments'] = array();
       while ($fetch_admins = mysqli_fetch_assoc($select_admins)) {
          $_SESSION['admin_name'] = $fetch_admins['adminName'];
          $_SESSION['admin_email'] = $fetch_admins['adminEmail'];
          $_SESSION['admin_id'] = $fetch_admins['adminId'];
          $_SESSION['admin_surname'] = $fetch_admins['adminSurname'];
-         $_SESSION['departmentId'] = $fetch_admins['departmentId'];
-         $_SESSION['department'] = returnDepartmentName($conn, $fetch_admins['departmentId'])['departmentName'];
+         //there is a table department_lists, an admin can have multiple departments
+         $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$_SESSION['admin_id']}'") or die('query failed');
+         if (mysqli_num_rows($select_departments) > 0) {
+            while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
+               //if there are more departmentIds for the same adminId, save them in an array
+               $_SESSION['departmentId'][] = $fetch_departments['departmentId'];
+               //now do the same for the department names
+               $_SESSION['department'][] = returnDepartmentName($conn, $fetch_departments['departmentId']);
+
+              
+            }
+         } else {
+            $message[] = 'Invalid email or password';
+         }
          header('location:admin_page.php');
       }
    } else {
