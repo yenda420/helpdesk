@@ -94,9 +94,8 @@ if (isset($_POST['delete_user'])) {
                                     <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
                                     <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
                                     <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>';
-
-                           if ($_SESSION['department'] == 'All') {
-                                    echo '<input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
+                           if ($_SESSION['department'] == 'Super-admin') {
+                              echo '<input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
                                     <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
                                  </div>';
                            } else {
@@ -110,10 +109,19 @@ if (isset($_POST['delete_user'])) {
                                     <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
                                     <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
                                     <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
-                                    <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>
-                                    <div class="breaking"><p> Department : <span>' . returnDepartmentName($conn, $user['departmentId'])['departmentName'] . '</span> </p></div>';
-                           if ($_SESSION['department'] == 'All') {
-                                       echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
+                                    <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>';
+                           echo '<div class="breaking"><p> Department : <span>';
+                           $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$user['adminId']}'") or die('query failed');
+                           $departmentNames = [];
+                           if (mysqli_num_rows($select_departments) > 0) {
+                              while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
+                                 $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId'])['departmentName'];
+                              }
+                           }
+                           echo implode(', ', $departmentNames);
+                           echo '</span> </p></div>';
+                           if ($_SESSION['department'] == 'Super-admin') {
+                              echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
                                        <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button>
                                  </div>';
                            } else {
