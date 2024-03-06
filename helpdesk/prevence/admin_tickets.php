@@ -23,6 +23,23 @@ if (isset($_POST['delete_ticket'])) {
 }
 $users = returnAllFrontendUsers($conn);
 
+$departmentNames = array();
+
+foreach ($_SESSION['department'] as $department) {
+    $departmentName = mysqli_real_escape_string($conn, returnDepartmentName($conn, $department['departmentId']));
+    if (!in_array($departmentName, $departmentNames))
+        array_push($departmentNames, $departmentName);
+}
+
+$ticketTypes = array();
+
+foreach ($departmentNames as $departmentName) {
+    $ticketTypesForDepartment = returnTicketTypesForDepartmentName($conn, $departmentName);
+    foreach ($ticketTypesForDepartment as $ticketType) {
+        array_push($ticketTypes, $ticketType);
+    }
+}
+
 $ticketTypes = returnTicketTypesForDepartmentName($conn, $_SESSION['department']);
 
 $fullQuery = "

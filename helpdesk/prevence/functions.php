@@ -16,7 +16,7 @@ function returnDepartmentName($conn, $departmentId)
     $sqlResult = mysqli_query($conn, $sql);
     $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
-    return $department[0];
+    return $department[0]['departmentName'];
 }
 
 function returnDepartmentId($conn, $departmentName)
@@ -92,10 +92,10 @@ function returnUserForSelectedTicket($conn, $ticketId)
 function returnTicketTypesForDepartmentName($conn, $departmentName)
 {
     if ($departmentName == 'Super-admin') {
-        $sql = "SELECT * FROM ticket_types";
+        $sql = "SELECT ticketTypeName, ticketTypeId FROM ticket_types";
     } else {
         $sql = "
-                SELECT *
+                SELECT ticketTypeName, ticketTypeId
                 FROM ticket_types INNER JOIN departments USING (departmentId)
                 WHERE departmentName = '{$departmentName}';
             ";
