@@ -19,7 +19,6 @@ if (isset($message)) {
       ';
    }
 }
-$departmentNames = array();
 foreach ($_SESSION['department'] as $departmentArray) {
    $departmentNames[] = $departmentArray['departmentName'];
 }
@@ -47,8 +46,8 @@ foreach ($_SESSION['department'] as $departmentArray) {
          <?php
          if ($departmentNames[0] == 'Super-admin') {
             echo '<a href="create_admin.php">Add Backend User</a>
-               <a href="create_admin.php">Add Department</a>
-               <a href="create_admin.php">Add Ticket</a>';
+               <a href="create_department.php">Add Department</a>
+               <a href="create_tickets.php">Add Ticket</a>';
          }
          ?>
       </nav>
