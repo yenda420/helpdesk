@@ -192,7 +192,6 @@ section {
   position: relative;
   left: 250px;
   bottom: 51px;
-  width:150px;
 }
 
 .header .flex .navbar a {
@@ -597,7 +596,6 @@ form .flex .select {
 
 form .flex .inputBox {
   flex: 1 1 40rem;
-  inline-size: min-content;
 }
 
 form .flex input[type="submit"] {
