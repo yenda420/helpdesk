@@ -40,8 +40,6 @@ foreach ($departmentNames as $departmentName) {
     }
 }
 
-$ticketTypes = returnTicketTypesForDepartmentName($conn, $_SESSION['department']);
-
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck, ticket_types tps 
