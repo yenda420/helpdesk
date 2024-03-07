@@ -19,10 +19,15 @@ if (isset($message)) {
       ';
    }
 }
-foreach ($_SESSION['department'] as $departmentArray) {
-   $departmentNames[] = $departmentArray['departmentName'];
+if (is_array($_SESSION['department'])) {
+ 
+   foreach ($_SESSION['department'] as $departmentArray) {
+     
+           $departmentNames[] = $departmentArray;
+      
+   }
 }
-?>
+?>  
 
 <header class="header">
 

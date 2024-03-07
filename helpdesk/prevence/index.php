@@ -32,9 +32,9 @@ if (isset($_POST['submit'])) {
          if (mysqli_num_rows($select_departments) > 0) {
             while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
                //if there are more departmentIds for the same adminId, save them in an array
-               $_SESSION['departmentId'][] = $fetch_departments['departmentId'];
+               $_SESSION['departmentId']= $fetch_departments['departmentId'];
                //now do the same for the department names
-               $_SESSION['department'][] = returnDepartmentName($conn, $fetch_departments['departmentId']);
+               $_SESSION['department'] = returnDepartmentName($conn, $fetch_departments['departmentId']);
 
               
             }

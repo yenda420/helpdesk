@@ -26,10 +26,11 @@ $users = returnAllFrontendUsers($conn);
 $departmentNames = array();
 
 foreach ($_SESSION['department'] as $department) {
-    $departmentName = mysqli_real_escape_string($conn, returnDepartmentName($conn, $department['departmentId']));
+    $departmentName = $department;
     if (!in_array($departmentName, $departmentNames))
         array_push($departmentNames, $departmentName);
 }
+//var_dump($departmentNames);
 
 $ticketTypes = array();
 
@@ -39,6 +40,9 @@ foreach ($departmentNames as $departmentName) {
         array_push($ticketTypes, $ticketType);
     }
 }
+
+
+
 
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 

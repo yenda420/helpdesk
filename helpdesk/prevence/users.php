@@ -115,7 +115,7 @@ if (isset($_POST['delete_user'])) {
                            $departmentNames = [];
                            if (mysqli_num_rows($select_departments) > 0) {
                               while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
-                                 $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId'])['departmentName'];
+                                 $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
                               }
                            }
                            echo implode(', ', $departmentNames);
