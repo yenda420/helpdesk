@@ -14,7 +14,8 @@ if(isset($_POST['send_btn'])) {
    $type = $_POST['type'];
    $description = $_POST['description'];
    $date = date('Y-m-d');
-   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`,`ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) VALUES ('$title', '$description','$date','$user_id', '$type')");
+   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`, `status`, `ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) 
+                                       VALUES ('$title', 'Waiting', '$description','$date','$user_id', '$type')");
    if($send_query) {
       $message[] = "Ticket sent successfully";
    } else {
