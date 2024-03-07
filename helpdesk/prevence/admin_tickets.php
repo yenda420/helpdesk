@@ -63,7 +63,9 @@ $fullQuery = "
     WHERE 1=1 AND (tps.departmentId = {$_SESSION['departmentId'][0]}
 ";
 foreach ($_SESSION['departmentId'] as $departmentId) {
-    $fullQuery .= " OR tps.departmentId = $departmentId";
+    if ($departmentId != $_SESSION['departmentId'][0]) {
+        $fullQuery .= " OR tps.departmentId = $departmentId";
+    }
 }
 $fullQuery .= ")";
 
