@@ -72,6 +72,15 @@ function returnAllBackendUsers($conn)
     return $users;
 }
 
+function returnAllUsers($conn) {
+    $sql = "SELECT * FROM admins, users";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $users;
+}
+
 function returnTicketsForSelectedUser($conn, $data)
 {
     $sql = "
