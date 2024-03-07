@@ -60,16 +60,17 @@ $enumValues = explode(',', str_replace("'", "", $enumString));
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
-    WHERE 1=1 AND (tps.departmentId = {$_SESSION['departmentId'][0]}
-";
-
-foreach ($_SESSION['departmentId'] as $departmentId) {
-    if ($departmentId != $_SESSION['departmentId'][0]) {
-        $fullQuery .= " OR tps.departmentId = $departmentId";
+    WHERE 1=1; ";
+    if($_SESSION['department'][0]!='Super-admin')
+    {
+        $fullQuery .=  "AND (tps.departmentId = {$_SESSION['departmentId'][0]}";
+        foreach ($_SESSION['departmentId'] as $departmentId) {
+            if ($departmentId != $_SESSION['departmentId'][0]) {
+                $fullQuery .= " OR tps.departmentId = $departmentId";
+            }
+        }
+        $fullQuery .= ")";
     }
-}
-
-$fullQuery .= ")";
 
 if (!empty($_POST['users'])) {
     $user = returnUser($conn, $_POST['users']);
