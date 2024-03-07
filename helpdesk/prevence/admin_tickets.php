@@ -164,7 +164,7 @@ require("admin_header.php");
                                 <?php } ?>
                         </select>
                         <select name="enumValues" id="enumValuesI #typesidd" class="selectBar">
-                            <option style="font-size: 1.8rem;" value="">Select a ticket status or type to search</option>
+                            <option style="font-size: 1.8rem;" value="">Select a ticket status</option>
                             <?php foreach ($enumValues as $value) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
                                     echo "selected" ?>
