@@ -19,7 +19,9 @@ if (isset($message)) {
       ';
    }
 }
+var_dump($_SESSION['department']) ;
 if (is_array($_SESSION['department'])) {
+  
  
    foreach ($_SESSION['department'] as $departmentArray) {
      
@@ -74,7 +76,10 @@ if (is_array($_SESSION['department'])) {
          <?php
          if($departmentNames[0] != 'Super-admin'){
             echo "<p>Departments: <span>";
-            echo implode(', ', $departmentNames);
+            foreach ($departmentNames as $department) {
+               echo $department;
+               echo ", ";
+            }
             echo "</span></p>";
          }
          else{
