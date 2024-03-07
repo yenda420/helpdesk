@@ -277,6 +277,15 @@ section {
   align-items: flex-start;
 }
 
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
 .dashboard .box-container .box {
   border-radius: 0.5rem;
   padding: 2rem;

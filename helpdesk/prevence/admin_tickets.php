@@ -57,6 +57,7 @@ $end = strrpos($enumString, ')');
 $enumString = substr($enumString, $start, $end - $start);
 $enumValues = explode(',', str_replace("'", "", $enumString));
 
+
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
@@ -135,7 +136,7 @@ require("admin_header.php");
 
         <form method="post" class="pure-form">
             <div class="flex">
-                <div class="box-container">
+                <div class="filters">
 
                     <div class="inputBox">
                         <select name="users" id="usersid" class="selectBar">
@@ -186,6 +187,18 @@ require("admin_header.php");
                                 select: "#typesid"
                             });
                         </script>
+                    </div>
+
+                    <div class="inputBox">
+                    <select name="enumValues" id="enumValuesI #typesidd" class="selectBar">
+                            <option style="font-size: 1.8rem;" value="">Select a ticket status</option>
+                            <?php foreach ($enumValues as $value) { ?>
+                                <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
+                                    echo "selected" ?>
+                                        value="<?= $value ?>">
+                                    <?= $value ?>
+                                <?php } ?>
+                        </select>
                     </div>
 
                     <div class="inputBox">
