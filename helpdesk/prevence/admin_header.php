@@ -29,7 +29,6 @@ if (is_array($_SESSION['department'])) {
       
    }
 }
-var_dump($depNames) ;
 ?>  
 
 <header class="header">
