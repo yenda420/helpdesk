@@ -57,6 +57,7 @@ $end = strrpos($enumString, ')');
 $enumString = substr($enumString, $start, $end - $start);
 $enumValues = explode(',', str_replace("'", "", $enumString));
 
+
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck, ticket_types tps 
