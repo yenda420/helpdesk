@@ -43,6 +43,9 @@ session_start();
                            <div class="breaking"><p> Title: <span>
                                  <?php echo $fetch_tickets['title']; ?>
                               </span> </p></div>
+                              <div class="breaking"><p> Status: <span>
+                                 <?php echo $fetch_tickets['status']; ?>
+                              </span> </p></div>
                               <div class="breaking"><p> Type: <span>
                                  <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
                               </span> </p></div>

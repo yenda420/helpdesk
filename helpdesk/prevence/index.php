@@ -1,8 +1,14 @@
 <?php
 
+session_start();
+session_unset();
+session_destroy();
+
 include 'config.php';
 require('functions.php');
+
 session_start();
+
 if (isset($_POST['submit'])) {
 
    $pass = hash('sha256', mysqli_real_escape_string($conn, $_POST['password']));
