@@ -145,7 +145,7 @@ require("admin_header.php");
 
                     <div class="inputBox">
                         <select name="users" id="usersid" class="selectBar">
-                            <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
+                            <option style="font-size: 1.8rem;" value="">Select a user</option>
 
                             <?php foreach ($users as $user) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['users'] == $user['userId'])
@@ -167,7 +167,7 @@ require("admin_header.php");
 
                     <div class="inputBox">
                         <select name="types" id="typesid" class="selectBar">
-                            <option style="font-size: 1.8rem;" value="">Select a ticket type or type to search</option>
+                            <option style="font-size: 1.8rem;" value="">Select a ticket type</option>
                             <?php foreach ($ticketTypes as $ticketType) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
                                     echo "selected" ?>
