@@ -1,29 +1,43 @@
 <?php
 
-include 'config.php';
+require 'config.php';
 require('functions.php');
 
 session_start();
 
 if (isset($_SESSION['admin_id'])) {
-   $admin_id = $_SESSION['admin_id'];
+   if ($_SESSION['department'][0]!='Super-admin') {
+      header('location:admin_page.php');
+   }
 } else {
    header('location:index.php');
 }
 
 if (isset($_POST['submit'])) {
-  $ticketName = $_POST['ticketName'];
-  $departmentName = $_POST['departmentName'];
-  $query = "select departmentId from departments where departmentName = '$departmentName'";
-  $result = mysqli_query($conn, $query);
-  $departmentId = mysqli_fetch_assoc($result)['departmentId'];
-  $insert = "INSERT INTO `ticket_types` (ticketTypeName, departmentId) VALUES ('$ticketName', '$departmentId');";
-  $result2 = mysqli_query($conn, $insert);
-  if ($result2) {
-    $message[] = 'Ticket was successfuly created.';
-  } else {
-    $message[] = 'Query failed.';
-  }
+   $name = mysqli_real_escape_string($conn, $_POST['ticketName']);
+   //if the department name is already in the database, don't add it again
+   $sql = "SELECT ticketTypeName FROM ticket_types WHERE ticketTypeName='$name'";
+   $result = mysqli_query($conn, $sql);
+   $ticket = mysqli_fetch_assoc($result);
+   if ($ticket) {
+      $message[] = 'Ticket type already exists.';
+   } else {
+      $departmentName = $_POST['departmentName'];
+      if(departmentExists($conn,$departmentName)) {
+         $department = returnDepartmentId($conn, $departmentName);
+         $departmentId = $department['departmentId'];
+         $query = "INSERT INTO `ticket_types` (ticketTypeName, departmentId) VALUES ('$name', '$departmentId');";
+         $result2 = mysqli_query($conn, $query);
+         if ($result2) {
+            $message[] = 'Ticket type was successfuly created.';
+         } else {
+            $message[] = 'Query failed.';
+         }
+      }
+      else {
+         $message[] = 'Department does not exist.';
+      }
+   }
  
 }
 ?>

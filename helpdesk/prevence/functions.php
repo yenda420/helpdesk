@@ -28,6 +28,19 @@ function returnDepartmentId($conn, $departmentName)
 
     return $department[0];
 }
+function departmentExists($conn, $departmentName)
+{
+    $sql = "SELECT * FROM departments WHERE departmentName = '$departmentName'";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $department = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    if ($department) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 function returnAdminId($conn, $adminEmail)
 {

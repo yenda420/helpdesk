@@ -1,24 +1,33 @@
 <?php
 
-include 'config.php';
+require 'config.php';
 require('functions.php');
 
 session_start();
-
 if (isset($_SESSION['admin_id'])) {
-   $admin_id = $_SESSION['admin_id'];
+   if ($_SESSION['department'][0]!='Super-admin') {
+      header('location:admin_page.php');
+   }
 } else {
    header('location:index.php');
 }
 
 if (isset($_POST['submit'])) {
    $name = mysqli_real_escape_string($conn, $_POST['createDepartmentName']);
-   $query = "INSERT INTO `departments` (departmentName) VALUES ('$name');";
-   $result = mysqli_query($conn, $query);
-   if($result){
-      $message[] = 'Department was successfuly created.';
+   //if the department name is already in the database, don't add it again
+   $sql = "SELECT departmentName FROM departments WHERE departmentName='$name'";
+   $result = mysqli_query($conn, $sql);
+   $department = mysqli_fetch_assoc($result);
+   if ($department) {
+      $message[] = 'Department already exists.';
    } else {
-      $message[] = 'Query failed.';
+      $query = "INSERT INTO `departments` (departmentName) VALUES ('$name');";
+      $result = mysqli_query($conn, $query);
+      if ($result) {
+         $message[] = 'Department was successfuly created.';
+      } else {
+         $message[] = 'Query failed.';
+      }
    }
  
 }
