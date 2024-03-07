@@ -175,15 +175,6 @@ require("admin_header.php");
                                     <?= $ticketType["ticketTypeName"] ?>
                                 <?php } ?>
                         </select>
-                        <select name="enumValues" id="enumValuesI #typesidd" class="selectBar">
-                            <option style="font-size: 1.8rem;" value="">Select a ticket status or type to search</option>
-                            <?php foreach ($enumValues as $value) { ?>
-                                <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
-                                    echo "selected" ?>
-                                        value="<?= $value ?>">
-                                    <?= $value ?>
-                                <?php } ?>
-                        </select>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
                             integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
                             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
