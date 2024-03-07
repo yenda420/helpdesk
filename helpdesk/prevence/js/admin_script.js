@@ -1,33 +1,33 @@
 let navbar = document.querySelector('.header .navbar');
 let accountBox = document.querySelector('.header .account-box');
 
-document.querySelector('#menu-btn').onclick = () =>{
+document.querySelector('#menu-btn').onclick = () => {
    navbar.classList.toggle('active');
    accountBox.classList.remove('active');
 }
 
-document.querySelector('#user-btn').onclick = () =>{
+document.querySelector('#user-btn').onclick = () => {
    accountBox.classList.toggle('active');
    navbar.classList.remove('active');
 }
 
-window.onscroll = () =>{
+window.onscroll = () => {
    navbar.classList.remove('active');
    accountBox.classList.remove('active');
 }
 
-function confirmDeletingUser(){
-  return confirm('Are you sure you want to delete this user?');
+function confirmDeletingUser() {
+   return confirm('Are you sure you want to delete this user?');
 }
 
-function confirmDeletingAdmin(){
+function confirmDeletingAdmin() {
    return confirm('Are you sure you want to delete this admin user?');
- }
+}
 
-function confirmDeletingRequest(){
+function confirmDeletingRequest() {
    return confirm('Are you sure you want to delete this request?');
- }
+}
 
- function confirmDeletingTicket(){
+function confirmDeletingTicket() {
    return confirm('Are you sure you want to delete this ticket?');
- }
+}
