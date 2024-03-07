@@ -110,20 +110,21 @@ if (isset($_POST['submit'])) {
                </div>
                <div class="inputBox">
                   <input type="password" name="createAdminPasswdConf" placeholder="Confirm password" required />
-               </div>
-               <div class="inputBox">
+               </div><br/>
                   <?php
                   $departments = returnDepartments($conn);
                   $i = 0;
 
                   foreach ($departments as $department) {
                      $i++;
-                     echo "<input type='checkbox' class='department' id=" . $i . " 
+                     echo '<div class="" style="display: flex;
+                     align-items: center;
+                     margin-bottom: 10px;">';
+                     echo "<input style='margin-right: 5px; order: -1;' type='checkbox' class='department' id=" . $i . " 
                            name='department[]' value=" . $department['departmentName'] . ">";
-                     echo "<label for=" . $i . ">" . $department['departmentName'] . "</label><br>";
+                     echo "<label for=" . $i . ">" . $department['departmentName'] . "</label></div>";
                   }
                   ?>
-               </div>
             </div>
             <input type="submit" value="Create" class="btn" name="submit">
          </form>
