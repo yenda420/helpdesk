@@ -19,16 +19,17 @@ if (isset($message)) {
       ';
    }
 }
-var_dump($_SESSION['department']) ;
+
 if (is_array($_SESSION['department'])) {
   
  
    foreach ($_SESSION['department'] as $departmentArray) {
      
-           $departmentNames[] = $departmentArray;
+           $depNames[] = $departmentArray;
       
    }
 }
+var_dump($depNames) ;
 ?>  
 
 <header class="header">
@@ -38,7 +39,7 @@ if (is_array($_SESSION['department'])) {
      
          <a href="admin_page.php" class="logo">
             <img src="img/techbase_logo.png" alt="logo">
-            <?php if ($departmentNames[0] == 'Super-admin') {
+            <?php if ($depNames[0] == 'Super-admin') {
                echo '<p><span>Super</span>Admin</p>';
             } else {
                echo '<p><span>Admin<span></p>';
@@ -51,7 +52,7 @@ if (is_array($_SESSION['department'])) {
          <a href="users.php">Users</a>
          <a href="admin_tickets.php">Tickets</a>
          <?php
-         if ($departmentNames[0] == 'Super-admin') {
+         if ($depNames[0] == 'Super-admin') {
             echo '<a href="create_admin.php">Add Backend User</a>
                <a href="create_department.php">Add Department</a>
                <a href="create_tickets.php">Add Ticket</a>';
@@ -74,17 +75,14 @@ if (is_array($_SESSION['department'])) {
                <?php echo $_SESSION['admin_email']; ?>
             </span></p>
          <?php
-         if($departmentNames[0] != 'Super-admin'){
+         if($depNames[0] != 'Super-admin'){
             echo "<p>Departments: <span>";
-            foreach ($departmentNames as $department) {
-               echo $department;
-               echo ", ";
-            }
+            echo implode(", ", $depNames);
             echo "</span></p>";
          }
          else{
             echo "<p>";
-            echo $departmentNames[0];
+            echo $depNames[0];
             echo "</p>";
          }
          ?>
