@@ -21,30 +21,28 @@ if (isset($message)) {
 }
 
 if (is_array($_SESSION['department'])) {
-  
- 
+
+
    foreach ($_SESSION['department'] as $departmentArray) {
-     
-           $depNames[] = $departmentArray;
-      
+      $depNames[] = $departmentArray;
    }
 }
-?>  
+?>
 
 <header class="header">
 
    <div class="flex">
 
-     
-         <a href="admin_page.php" class="logo">
-            <img src="img/techbase_logo.png" alt="logo">
-            <?php if ($depNames[0] == 'Super-admin') {
-               echo '<p><span>Super</span>Admin</p>';
-            } else {
-               echo '<p><span>Admin<span></p>';
-            } ?>
-         </a>
-    
+
+      <a href="admin_page.php" class="logo">
+         <img src="img/techbase_logo.png" alt="logo">
+         <?php if ($depNames[0] == 'Super-admin') {
+            echo '<p><span>Super</span>Admin</p>';
+         } else {
+            echo '<p><span>Admin<span></p>';
+         } ?>
+      </a>
+
 
       <nav class="navbar">
          <a href="admin_page.php">Requests</a>
@@ -74,12 +72,11 @@ if (is_array($_SESSION['department'])) {
                <?php echo $_SESSION['admin_email']; ?>
             </span></p>
          <?php
-         if($depNames[0] != 'Super-admin'){
+         if ($depNames[0] != 'Super-admin') {
             echo "<p>Departments: <span>";
             echo implode(", ", $depNames);
             echo "</span></p>";
-         }
-         else{
+         } else {
             echo "<p>";
             echo $depNames[0];
             echo "</p>";

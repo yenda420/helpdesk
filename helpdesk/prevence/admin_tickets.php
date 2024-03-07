@@ -21,6 +21,7 @@ if (isset($_POST['delete_ticket'])) {
         $message[] = "Failed to delete ticket";
     }
 }
+
 $users = returnAllFrontendUsers($conn);
 
 $departmentNames = array();
@@ -30,7 +31,6 @@ foreach ($_SESSION['department'] as $department) {
     if (!in_array($departmentName, $departmentNames))
         array_push($departmentNames, $departmentName);
 }
-//var_dump($departmentNames);
 
 $ticketTypes = array();
 
@@ -41,11 +41,24 @@ foreach ($departmentNames as $departmentName) {
     }
 }
 
+$ticketStatusQuery = "
+    SELECT COLUMN_TYPE 
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_SCHEMA = 'helpdesk' 
+    AND TABLE_NAME = 'tickets'
+    AND COLUMN_NAME = 'status';
+";
 
+$ticketStatusQueryResult = mysqli_query($conn, $ticketStatusQuery);
+$enumString = array_shift(mysqli_fetch_all($ticketStatusQueryResult, MYSQLI_ASSOC)[0]);
 
+$start = strpos($enumString, '(') + 1;
+$end = strrpos($enumString, ')');
+$enumString = substr($enumString, $start, $end - $start);
+$enumValues = explode(',', str_replace("'", "", $enumString));
 
 $fullQuery = "
-    SELECT DISTINCT tck.ticketId, tck.title, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
+    SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck, ticket_types tps 
     WHERE 1 = 1
 ";
@@ -60,8 +73,11 @@ if (!empty($_POST['users'])) {
 }
 
 if (!empty($_POST['types'])) {
-    echo $_POST['types'];
     $fullQuery .= " AND tps.ticketTypeId = '{$_POST['types']}' AND tps.ticketTypeId = tck.ticketTypeId";
+}
+
+if (!empty($_POST['enumValues'])) {
+    $fullQuery .= " AND tck.status = '{$_POST['enumValues']}'";
 }
 
 if (!empty($_POST["date"])) {
@@ -77,6 +93,10 @@ if (!isset($_POST['users'])) {
 
 if (!isset($_POST['types'])) {
     $_POST['types'] = null;
+}
+
+if (!isset($_POST['types'])) {
+    $_POST['enumValues'] = null;
 }
 
 require("admin_header.php");
@@ -142,6 +162,15 @@ require("admin_header.php");
                                     <?= $ticketType["ticketTypeName"] ?>
                                 <?php } ?>
                         </select>
+                        <select name="enumValues" id="enumValuesI #typesidd" class="selectBar">
+                            <option style="font-size: 1.8rem;" value="">Select a ticket status or type to search</option>
+                            <?php foreach ($enumValues as $value) { ?>
+                                <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
+                                    echo "selected" ?>
+                                        value="<?= $value ?>">
+                                    <?= $value ?>
+                                <?php } ?>
+                        </select>
                         <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
                             integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
                             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -164,7 +193,8 @@ require("admin_header.php");
         </form>
 
         <?php
-        if (empty($_POST["users"]) && empty($_POST["types"]) && empty($_POST["date"])) {         //List of all tickets:
+        if (empty($_POST["users"]) && empty($_POST["types"]) && 
+            empty($_POST["date"]) && empty($_POST["enumValues"])) { //List of all tickets:
             if (numberOfTickets($conn) != 0) { ?>
                 <div class="box-container">
                     <?php
@@ -181,6 +211,11 @@ require("admin_header.php");
                             <div class="breaking">
                                 <p>Title: <span>
                                         <?= $ticket["title"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Status: <span>
+                                        <?= $ticket["status"] ?>
                                     </span></p>
                             </div>
                             <div class="breaking">
