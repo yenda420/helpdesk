@@ -21,7 +21,6 @@ if (isset($_POST['delete_ticket'])) {
         $message[] = "Failed to delete ticket";
     }
 }
-
 $users = returnAllFrontendUsers($conn);
 
 $departmentNames = array();
@@ -63,11 +62,13 @@ $fullQuery = "
     FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
     WHERE 1=1 AND (tps.departmentId = {$_SESSION['departmentId'][0]}
 ";
+
 foreach ($_SESSION['departmentId'] as $departmentId) {
     if ($departmentId != $_SESSION['departmentId'][0]) {
         $fullQuery .= " OR tps.departmentId = $departmentId";
     }
 }
+
 $fullQuery .= ")";
 
 if (!empty($_POST['users'])) {
@@ -91,7 +92,6 @@ if (!empty($_POST["date"])) {
     $fullQuery .= " AND ticketDate = '{$_POST['date']}'";
 }
 
-echo $fullQuery;
 $fullQueryResult = mysqli_query($conn, $fullQuery);
 $tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
 
