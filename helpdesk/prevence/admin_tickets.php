@@ -21,6 +21,7 @@ if (isset($_POST['delete_ticket'])) {
         $message[] = "Failed to delete ticket";
     }
 }
+
 $users = returnAllFrontendUsers($conn);
 
 $departmentNames = array();
@@ -89,8 +90,11 @@ if (!empty($_POST['enumValues'])) {
     $fullQuery .= " AND tck.status = '{$_POST['enumValues']}'";
 }
 
-if (!empty($_POST["date"])) {
-    $fullQuery .= " AND ticketDate = '{$_POST['date']}'";
+if (!empty($_POST['start']) && !empty($_POST['end'])) {
+    $startDate = $_POST["start"];
+    $endDate = $_POST["end"];
+
+    $fullQuery .= " AND tck.ticketDate >= '$startDate' AND tck.ticketDate <= '$endDate'";
 }
 
 $fullQueryResult = mysqli_query($conn, $fullQuery);
@@ -109,10 +113,6 @@ if (!isset($_POST['types'])) {
 }
 
 require("admin_header.php");
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -123,13 +123,17 @@ require("admin_header.php");
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tickets</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="js/calendar.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
     <link rel="stylesheet" href="css/searchbar.css">
 </head>
 
 <body>
-
     <section class="dashboard">
         <section class="tickets">
             <h1 class="title">Tickets</h1>
@@ -202,12 +206,12 @@ require("admin_header.php");
                         </select>
                     </div>
 
-                    <div class="inputBox">
-                        <input type="date" id="date" name="date" value="<?php if (isset($_POST['date'])) {
-                            echo $_POST['date'];
-                        } ?>">
+                    <input type="hidden" id="start" name="start">
+                    <input type="hidden" id="end" name="end">
+                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span></span> <i class="fa fa-caret-down"></i>
                     </div>
-
                 </div>
                 <input type="submit" value="Show tickets" class="btn" name="show_tickets">
             </div>
