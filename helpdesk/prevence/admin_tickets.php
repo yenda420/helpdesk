@@ -219,7 +219,8 @@ require("admin_header.php");
                     <?php
                     foreach ($tickets as $ticket) {
                         $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
-                        $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
+                        $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
+                        $ticketDate = date_create($ticket['ticketDate']); ?>
 
                         <div class="box">
                             <div class="breaking">
@@ -264,7 +265,7 @@ require("admin_header.php");
                             </div>
                             <div class="breaking">
                                 <p>Ticket date: <span>
-                                        <?= $ticket['ticketDate'] ?>
+                                        <?= date_format($ticketDate, 'd.m.Y'); ?>
                                     </span></p>
                             </div>
                             <form method="POST" onsubmit="return confirmDeletingTicket();">
@@ -285,7 +286,8 @@ require("admin_header.php");
             if (mysqli_num_rows($fullQueryResult) > 0) { ?>
                 <div class="box-container">
                     <?php foreach ($tickets as $ticket) { //List of selected tickets: 
-                                    $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName']; ?>
+                            $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
+                            $ticketDate = date_create($ticket['ticketDate']); ?>
 
                         <div class="box">
                             <div class="breaking">
@@ -296,6 +298,11 @@ require("admin_header.php");
                             <div class="breaking">
                                 <p>Title: <span>
                                         <?= $ticket["title"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Status: <span>
+                                        <?= $ticket["status"] ?>
                                     </span></p>
                             </div>
                             <div class="breaking">
@@ -310,7 +317,7 @@ require("admin_header.php");
                             </div>
                             <div class="breaking">
                                 <p>Ticket date: <span>
-                                        <?= $ticket['ticketDate'] ?>
+                                        <?= date_format($ticketDate, 'd.m.Y'); ?>
                                     </span></p>
                             </div>
                             <form method="POST" onsubmit="return confirmDeletingTicket();">
