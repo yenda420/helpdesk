@@ -736,6 +736,7 @@ textarea {
   padding: 14px 16px;
   background-color: inherit;
   font-family: inherit;
+  cursor: pointer;
 }
 
 .dropdown-content {
