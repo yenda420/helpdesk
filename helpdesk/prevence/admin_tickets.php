@@ -134,6 +134,7 @@ require("admin_header.php");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
     <link rel="stylesheet" href="css/searchbar.css">
+    <link rel="stylesheet" href="css/daterange.css">
 </head>
 
 <body>
@@ -146,8 +147,8 @@ require("admin_header.php");
             <div class="flex">
                 <div class="filters">
 
-                    <div class="inputBox">
-                        <select name="users" id="usersid" class="selectBar">
+                    <div class="inputBox" align="center">
+                        <select name="users" id="usersid" class="">
                             <option style="font-size: 1.8rem;" value="">Select a user</option>
 
                             <?php foreach ($users as $user) { ?>
@@ -168,8 +169,8 @@ require("admin_header.php");
                         </script>
                     </div>
 
-                    <div class="inputBox">
-                        <select name="types" id="typesid" class="selectBar">
+                    <div class="inputBox" align="center">
+                        <select name="types" id="typesid" class="">
                             <option style="font-size: 1.8rem;" value="">Select a ticket type</option>
                             <?php foreach ($ticketTypes as $ticketType) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
@@ -188,8 +189,8 @@ require("admin_header.php");
                         </script>
                     </div>
 
-                    <div class="inputBox">
-                    <select name="enumValues" id="enumValuesI #typesidd" class="selectBar">
+                    <div class="inputBox" align="center">
+                    <select name="enumValues" id="enumValuesI #typesidd" class="">
                             <option style="font-size: 1.8rem;" value="">Select a ticket status</option>
                             <?php foreach ($enumValues as $value) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
@@ -202,7 +203,7 @@ require("admin_header.php");
 
                     <input type="hidden" id="start" name="start">
                     <input type="hidden" id="end" name="end">
-                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                    <div id="reportrange" class="dateRange">
                         <i class="fa fa-calendar"></i>&nbsp;
                         <span></span> <i class="fa fa-caret-down"></i>
                     </div>
