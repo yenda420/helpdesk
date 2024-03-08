@@ -10,32 +10,48 @@ if (isset($_SESSION['admin_id'])) {
    header('location:index.php');
 }
 if (isset($_POST['delete_user'])) {
-   if ($_SESSION['department'] == 'All') {
-      if (isset($_POST['user_id'])) {
-         $user_id = $_POST['user_id'];
-         $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = $user_id");
-         if ($delete_query) {
-            $delete_query = mysqli_query($conn, "DELETE FROM `users` WHERE userId = $user_id");
-            $message[] = "User deleted successfully";
-         } else {
-            $message[] = "Error deleting user";
-         }
-      } else if (isset($_POST['admin_id'])) {
-         $admin_id = $_POST['admin_id'];
-         $delete_query = mysqli_query($conn, "DELETE FROM `admins` WHERE adminId = $admin_id");
-         if ($delete_query) {
-            $message[] = "Admin deleted successfully";
-         } else {
-            $message[] = "Error deleting admin";
-         }
-
-
+   if (isset($_POST['user_id'])) {
+      $user_id = $_POST['user_id'];
+      $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = $user_id");
+      if ($delete_query) {
+         $delete_query = mysqli_query($conn, "DELETE FROM `users` WHERE userId = $user_id");
+         $message[] = "User deleted successfully";
+      } else {
+         $message[] = "Error deleting user";
       }
-   } else {
-      $message[] = "You don't have permission to delete users";
+   } else if (isset($_POST['admin_id'])) {
+      $admin_id = $_POST['admin_id'];
+      $delete_query = mysqli_query($conn, "DELETE FROM `admins` WHERE adminId = $admin_id");
+      if ($delete_query) {
+         $message[] = "Admin deleted successfully";
+      } else {
+         $message[] = "Error deleting admin";
+      }
+
+
+   }
+}
+if (isset($_POST["change_dept"])) {
+   if (isset($_POST['admin_id']) && isset($_POST['department'])) {
+      $admin_id = $_POST['admin_id'];
+      $department_id = $_POST['department'];
+
+      // Delete existing departments
+      //$delete_query = mysqli_query($conn, "DELETE FROM `department_lists` WHERE `adminId` = $admin_id");
+
+      // Insert new departments
+     
+         //$department_id = returnDepartmentId($conn,$department_id)['departmentId'];
+         echo $department_id;
+         echo '<br>';
+         //$insert_query = mysqli_query($conn, "INSERT INTO `department_lists` (`adminId`, `departmentId`) VALUES ($admin_id, $department_id)");
+      
+
+      $message[] = "Departments updated successfully";
    }
 
 }
+
 
 
 ?>
@@ -94,7 +110,7 @@ if (isset($_POST['delete_user'])) {
                                     <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
                                     <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
                                     <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>';
-                           if ($_SESSION['department'] == 'Super-admin') {
+                           if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
                                     <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
                                  </div>';
@@ -105,11 +121,12 @@ if (isset($_POST['delete_user'])) {
                      }
                      if (isset($_POST['filter']) && $_POST['users'] == 'backend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                         foreach ($backendUsers as $user) {
+                           echo '<form method="post">';
                            echo '<div class="box">
-                                    <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
-                                    <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
-                                    <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
-                                    <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>';
+                                   <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
+                                   <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
+                                   <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
+                                   <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>';
                            echo '<div class="breaking"><p> Department : <span>';
                            $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$user['adminId']}'") or die('query failed');
                            $departmentNames = [];
@@ -118,15 +135,17 @@ if (isset($_POST['delete_user'])) {
                                  $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
                               }
                            }
-                           echo implode(', ', $departmentNames);
+                           echo '<input type="text" name="department" value="' . implode(', ', $departmentNames) . '">';
                            echo '</span> </p></div>';
-                           if ($_SESSION['department'] == 'Super-admin') {
+                           if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
                                        <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button>
-                                 </div>';
+                                       <button type="submit" name="change_dept" class="btn" onclick="return confirmChangingDepartments()">Change</button>
+                                   </div>';
                            } else {
                               echo '</div>';
                            }
+                           echo '</form>';
                         }
                      }
                      //if there are no users
