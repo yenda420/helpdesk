@@ -38,7 +38,8 @@ session_start();
 
                while ($fetch_tickets = mysqli_fetch_assoc($select_tickets)) {
                      if ($userId == $fetch_tickets['userId']) {
-                        ?>
+                        $ticketDate = date_create($fetch_tickets['ticketDate']); ?>
+                        
                         <div class="box">
                            <div class="breaking"><p> Title: <span>
                                  <?php echo $fetch_tickets['title']; ?>
@@ -50,9 +51,9 @@ session_start();
                                  <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
                               </span> </p></div>
                               <div class="breaking"><p> Date: <span>
-                                 <?php echo $fetch_tickets['ticketDate']; ?>
+                                 <?php echo date_format($ticketDate, 'd.m.Y'); ?>
                               </span> </p></div>
-                           <div class="breaking"><p> Description: <span>
+                              <div class="breaking"><p> Description: <span>
                                  <?php echo $fetch_tickets['ticketDesc']; ?>
                               </span> </p></div>
                         </div>
