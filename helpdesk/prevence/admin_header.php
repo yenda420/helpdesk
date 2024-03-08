@@ -30,10 +30,7 @@ if (is_array($_SESSION['department'])) {
 ?>
 
 <header class="header">
-
    <div class="flex">
-
-
       <a href="admin_page.php" class="logo">
          <img src="img/techbase_logo.png" alt="logo">
          <?php if ($depNames[0] == 'Super-admin') {
@@ -43,16 +40,48 @@ if (is_array($_SESSION['department'])) {
          } ?>
       </a>
 
+      <nav class="navbar" id="navbar-responsive">
+         <a href="admin_page.php" class="active">Requests</a>
 
-      <nav class="navbar">
-         <a href="admin_page.php">Requests</a>
-         <a href="users.php">Users</a>
-         <a href="admin_tickets.php">Tickets</a>
+         <div class="dropdown">
+            <button class="dropbtn">Users
+               <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+               <a href="users.php">See all users</a>
+               <a href="create_admin.php">Create backend user</a>
+            </div>
+         </div>
+
+         <div class="dropdown">
+            <button class="dropbtn">Tickets
+               <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+               <a href="admin_tickets.php">See all tickets</a>
+               <a href="#">See all ticket types</a>
+               <a href="create_tickets.php">Create ticket types</a>
+            </div>
+         </div>
+
+         <script>
+            function myFunction() {
+               var nav = document.getElementById("navbar-responsive");
+               if (nav.className === "navbar") {
+                  nav.className += " responsive";
+               } else {
+                  nav.className = "navbar";
+               }
+            }
+         </script>
+
          <?php
          if ($depNames[0] == 'Super-admin') {
-            echo '<a href="create_admin.php">Add Backend User</a>
+            echo '
+               <a href="create_admin.php">Add Backend User</a>
                <a href="create_department.php">Add Department</a>
-               <a href="create_tickets.php">Add Ticket</a>';
+               <a href="create_tickets.php">Add Ticket</a>
+            ';
          }
          ?>
       </nav>
@@ -63,8 +92,6 @@ if (is_array($_SESSION['department'])) {
       </div>
 
       <div class="account-box">
-
-
          <p>Name: <span>
                <?php echo $_SESSION['admin_name']; ?>
             </span></p>
@@ -84,7 +111,5 @@ if (is_array($_SESSION['department'])) {
          ?>
          <a href="logout.php" class="delete-btn">logout</a>
       </div>
-
    </div>
-
 </header>
