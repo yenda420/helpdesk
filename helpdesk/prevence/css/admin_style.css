@@ -493,6 +493,12 @@ section {
 .users .box-container .box p span {
   color: var(--orange);
 }
+.dashboard .box-container .box p input{
+  color: var(--orange);
+  font-size: 2rem;
+  text-align: center;
+  background-color: var(--light-bg);
+}
 
 .users .box-container .box .delete-btn {
   margin-top: 0;
