@@ -41,28 +41,50 @@ if (is_array($_SESSION['department'])) {
       </a>
 
       <nav class="navbar" id="navbar-responsive">
-         <a href="admin_page.php" class="active">Requests</a>
+         <?php
+            if ($depNames[0] == 'Super-admin') {
+               echo '
+                  <a href="admin_page.php" class="active">Requests</a>
 
-         <div class="dropdown">
-            <button class="dropbtn">Users
-               <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-               <a href="users.php">See all users</a>
-               <a href="create_admin.php">Create backend user</a>
-            </div>
-         </div>
+                  <div class="dropdown">
+                     <button class="dropbtn">Users
+                        <i class="fa fa-caret-down"></i>
+                     </button>
+                     <div class="dropdown-content">
+                        <a href="users.php">See all users</a>
+                        <a href="create_admin.php">Create backend user</a>
+                     </div>
+                  </div>
 
-         <div class="dropdown">
-            <button class="dropbtn">Tickets
-               <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-               <a href="admin_tickets.php">See all tickets</a>
-               <a href="#">See all ticket types</a>
-               <a href="create_tickets.php">Create ticket types</a>
-            </div>
-         </div>
+                  <div class="dropdown">
+                     <button class="dropbtn">Departments
+                        <i class="fa fa-caret-down"></i>
+                     </button>
+                     <div class="dropdown-content">
+                        <a href="departments.php">See all departments</a>
+                        <a href="create_department.php">Create department</a>
+                     </div>
+                  </div>
+         
+                  <div class="dropdown">
+                     <button class="dropbtn">Tickets
+                        <i class="fa fa-caret-down"></i>
+                     </button>
+                     <div class="dropdown-content">
+                        <a href="admin_tickets.php">See all tickets</a>
+                        <a href="tck_types.php">See all ticket types</a>
+                        <a href="create_tickets.php">Create ticket types</a>
+                     </div>
+                  </div>
+               ';
+            } else {
+               echo '
+                  <a href="admin_page.php" class="active">Requests</a>
+                  <a href="admin_tickets.php">Tickets</a>
+                  <a href="users.php" class="active">Users</a>
+               ';
+            }
+         ?>
 
          <script>
             function myFunction() {
@@ -74,16 +96,6 @@ if (is_array($_SESSION['department'])) {
                }
             }
          </script>
-
-         <?php
-         if ($depNames[0] == 'Super-admin') {
-            echo '
-               <a href="create_admin.php">Add Backend User</a>
-               <a href="create_department.php">Add Department</a>
-               <a href="create_tickets.php">Add Ticket</a>
-            ';
-         }
-         ?>
       </nav>
 
       <div class="icons">
