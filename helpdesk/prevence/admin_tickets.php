@@ -1,344 +1,115 @@
 <?php
-session_start();
-if (isset($_SESSION['admin_id'])) {
-    $admin_id = $_SESSION['admin_id'];
-} else {
-    header('location:index.php');
+if (isset($message)) {
+   error_reporting(E_ALL ^ E_WARNING);
+   foreach ($message as $message) {
+      echo '
+      <div class="message">
+         <span>' . $message . '</span>
+         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
+         <script>
+            setTimeout(function() {
+               document.querySelector(".message").style.opacity = "0";
+               document.querySelector(".message").style.transition = "all 0.5s";
+               setTimeout(function() {
+                  document.querySelector(".message").remove();
+               }, 500);
+            }, 3500);
+         </script>
+      </div>
+      ';
+   }
 }
 
-require("config.php");
-require("functions.php");
+if (is_array($_SESSION['department'])) {
 
 
-if (isset($_POST['delete_ticket'])) {
-    $ticket_id = $_POST['ticket_id'];
-    // Perform the deletion query
-    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
-    if ($delete_query) {
-        // Redirect to the same page after deletio
-        $message[] = "Ticket deleted successfully";
-    } else {
-        $message[] = "Failed to delete ticket";
-    }
+   foreach ($_SESSION['department'] as $departmentArray) {
+      $depNames[] = $departmentArray;
+   }
 }
-
-$users = returnAllFrontendUsers($conn);
-
-$departmentNames = array();
-
-foreach ($_SESSION['department'] as $department) {
-    $departmentName = $department;
-    if (!in_array($departmentName, $departmentNames))
-        array_push($departmentNames, $departmentName);
-}
-
-$ticketTypes = array();
-
-foreach ($departmentNames as $departmentName) {
-    $ticketTypesForDepartment = returnTicketTypesForDepartmentName($conn, $departmentName);
-    foreach ($ticketTypesForDepartment as $ticketType) {
-        array_push($ticketTypes, $ticketType);
-    }
-}
-
-$ticketStatusQuery = "
-    SELECT COLUMN_TYPE 
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_SCHEMA = 'helpdesk' 
-    AND TABLE_NAME = 'tickets'
-    AND COLUMN_NAME = 'status';
-";
-
-$ticketStatusQueryResult = mysqli_query($conn, $ticketStatusQuery);
-$enumString = array_shift(mysqli_fetch_all($ticketStatusQueryResult, MYSQLI_ASSOC)[0]);
-
-$start = strpos($enumString, '(') + 1;
-$end = strrpos($enumString, ')');
-$enumString = substr($enumString, $start, $end - $start);
-$enumValues = explode(',', str_replace("'", "", $enumString));
-
-
-$fullQuery = "
-    SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
-    FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
-    WHERE 1=1
-";
-
-if($_SESSION['department'][0] != 'Super-admin') {
-    $fullQuery .=  "AND (tps.departmentId = {$_SESSION['departmentId'][0]}";
-    foreach ($_SESSION['departmentId'] as $departmentId) {
-        if ($departmentId != $_SESSION['departmentId'][0]) {
-            $fullQuery .= " OR tps.departmentId = $departmentId";
-        }
-    }
-    $fullQuery .= ")";
-}
-
-if (!empty($_POST['users'])) {
-    $user = returnUser($conn, $_POST['users']);
-
-    if (isset($user['userId'])) {
-        $userId = $user['userId'];
-        $fullQuery .= " AND tck.userId = $userId";
-    }
-}
-
-if (!empty($_POST['types'])) {
-    $fullQuery .= " AND tps.ticketTypeId = '{$_POST['types']}' AND tps.ticketTypeId = tck.ticketTypeId";
-}
-
-if (!empty($_POST['enumValues'])) {
-    $fullQuery .= " AND tck.status = '{$_POST['enumValues']}'";
-}
-
-if (!empty($_POST['start']) && !empty($_POST['end'])) {
-    $startDate = $_POST["start"];
-    $endDate = $_POST["end"];
-
-    $fullQuery .= " AND tck.ticketDate >= '$startDate' AND tck.ticketDate <= '$endDate'";
-}
-
-$fullQuery .= " ORDER BY tck.ticketDate;";
-
-$fullQueryResult = mysqli_query($conn, $fullQuery);
-$tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
-
-if (!isset($_POST['users'])) {
-    $_POST['users'] = null;
-}
-
-if (!isset($_POST['types'])) {
-    $_POST['types'] = null;
-}
-
-if (!isset($_POST['types'])) {
-    $_POST['enumValues'] = null;
-}
-
-require("admin_header.php");
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<header class="header">
+   <div class="flex">
+      <a href="admin_page.php" class="logo">
+         <img src="img/techbase_logo.png" alt="logo">
+         <?php if ($depNames[0] == 'Super-admin') {
+            echo '<p><span>Super</span>Admin</p>';
+         } else {
+            echo '<p><span>Admin<span></p>';
+         } ?>
+      </a>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tickets</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="js/calendar.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/admin_style.css">
-    <link rel="stylesheet" href="css/searchbar.css">
-    <link rel="stylesheet" href="css/daterange.css">
-</head>
+      <nav class="navbar" id="navbar-responsive">
+         <a href="admin_page.php" class="active">Requests</a>
 
-<body>
-    <section class="dashboard">
-        <section class="tickets">
-            <h1 class="title">Tickets</h1>
-        </section>
-
-        <form method="post" class="pure-form">
-            <div class="flex">
-                <div class="filters">
-
-                    <div class="inputBox" align="center">
-                        <select name="users" id="usersid" class="">
-                            <option style="font-size: 1.8rem;" value="">Select a user</option>
-
-                            <?php foreach ($users as $user) { ?>
-                                <option style="font-size: 1.8rem;" <?php if ($_POST['users'] == $user['userId'])
-                                    echo "selected" ?>
-                                        value="<?= $user["userId"] ?>">
-                                    <?= $user["userEmail"] ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
-                            integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
-                            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                        <script>
-                            new SlimSelect({
-                                select: "#usersid"
-                            });
-                        </script>
-                    </div>
-
-                    <div class="inputBox" align="center">
-                        <select name="types" id="typesid" class="">
-                            <option style="font-size: 1.8rem;" value="">Select a ticket type</option>
-                            <?php foreach ($ticketTypes as $ticketType) { ?>
-                                <option style="font-size: 1.8rem;" <?php if ($_POST['types'] == $ticketType['ticketTypeId'])
-                                    echo "selected" ?>
-                                        value="<?= $ticketType["ticketTypeId"] ?>">
-                                    <?= $ticketType["ticketTypeName"] ?>
-                                <?php } ?>
-                        </select>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
-                            integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
-                            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                        <script>
-                            new SlimSelect({
-                                select: "#typesid"
-                            });
-                        </script>
-                    </div>
-
-                    <div class="inputBox" align="center">
-                    <select name="enumValues" id="enumValuesI #typesidd" class="">
-                            <option style="font-size: 1.8rem;" value="">Select a ticket status</option>
-                            <?php foreach ($enumValues as $value) { ?>
-                                <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
-                                    echo "selected" ?>
-                                        value="<?= $value ?>">
-                                    <?= $value ?>
-                                <?php } ?>
-                        </select>
-                    </div>
-
-                    <input type="hidden" id="start" name="start">
-                    <input type="hidden" id="end" name="end">
-                    <div id="reportrange" class="dateRange">
-                        <i class="fa fa-calendar"></i>&nbsp;
-                        <span></span> <i class="fa fa-caret-down"></i>
-                    </div>
-                </div>
-                <input type="submit" value="Show tickets" class="btn" name="show_tickets">
+         <div class="dropdown">
+            <button class="dropbtn">Users
+               <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+               <a href="users.php">See all users</a>
+               <a href="create_admin.php">Create backend user</a>
             </div>
-        </form>
+         </div>
 
-        <?php
-        if (empty($_POST["users"]) && empty($_POST["types"]) && 
-            empty($_POST["date"]) && empty($_POST["enumValues"])) { //List of all tickets:
-            if (numberOfTickets($conn) != 0) { ?>
-                <div class="box-container">
-                    <?php
-                    foreach ($tickets as $ticket) {
-                        $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
-                        $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
-                        $ticketDate = date_create($ticket['ticketDate']); ?>
+         <div class="dropdown">
+            <button class="dropbtn">Tickets
+               <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+               <a href="admin_tickets.php">See all tickets</a>
+               <a href="#">See all ticket types</a>
+               <a href="create_tickets.php">Create ticket types</a>
+            </div>
+         </div>
 
-                        <div class="box">
-                            <div class="breaking">
-                                <p>ID: <span>
-                                        <?= $ticket["ticketId"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Title: <span>
-                                        <?= $ticket["title"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Status: <span>
-                                        <?= $ticket["status"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Users name: <span>
-                                        <?= $user["userName"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Users surname: <span>
-                                        <?= $user["userSurname"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Users email: <span>
-                                        <?= $user["userEmail"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Ticket type: <span>
-                                        <?= $ticketType ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Description: <span>
-                                        <?= $ticket["ticketDesc"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Ticket date: <span>
-                                        <?= date_format($ticketDate, 'd.m.Y'); ?>
-                                    </span></p>
-                            </div>
-                            <form method="POST" onsubmit="return confirmDeletingTicket();">
-                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                            </form>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } else { //No ticket instances database      ?>
-                <div class="box-container notickets">
-                    <p class="empty">
-                        No ticket instances database
-                    </p>
-                </div>
-            <?php } ?>
-        <?php } else {
-            if (mysqli_num_rows($fullQueryResult) > 0) { ?>
-                <div class="box-container">
-                    <?php foreach ($tickets as $ticket) { //List of selected tickets: 
-                            $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
-                            $ticketDate = date_create($ticket['ticketDate']); ?>
+         <script>
+            function myFunction() {
+               var nav = document.getElementById("navbar-responsive");
+               if (nav.className === "navbar") {
+                  nav.className += " responsive";
+               } else {
+                  nav.className = "navbar";
+               }
+            }
+         </script>
 
-                        <div class="box">
-                            <div class="breaking">
-                                <p>ID: <span>
-                                        <?= $ticket["ticketId"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Title: <span>
-                                        <?= $ticket["title"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Status: <span>
-                                        <?= $ticket["status"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Ticket type: <span>
-                                        <?= $ticketType ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Description: <span>
-                                        <?= $ticket["ticketDesc"] ?>
-                                    </span></p>
-                            </div>
-                            <div class="breaking">
-                                <p>Ticket date: <span>
-                                        <?= date_format($ticketDate, 'd.m.Y'); ?>
-                                    </span></p>
-                            </div>
-                            <form method="POST" onsubmit="return confirmDeletingTicket();">
-                                <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
-                                <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
-                            </form>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } else { ?>
-                <div class="box-container notickets">
-                    <p class="empty">
-                        No tickets found
-                    </p>
-                </div>
-            <?php }
-        } ?>
-    </section>
-    <script src="js/admin_script.js"></script>
-    <?php include 'footer.php'; ?>
-</body>
+         <?php
+         if ($depNames[0] == 'Super-admin') {
+            echo '
+               <a href="create_admin.php">Add Backend User</a>
+               <a href="create_department.php">Add Department</a>
+               <a href="create_tickets.php">Add Ticket</a>
+            ';
+         }
+         ?>
+      </nav>
 
-</html>
+      <div class="icons">
+         <div id="menu-btn" class="fas fa-bars"></div>
+         <div id="user-btn" class="fas fa-user"></div>
+      </div>
+
+      <div class="account-box">
+         <p>Name: <span>
+               <?php echo $_SESSION['admin_name']; ?>
+            </span></p>
+         <p>Email: <span>
+               <?php echo $_SESSION['admin_email']; ?>
+            </span></p>
+         <?php
+         if ($depNames[0] != 'Super-admin') {
+            echo "<p>Departments: <span>";
+            echo implode(", ", $depNames);
+            echo "</span></p>";
+         } else {
+            echo "<p>";
+            echo $depNames[0];
+            echo "</p>";
+         }
+         ?>
+         <a href="logout.php" class="delete-btn">logout</a>
+      </div>
+   </div>
+</header>
