@@ -18,10 +18,13 @@ if (isset($_POST['submit'])) {
    $pass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswd']));
    $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['createAdminPasswdConf']));
 
+   $wrongDepartmentsSelected = false;
+
    foreach ($_POST['department'] as $department) {
       $departmentIds[] = returnDepartmentId($conn, mysqli_real_escape_string($conn, $department))['departmentId'];
+      $departmentNames[] = returnDepartmentName($conn, returnDepartmentId($conn, mysqli_real_escape_string($conn, $department))['departmentId']);
    }
-   
+
    $insertIntoAdmins = "INSERT INTO `admins` (adminName, adminSurname, adminEmail, adminPasswd) 
                            VALUES ('$name', '$surname', '$email','$cpass');";
 
@@ -31,22 +34,50 @@ if (isset($_POST['submit'])) {
             if (preg_match('/\d/', $_POST['createAdminPasswd'])) {
                if (preg_match("/[^a-zA-Z0-9]/", $_POST['createAdminPasswd'])) {
                   if (!emailInDatabase($conn, $email)) {
-                     $querySuccessful = true;
+                     if (count($departmentIds) == 1) {
+                        $querySuccessful = true;
 
-                     if (!mysqli_query($conn, $insertIntoAdmins)) $querySuccessful = false;
+                        if (!mysqli_query($conn, $insertIntoAdmins)) $querySuccessful = false;
 
-                     $createdAdminId = returnAdminId($conn, $email)['adminId'];
+                        $createdAdminId = returnAdminId($conn, $email)['adminId'];
 
-                     foreach ($departmentIds as $departmentId) {
-                        $insertIntoDepartment_lists = "INSERT INTO department_lists (departmentId, adminId) VALUES ($departmentId, $createdAdminId);";
-                        if (!mysqli_query($conn, $insertIntoDepartment_lists)) $querySuccessful = false;
-                     }
+                        foreach ($departmentIds as $departmentId) {
+                           $insertIntoDepartment_lists = "INSERT INTO department_lists (departmentId, adminId) VALUES ($departmentId, $createdAdminId);";
+                           if (!mysqli_query($conn, $insertIntoDepartment_lists)) $querySuccessful = false;
+                        }
 
-                     if ($querySuccessful) {
-                        $message[] = 'Admin was successfuly created.';
+                        if ($querySuccessful) {
+                           $message[] = 'Admin was successfuly created.';
+                        } else {
+                           $message[] = 'Query failed.';
+                        }
                      } else {
-                        $message[] = 'Query failed.';
+                        if (!in_array('Super-admin', $departmentNames)) {
+                           if (!in_array('Unassigned', $departmentNames)) {
+                              $querySuccessful = true;
+
+                              if (!mysqli_query($conn, $insertIntoAdmins)) $querySuccessful = false;
+
+                              $createdAdminId = returnAdminId($conn, $email)['adminId'];
+
+                              foreach ($departmentIds as $departmentId) {
+                                 $insertIntoDepartment_lists = "INSERT INTO department_lists (departmentId, adminId) VALUES ($departmentId, $createdAdminId);";
+                                 if (!mysqli_query($conn, $insertIntoDepartment_lists)) $querySuccessful = false;
+                              }
+
+                              if ($querySuccessful) {
+                                 $message[] = 'Admin was successfuly created.';
+                              } else {
+                                 $message[] = 'Query failed.';
+                              }
+                           } else {
+                              $message[] = 'You can\'t select multiple departments if you chose the "Unassigned" department.';
+                           }
+                        } else {
+                           $message[] = 'You can\'t select multiple departments if you chose the "Super-admin" department.';
+                        }
                      }
+
                   } else {
                      $message[] = 'Account with this email already exists.';
                   }

@@ -13,7 +13,7 @@ if (isset($message)) {
                setTimeout(function() {
                   document.querySelector(".message").remove();
                }, 500);
-            }, 3500);
+            }, 8000);
          </script>
       </div>
       ';
