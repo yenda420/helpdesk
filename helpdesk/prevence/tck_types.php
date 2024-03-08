@@ -90,7 +90,7 @@ if (isset($_POST['change_type'])) {
                             <button type="submit" name="delete_type" class="delete-btn"
                                 onclick="return confirmDeletingTicketType()">Delete</button>
                                 <button type="submit" name="change_type" class="btn"
-                                onclick="return confirmDeletingTicketType()">Change</button>
+                                onclick="return confirmChangingTicketType()">Change</button>
                         </div>
                     </form>
                     <?php
