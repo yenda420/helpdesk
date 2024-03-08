@@ -31,3 +31,15 @@ function confirmDeletingRequest() {
 function confirmDeletingTicket() {
    return confirm('Are you sure you want to delete this ticket?');
 }
+
+function confirmDeletingTicketType() {
+   return confirm('Are you sure you want to delete this ticket type?');
+}
+
+function confirmDeletingDepartment() {
+   return confirm('Are you sure you want to delete this department?');
+}
+
+function confirmDeletingChangingTicketType() {
+   return confirm('Are you sure you want to change this ticket type?');
+}
