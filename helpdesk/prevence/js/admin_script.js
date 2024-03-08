@@ -40,6 +40,6 @@ function confirmDeletingDepartment() {
    return confirm('Are you sure you want to delete this department?');
 }
 
-function confirmDeletingChangingTicketType() {
+function confirmChangingTicketType() {
    return confirm('Are you sure you want to change this ticket type?');
 }
