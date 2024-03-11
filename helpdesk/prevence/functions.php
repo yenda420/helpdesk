@@ -244,3 +244,26 @@ function emailInDatabase($dbConnect, $email)
         return 1;
     }
 }
+
+function registerUser($conn, $data) {
+    $name = mysqli_real_escape_string($conn, $data['name']);
+    $surname = mysqli_real_escape_string($conn, $data['surname']);
+    $email = mysqli_real_escape_string($conn, $data['email']);
+    $pass = mysqli_real_escape_string($conn, hash('sha256', $data['password']));
+    $cpass = mysqli_real_escape_string($conn, hash('sha256', $data['cpassword']));
+
+    if ($pass != $cpass) return 'Passwords don\'t match!';
+    if (strlen($data['password']) < 8) return 'Password needs at least 8 characters.';
+    if (!preg_match('/[A-Z]/', $data['password'])) return 'Password needs at least 1 upper case character.';;
+    if (!preg_match('/\d/', $data['password'])) return 'Password needs at least 1 number.';
+    if (!preg_match("/[^a-zA-Z0-9]/", $data['password'])) return 'Password needs at least 1 special character.';
+    if (emailInDatabase($conn, $email)) return 'Account with this email already exists.';
+
+    $sqlInsert = "
+        INSERT INTO `requests` 
+        SET reqName='$name', reqSurname='$surname', reqEmail='$email', reqPasswd='$pass';
+    ";
+
+    if (mysqli_query($conn, $sqlInsert)) return 'Request for an account was successful.';
+        else return 'Query failed.';
+}

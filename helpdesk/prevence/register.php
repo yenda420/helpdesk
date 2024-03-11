@@ -4,47 +4,7 @@
    require('functions.php');
 
    if (isset($_POST['submit'])) {
-
-      $name = mysqli_real_escape_string($conn, $_POST['name']);
-      $surname = mysqli_real_escape_string($conn, $_POST['surname']);
-      $email = mysqli_real_escape_string($conn, $_POST['email']);
-      $pass = mysqli_real_escape_string($conn, hash('sha256', $_POST['password']));
-      $cpass = mysqli_real_escape_string($conn, hash('sha256', $_POST['cpassword']));
-
-      $sqlInsert = "
-         INSERT INTO `requests` 
-         SET reqName='$name', reqSurname='$surname', reqEmail='$email', reqPasswd='$pass';
-      ";
-
-      if ($pass == $cpass) {
-         if (strlen($_POST['password']) >= 8) {
-            if (preg_match('/[A-Z]/', $_POST['password'])) {
-               if (preg_match('/\d/', $_POST['password'])) {
-                  if (preg_match("/[^a-zA-Z0-9]/", $_POST['password'])) {
-                     if (!emailInDatabase($conn, $email)) {
-                        if (mysqli_query($conn, $sqlInsert)) {
-                           $message[] = 'Request for an account was successful.';
-                        } else {
-                           $message[] = 'Query failed.';
-                        }
-                     } else {
-                        $message[] = 'Aaccount with this email already exists.';
-                     }
-                  } else {
-                     $message[] = 'Password needs at least 1 special character.';
-                  }
-               } else {
-                  $message[] = 'Password needs at least 1 number.';
-               }
-            } else {
-               $message[] = 'Password needs at least 1 upper case character.';
-            }
-         } else {
-            $message[] = 'Password needs at least 8 characters.';
-         }
-      } else {
-         $message[] = 'Passwords don\'t match!';
-      }
+      $message[] = registerUser($conn, $_POST);
    }
 ?>
 
