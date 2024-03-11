@@ -61,19 +61,24 @@ if (isset($_POST['delete_dep'])) {
                                 </span> </p>
                         </div>
                         <div class="breaking">
-                            <p> Ticket types:
-                                <?php
-                                $ticket_types = array();
-                                $ticket_types = returnTicketTypesForDepartmentName($conn, $fetch_deps['departmentName']);
-                                $last_index = count($ticket_types) - 1;
-                                foreach ($ticket_types as $index => $ticket_type) {
-                                    echo '<span>' . $ticket_type['ticketTypeName'] . '</span>';
-                                    if ($index != $last_index) {
-                                        echo ' | ';
-                                    }
+                            <?php
+                                if ($fetch_deps['departmentName'] != 'Unassigned') {
+                                    echo '<p> Ticket types:';
+                                        $ticket_types = array();
+                                        $ticket_types = returnTicketTypesForDepartmentName($conn, $fetch_deps['departmentName']);
+                                        $last_index = count($ticket_types) - 1;
+                                        foreach ($ticket_types as $index => $ticket_type) {
+                                            echo '<span>' . $ticket_type['ticketTypeName'] . '</span>';
+                                            if ($index != $last_index) {
+                                                echo ' | ';
+                                            }
+                                        }
+                                    echo '</p>';
+                                } else {
+                                    echo '<p>No ticket types</p>';
                                 }
-                                ?>
-                            </p>
+                            ?>
+                            
                         </div>
                         <div class="breaking">
                             <p> Admins:
