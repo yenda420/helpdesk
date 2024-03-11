@@ -35,23 +35,24 @@ if (isset($_POST['delete_user'])) {
 if (isset($_POST["change_dept"])) {
    if (isset($_POST['admin_id']) && isset($_POST['department'])) {
       $admin_id = $_POST['admin_id'];
-      $department_id = $_POST['department'];
+      $department_names = $_POST['department'];
+      $department_names = explode(',', $department_names);
+      $department_names = array_map('trim', $department_names);
+      $department_ids = [];
+      foreach ($department_names as $department_name) {
+         $department_ids[] = returnDepartmentId($conn, $department_name);
+      }
+      $delete_department = "DELETE FROM department_lists WHERE adminId = $admin_id";
+      if (mysqli_query($conn, $delete_department)) {
+         foreach ($department_ids as $department_id) {
+            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ($admin_id,{$department_id['departmentId']})");
+         }
+         $message[] = "Departments changed successfully";
+      }
 
-      // Delete existing departments
-      //$delete_query = mysqli_query($conn, "DELETE FROM `department_lists` WHERE `adminId` = $admin_id");
-
-      // Insert new departments
-     
-         //$department_id = returnDepartmentId($conn,$department_id)['departmentId'];
-         echo $department_id;
-         echo '<br>';
-         //$insert_query = mysqli_query($conn, "INSERT INTO `department_lists` (`adminId`, `departmentId`) VALUES ($admin_id, $department_id)");
-      
-
-      $message[] = "Departments updated successfully";
    }
-
 }
+
 
 
 
