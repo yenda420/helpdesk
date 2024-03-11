@@ -41,25 +41,6 @@ function departmentExists($conn, $departmentName)
         return 0;
     }
 }
-function deleteDepartment($conn, $departmentId)
-{
-    $delete_lists = "DELETE FROM department_lists WHERE departmentId = $departmentId";
-    if (mysqli_query($conn, $delete_lists)) {
-        $update_tickets = "UPDATE ticket_types SET departmentId = 0 WHERE departmentId = $departmentId";
-        if (mysqli_query($conn, $update_tickets)) {
-            $delete_department = "DELETE FROM departments WHERE departmentId = $departmentId";
-            if (mysqli_query($conn, $delete_department)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    } else {
-        return 0;
-    }
-}
 
 function returnAdminId($conn, $adminEmail)
 {
@@ -87,29 +68,16 @@ function returnAllBackendUsers($conn)
 
     $sqlResult = mysqli_query($conn, $sql);
     $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
     return $users;
 }
-function returnAllBackendsForDepartmentId($conn, $departmentId)
-{
-    $sql = "
-            SELECT adminEmail
-            FROM admins inner join department_lists using (adminId)
-            WHERE departmentId = $departmentId;
-        ";
 
-    $sqlResult = mysqli_query($conn, $sql);
-    $admins = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-
-    return $admins;
-}
-
-function returnAllUsers($conn)
-{
-    $sql = "SELECT * FROM admins, users";
+function returnAllUsers($conn) {
+    $sql = "SELECT * FROM admins UNION DISTINCT SELECT * FROM users";
 
     $sqlResult = mysqli_query($conn, $sql);
     $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+    //var_dump($users);
+    //var_dump(count($users));
 
     return $users;
 }
@@ -165,6 +133,16 @@ function returnTicketTypesForDepartmentName($conn, $departmentName)
 function returnUser($conn, $userId)
 {
     $sql = "SELECT * FROM users WHERE userId = $userId";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $user[0];
+}
+
+function returnAdmin($conn, $adminId)
+{
+    $sql = "SELECT * FROM admins WHERE adminId = $adminId";
 
     $sqlResult = mysqli_query($conn, $sql);
     $user = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
@@ -258,11 +236,9 @@ function emailInDatabase($dbConnect, $email)
     $sqlResultAdmins = mysqli_query($dbConnect, $sqlRequests);
     $numberOfRecordsAdmins = mysqli_num_rows($sqlResultRequests);
 
-    if (
-        $numberOfRecordsRequests == 0 &&
-        $numberOfRecordsUsers == 0 &&
-        $numberOfRecordsRequests == 0
-    ) {
+    if ($numberOfRecordsRequests == 0 && 
+        $numberOfRecordsUsers == 0 && 
+        $numberOfRecordsRequests == 0) {
         return 0;
     } else {
         return 1;
