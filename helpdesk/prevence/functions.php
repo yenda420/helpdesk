@@ -70,7 +70,19 @@ function returnAllBackendUsers($conn)
     $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
     return $users;
 }
+function returnAllBackendsForDepartmentId($conn, $departmentId)
+{
+    $sql = "
+            SELECT adminEmail
+            FROM admins inner join department_lists using (adminId)
+            WHERE departmentId = $departmentId;
+        ";
 
+    $sqlResult = mysqli_query($conn, $sql);
+    $admins = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    return $admins;
+}
 function returnAllUsers($conn)
 {
     $sql = "SELECT * FROM admins UNION DISTINCT SELECT * FROM users";
