@@ -206,7 +206,7 @@ if (!isset($_POST['userSearch'])) {
                                    <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
                                    <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
                                    <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>';
-                           echo '<div class="breaking"><p> Department : <span>';
+                           echo '<div class="breaking" style="overflow:hidden;"><p> Department : <span align="center" style="justify-content: center;">';
                            $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$user['adminId']}'") or die('query failed');
                            $departmentNames = [];
                            if (mysqli_num_rows($select_departments) > 0) {
@@ -214,8 +214,8 @@ if (!isset($_POST['userSearch'])) {
                                  $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
                               }
                            }
-                           echo '<input type="text" name="department" value="' . implode(', ', $departmentNames) . '">';
-                           echo '</span> </p></div>';
+                           echo '<input style="width:fit-content; max-width: 20rem" type="text" name="department" value="' . implode(', ', $departmentNames) . '">';
+                           echo '</span></p></div>';
                            if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>
                                        <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button>
