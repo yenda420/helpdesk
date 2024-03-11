@@ -70,27 +70,28 @@ function returnAllBackendUsers($conn)
     $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
     return $users;
 }
+
 function returnAllBackendsForDepartmentId($conn, $departmentId)
 {
     $sql = "
             SELECT adminEmail
-            FROM admins inner join department_lists using (adminId)
+            FROM admins INNER JOIN department_lists USING (adminId)
             WHERE departmentId = $departmentId;
-        ";
+    ";
 
     $sqlResult = mysqli_query($conn, $sql);
     $admins = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
 
     return $admins;
 }
+
 function returnAllUsers($conn)
 {
     $sql = "SELECT * FROM admins UNION DISTINCT SELECT * FROM users";
 
     $sqlResult = mysqli_query($conn, $sql);
     $users = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
-    //var_dump($users);
-    //var_dump(count($users));
+
 
     return $users;
 }
@@ -267,19 +268,26 @@ function registerUser($conn, $data)
     $email = mysqli_real_escape_string($conn, $data['email']);
     $pass = mysqli_real_escape_string($conn, hash('sha256', $data['password']));
 
-    if ($data['password'] != $data['cpassword']) return 'Passwords don\'t match!';
-    if (strlen($data['password']) < 8) return 'Password needs at least 8 characters.';
-    if (!preg_match('/[A-Z]/', $data['password'])) return 'Password needs at least 1 upper case character.';
-    if (!preg_match('/\d/', $data['password'])) return 'Password needs at least 1 number.';
-    if (!preg_match("/[^a-zA-Z0-9]/", $data['password'])) return 'Password needs at least 1 special character.';
-    if (emailInDatabase($conn, $email)) return 'Account with this email already exists.';
+    if ($data['password'] != $data['cpassword'])
+        return 'Passwords don\'t match!';
+    if (strlen($data['password']) < 8)
+        return 'Password needs at least 8 characters.';
+    if (!preg_match('/[A-Z]/', $data['password']))
+        return 'Password needs at least 1 upper case character.';
+    if (!preg_match('/\d/', $data['password']))
+        return 'Password needs at least 1 number.';
+    if (!preg_match("/[^a-zA-Z0-9]/", $data['password']))
+        return 'Password needs at least 1 special character.';
+    if (emailInDatabase($conn, $email))
+        return 'Account with this email already exists.';
 
     $sqlInsert = "
         INSERT INTO `requests` 
         SET reqName='$name', reqSurname='$surname', reqEmail='$email', reqPasswd='$pass';
     ";
 
-    if (!mysqli_query($conn, $sqlInsert)) return 'Query failed.';
+    if (!mysqli_query($conn, $sqlInsert))
+        return 'Query failed.';
 
     return 'Request for an account was successful.';
 }
@@ -291,12 +299,18 @@ function createAdmin($conn, $data)
     $email = mysqli_real_escape_string($conn, $data['createAdminEmail']);
     $pass = mysqli_real_escape_string($conn, hash('sha256', $data['createAdminPasswd']));
 
-    if ($data['createAdminPasswd'] != $data['createAdminPasswdConf']) return 'Passwords don\'t match!';
-    if (strlen($data['createAdminPasswd']) < 8) return 'Password needs at least 8 characters.';
-    if (!preg_match('/[A-Z]/', $data['createAdminPasswd'])) return 'Password needs at least 1 upper case character.';
-    if (!preg_match('/\d/', $data['createAdminPasswd'])) return 'Password needs at least 1 number.';
-    if (!preg_match("/[^a-zA-Z0-9]/", $data['createAdminPasswd'])) return 'Password needs at least 1 special character.';
-    if (emailInDatabase($conn, $email)) return 'Account with this email already exists.';
+    if ($data['createAdminPasswd'] != $data['createAdminPasswdConf'])
+        return 'Passwords don\'t match!';
+    if (strlen($data['createAdminPasswd']) < 8)
+        return 'Password needs at least 8 characters.';
+    if (!preg_match('/[A-Z]/', $data['createAdminPasswd']))
+        return 'Password needs at least 1 upper case character.';
+    if (!preg_match('/\d/', $data['createAdminPasswd']))
+        return 'Password needs at least 1 number.';
+    if (!preg_match("/[^a-zA-Z0-9]/", $data['createAdminPasswd']))
+        return 'Password needs at least 1 special character.';
+    if (emailInDatabase($conn, $email))
+        return 'Account with this email already exists.';
 
     foreach ($data['department'] as $department) {
         $departmentIds[] = returnDepartmentId($conn, mysqli_real_escape_string($conn, $department))['departmentId'];
@@ -304,16 +318,19 @@ function createAdmin($conn, $data)
     }
 
     if (count($departmentIds) > 1) {
-        if (in_array('Super-admin', $departmentNames)) return 'You can\'t select multiple departments if you chose the "Super-admin" department.';
-        if (in_array('Unassigned', $departmentNames)) return 'You can\'t select multiple departments if you chose the "Unassigned" department.';
-    } 
+        if (in_array('Super-admin', $departmentNames))
+            return 'You can\'t select multiple departments if you chose the "Super-admin" department.';
+        if (in_array('Unassigned', $departmentNames))
+            return 'You can\'t select multiple departments if you chose the "Unassigned" department.';
+    }
 
     $insertIntoAdmins = "
         INSERT INTO `admins` (adminName, adminSurname, adminEmail, adminPasswd) 
         VALUES ('$name', '$surname', '$email','$pass');
     ";
 
-    if (!mysqli_query($conn, $insertIntoAdmins)) return 'Query failed';
+    if (!mysqli_query($conn, $insertIntoAdmins))
+        return 'Query failed';
 
     $createdAdminId = returnAdminId($conn, $email)['adminId'];
 
@@ -324,11 +341,13 @@ function createAdmin($conn, $data)
             VALUES ($departmentId, $createdAdminId);
         ";
 
-        if (!mysqli_query($conn, $insertIntoDepartment_lists)) return 'Query failed';
+        if (!mysqli_query($conn, $insertIntoDepartment_lists))
+            return 'Query failed';
     }
 
     return 'Admin was successfuly created.';
 }
+
 function deleteDepartment($conn, $departmentId)
 {
     $delete_lists = "DELETE FROM department_lists WHERE departmentId = $departmentId";
