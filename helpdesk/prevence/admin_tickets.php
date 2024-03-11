@@ -205,7 +205,7 @@ require("admin_header.php");
                     <input type="hidden" id="end" name="end">
                     <div id="reportrange" class="dateRange">
                         <i class="fa fa-calendar"></i>&nbsp;
-                        <span></span> <i class="fa fa-caret-down"></i>
+                        <span>Select a date</span> <i class="fa fa-caret-down"></i>
                     </div>
                 </div>
                 <input type="submit" value="Show tickets" class="btn" name="show_tickets">
