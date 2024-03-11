@@ -251,7 +251,7 @@ if (!isset($_POST['userSearch'])) {
                                  $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
                               }
                            }
-                           echo implode(', ', $departmentNames);
+                           echo '<input style="width:fit-content; max-width: 20rem" type="text" name="department" value="' . implode(', ', $departmentNames) . '">';
                            echo '</span> </p></div>';
                            if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="admin_id" value="' . $oneUser[1]['adminId'] . '"> <br>
