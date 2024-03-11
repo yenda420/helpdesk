@@ -329,3 +329,22 @@ function createAdmin($conn, $data)
 
     return 'Admin was successfuly created.';
 }
+function deleteDepartment($conn, $departmentId)
+{
+    $delete_lists = "DELETE FROM department_lists WHERE departmentId = $departmentId";
+    if (mysqli_query($conn, $delete_lists)) {
+        $update_tickets = "UPDATE ticket_types SET departmentId = 0 WHERE departmentId = $departmentId";
+        if (mysqli_query($conn, $update_tickets)) {
+            $delete_department = "DELETE FROM departments WHERE departmentId = $departmentId";
+            if (mysqli_query($conn, $delete_department)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+}
