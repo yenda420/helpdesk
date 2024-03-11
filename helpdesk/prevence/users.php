@@ -54,6 +54,46 @@ if (isset($_POST["change_dept"])) {
 
 
 
+$users = returnAllUsers($conn);
+$frontendUsers = returnAllFrontendUsers($conn);
+$backendUsers = returnAllBackendUsers($conn);
+
+$fullQuery = "
+    SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
+    FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
+    WHERE 1=1
+";
+
+if($_SESSION['department'][0] != 'Super-admin') {
+    $fullQuery .=  "AND (tps.departmentId = {$_SESSION['departmentId'][0]}";
+    foreach ($_SESSION['departmentId'] as $departmentId) {
+        if ($departmentId != $_SESSION['departmentId'][0]) {
+            $fullQuery .= " OR tps.departmentId = $departmentId";
+        }
+    }
+    $fullQuery .= ")";
+}
+
+if (!empty($_POST['userSearch'])) {
+    $user = returnUser($conn, $_POST['userSearch']);
+
+    if (isset($user['userId'])) {
+        $userId = $user['userId'];
+        $fullQuery .= " AND tck.userId = $userId";
+    }
+}
+
+$fullQuery .= " ORDER BY tck.ticketDate;";
+
+$fullQueryResult = mysqli_query($conn, $fullQuery);
+$tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
+
+if (!isset($_POST['userSearch'])) {
+    $_POST['userSearch'] = null;
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -68,6 +108,7 @@ if (isset($_POST["change_dept"])) {
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
    <link rel="stylesheet" href="css/admin_style.css">
+    <link rel="stylesheet" href="css/searchbar.css">
 
 </head>
 
@@ -84,25 +125,62 @@ if (isset($_POST["change_dept"])) {
          <h1 class="title">Users</h1>
          <form method="post">
             <div class="flex">
-               <div class="inputBox">
-                  <select name="users" class="select" required>
-                     <option value="all">--- Choose a user type ---</option>
-                     <option <?php if ($_POST['users'] == 'frontend')
-                        echo 'selected' ?> value="frontend">Frontend
-                        </option>
-                        <option <?php if ($_POST['users'] == 'backend')
-                        echo 'selected' ?> value="backend">Backend</option>
+               <div class="filters">
+                  <div class="inputBox">
+                     <select name="users" class="" required>
+                        <option value="all">--- Choose a user type ---</option>
+                        <option <?php if ($_POST['users'] == 'frontend')
+                           echo 'selected' ?> value="frontend">Frontend
+                           </option>
+                           <option <?php if ($_POST['users'] ==   'backend')
+                           echo 'selected' ?> value="backend">Backend</option>
                      </select>
                   </div>
+                  <div class="inputBox" align="center">
+                     <select name="userSearch" id="userSearch">
+                        <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
+
+                        <?php foreach ($frontendUsers as $user) { 
+                           ?>
+                           <option style="font-size: 1.8rem;" <?php if ($_POST['userSearch'] == $user['userId'])
+                              echo "selected"; ?>
+                                 value="<?= $user['userId'] ?>"> 
+                              <?= $user['userEmail'] ?> 
+                           </option>
+                        <?php } 
+                        
+                        foreach ($backendUsers as $user) { 
+                           ?>
+                           <option style="font-size: 1.8rem;" <?php if ($_POST['userSearch'] == $user['adminId'])
+                              echo "selected"; ?>
+                                 value="<?= $user['adminId'] ?>"> 
+                              <?= $user['adminEmail'] ?>
+                           </option>
+                        <?php } ?>
+
+
+                     </select>
+                     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
+                           integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
+                           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                     <script>
+                           new SlimSelect({
+                              select: "#userSearch"
+                           });
+                     </script>
+                  </div>
+
+               </div>
                   <div class="inputBox">
                      <button type="submit" name="filter" class="btn">Show users</button>
                   </div><br>
-               </div>
 
                <div class="box-container">
                   <?php
                      $frontendUsers = returnAllFrontendUsers($conn);
                      $backendUsers = returnAllBackendUsers($conn);
+                     if(empty($_POST["userSearch"])) {
+
                      if (isset($_POST['filter']) && $_POST['users'] == 'frontend' || ($_POST['users'] == 'all' || !isset($_POST['filter']))) {
                         foreach ($frontendUsers as $user) {
                            echo '<div class="box">
@@ -148,6 +226,60 @@ if (isset($_POST["change_dept"])) {
                            echo '</form>';
                         }
                      }
+
+                  } else {
+                     if (isset($_POST['userSearch'])) {
+                        $oneUser[] = returnUser($conn, $_POST['userSearch']);
+                       // echo count($oneUser, 1);
+                        if (count($oneUser, 1) == 1) {
+                           //echo "prazdne";
+                           $oneUser[] = returnAdmin($conn, $_POST['userSearch']);
+                           //var_dump($oneUser[1]);
+                           //echo count($oneUser, 1);
+
+                           echo '<div class="box">
+                           <div class="breaking"><p> ID : <span>' . $oneUser[1]['adminId'] . '</span> </p></div>
+                           <div class="breaking"><p> Name : <span>' . $oneUser[1]['adminName'] . '</span> </p></div>
+                           <div class="breaking"><p> Surname : <span>' . $oneUser[1]['adminSurname'] . '</span> </p></div>
+                           <div class="breaking"><p> Email : <span>' . $oneUser[1]['adminEmail'] . '</span> </p></div>';
+                           echo '<div class="breaking"><p> Department : <span>';
+                           $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$oneUser[1]['adminId']}'") or die('query failed');
+                           $departmentNames = [];
+                           if (mysqli_num_rows($select_departments) > 0) {
+                              while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
+                                 $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
+                              }
+                           }
+                           echo implode(', ', $departmentNames);
+                           echo '</span> </p></div>';
+                           if ($_SESSION['department'][0] == 'Super-admin') {
+                              echo '<input type="hidden" name="admin_id" value="' . $oneUser[1]['adminId'] . '"> <br>
+                                       <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingAdmin()">Delete</button><button type="submit" name="change_dept" class="btn" onclick="return confirmChangingDepartments()">Change</button>
+                                 </div>';
+                           } else {
+                              echo '</div>';
+                           }
+
+                        } else {
+                           //var_dump($oneUser[0]['userId']);
+
+                           echo '<div class="box">
+                           <div class="breaking"><p> ID : <span>' . $oneUser[0]['userId'] . '</span> </p></div>
+                           <div class="breaking"><p> Name : <span>' . $oneUser[0]['userName'] . '</span> </p></div>
+                           <div class="breaking"><p> Surname : <span>' . $oneUser[0]['userSurname'] . '</span> </p></div>
+                           <div class="breaking"><p> Email : <span>' . $oneUser[0]['userEmail'] . '</span> </p></div>';
+                  if ($_SESSION['department'][0] == 'Super-admin') {
+                     echo '<input type="hidden" name="user_id" value="' . $oneUser[0]['userId'] . '"><br>
+                           <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
+                        </div>';
+                  } else {
+                     echo '</div>';
+                  }
+                  echo '</form>';
+                        }
+                     }
+                  }
+
                      //if there are no users
                      if (count($frontendUsers) == 0 && count($backendUsers) == 0) {
                         echo '<p class="empty">No users</p>';
@@ -161,6 +293,7 @@ if (isset($_POST["change_dept"])) {
 
 
                      ?>
+                     </div>
             </div>
          </form>
       </section>
