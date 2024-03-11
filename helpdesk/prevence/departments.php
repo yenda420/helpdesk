@@ -51,17 +51,17 @@ if (isset($_POST['delete_dep'])) {
                     ?>
                     <div class="box">
                         <div class="breaking">
-                            <p> ID : <span>
+                            <p> ID: <span>
                                     <?php echo $fetch_deps['departmentId']; ?>
                                 </span> </p>
                         </div>
                         <div class="breaking">
-                            <p> Name : <span>
+                            <p> Name: <span>
                                     <?php echo $fetch_deps['departmentName']; ?>
                                 </span> </p>
                         </div>
                         <div class="breaking">
-                            <p> Ticket types :
+                            <p> Ticket types:
                                 <?php
                                 $ticket_types = array();
                                 $ticket_types = returnTicketTypesForDepartmentName($conn, $fetch_deps['departmentName']);
@@ -76,7 +76,7 @@ if (isset($_POST['delete_dep'])) {
                             </p>
                         </div>
                         <div class="breaking">
-                            <p> Admins :
+                            <p> Admins:
                                 <?php
                                 $admins = array();
                                 $admins = returnAllBackendsForDepartmentId($conn, $fetch_deps['departmentId']);
