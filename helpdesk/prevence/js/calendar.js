@@ -2,10 +2,12 @@ $(function() {
     var start = moment().subtract(29, 'days');
     var end = moment();
     
-    var savedText = localStorage.getItem('savedText');
+    var savedText = sessionStorage.getItem('savedText');
 
     if (savedText) {
         $('#reportrange span').text(savedText);
+    } else {
+        $('#reportrange span').text('Select a date');
     }
 
     function cb(start, end) {
@@ -39,6 +41,6 @@ $(function() {
         let text = $(this).text();
         $('#reportrange span').text(text);
 
-        localStorage.setItem('savedText', text);
+        sessionStorage.setItem('savedText', text);
     });
 });
