@@ -33,11 +33,6 @@ if (is_array($_SESSION['department'])) {
    <div class="flex">
       <a href="admin_page.php" class="logo">
          <img src="img/techbase_logo.png" alt="logo">
-         <?php if ($depNames[0] == 'Super-admin') {
-            echo '<p><span>Super</span>Admin</p>';
-         } else {
-            echo '<p><span>Admin<span></p>';
-         } ?>
       </a>
 
       <nav class="navbar" id="navbar-responsive">
