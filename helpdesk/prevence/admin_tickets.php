@@ -143,7 +143,7 @@ require("admin_header.php");
             <h1 class="title">Tickets</h1>
         </section>
 
-        <form method="post" class="pure-form">
+        <form method="post" class="pure-form" id="filters-form">
             <div class="flex">
                 <div class="filters">
 
