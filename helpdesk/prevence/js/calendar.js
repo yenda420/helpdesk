@@ -1,7 +1,7 @@
 $(function() {
     var start = moment().subtract(29, 'days');
     var end = moment();
-    
+    var formSubmitted = false;
     var savedText = sessionStorage.getItem('savedText');
 
     if (savedText) {
@@ -42,5 +42,15 @@ $(function() {
         $('#reportrange span').text(text);
 
         sessionStorage.setItem('savedText', text);
+    });
+
+    $('#filters-form').on('submit', function(e) {
+        formSubmitted = true;
+    });
+
+    window.addEventListener('beforeunload', function (e) {
+        if (!formSubmitted) {
+            sessionStorage.setItem('savedText', 'Select a date'); 
+        }
     });
 });
