@@ -98,6 +98,12 @@ if (is_array($_SESSION['department'])) {
          </script>
       </nav>
 
+
+      <form method="POST" action="searchbar.php">
+      <input class="search" type="text" name="keyword" />
+      <input class="btn" type="submit" name="search" value="Search"/>
+    </form>
+
       <div class="icons">
          <div id="menu-btn" class="fas fa-bars"></div>
          <div id="user-btn" class="fas fa-user"></div>

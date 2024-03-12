@@ -66,6 +66,14 @@ section {
   font-size: 4rem;
 }
 
+.emptyWrap {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+  height: auto;
+  width: auto;
+}
+
 .empty {
   padding: 1.5rem;
   text-align: center;
@@ -73,6 +81,12 @@ section {
   background-color: var(--white);
   color: var(--red);
   font-size: 2rem;
+}
+
+.emptyDiv {
+  float: left;
+  width: 100%;
+  margin-bottom: 2rem;
 }
 
 .message {
@@ -126,6 +140,24 @@ section {
 
 .white-btn,
 .btn {
+  background-color: var(--orange);
+}
+
+header .btn {
+  display: inline-block;
+  padding: 0.3333rem 1rem;
+  cursor: pointer;
+  color: var(--white);
+  font-size: 17px;
+  border-radius: 0.5rem;
+  text-transform: capitalize;
+}
+
+header .btn:hover {
+  background-color: var(--black);
+}
+
+header .btn {
   background-color: var(--orange);
 }
 
@@ -616,6 +648,25 @@ form .flex .select {
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
   margin: 1rem 0;
+}
+
+.search {
+  border: var(--border);
+  width: 20%;
+  border-radius: .5rem;
+  background-color: var(--white);
+  padding: 1.2rem 1.4rem;
+  font-size: 1.8rem;
+  margin: 1rem 0;
+}
+
+header .search {
+  border: var(--border);
+  border-radius: .5rem;
+  background-color: var(--white);
+  padding: 0.6rem 0.7rem;
+  font-size: 17px;
+  margin-left: 1rem;
 }
 
 form .flex .inputBox {
