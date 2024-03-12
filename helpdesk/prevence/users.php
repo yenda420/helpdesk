@@ -36,20 +36,7 @@ if (isset($_POST["change_dept"])) {
    if (isset($_POST['admin_id']) && isset($_POST['department'])) {
       $admin_id = $_POST['admin_id'];
       $department_names = $_POST['department'];
-      $department_names = explode(',', $department_names);
-      $department_names = array_map('trim', $department_names);
-      $department_ids = [];
-      foreach ($department_names as $department_name) {
-         $department_ids[] = returnDepartmentId($conn, $department_name);
-      }
-      $delete_department = "DELETE FROM department_lists WHERE adminId = $admin_id";
-      if (mysqli_query($conn, $delete_department)) {
-         foreach ($department_ids as $department_id) {
-            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ($admin_id,{$department_id['departmentId']})");
-         }
-         $message[] = "Departments changed successfully";
-      }
-
+      $message[] = changeAdminDepartment($conn,$admin_id, $department_names);
    }
 }
 
