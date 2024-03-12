@@ -30,7 +30,6 @@ $(function() {
 
     cb(start, end);
 
-
     $('ul li').on("click", function() {
         let ulElement = document.querySelector('ul');
         let liElements = ulElement.querySelectorAll('li');
@@ -43,7 +42,7 @@ $(function() {
 
         sessionStorage.setItem('savedText', text);
     });
-
+    
     $('#filters-form').on('submit', function(e) {
         formSubmitted = true;
     });
