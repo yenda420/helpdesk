@@ -65,17 +65,17 @@ if (isset($_POST['change_type'])) {
                     <form method="POST">
                         <div class="box">
                             <div class="breaking">
-                                <p> ID : <span>
+                                <p> ID: <span>
                                         <?php echo $fetch_types['ticketTypeId']; ?>
                                     </span> </p>
                             </div>
                             <div class="breaking">
-                                <p> Type name : <span>
+                                <p> Type name: <span>
                                         <input type="text" name="type_name" value="<?php echo $fetch_types['ticketTypeName']; ?>">
                                     </span> </p>
                             </div>
                             <div class="breaking">
-                                <p>Department : <span>
+                                <p>Department: <span>
                                     <input type="text" name="department_responsible" value="<?php echo returnDepartmentName($conn,$fetch_types['departmentId']); ?>">
                                     </span> </p>
                             </div>

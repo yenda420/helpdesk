@@ -227,11 +227,11 @@ if (!isset($_POST['userSearch'])) {
                            //echo count($oneUser, 1);
 
                            echo '<div class="box">
-                           <div class="breaking"><p> ID : <span>' . $oneUser[1]['adminId'] . '</span> </p></div>
-                           <div class="breaking"><p> Name : <span>' . $oneUser[1]['adminName'] . '</span> </p></div>
-                           <div class="breaking"><p> Surname : <span>' . $oneUser[1]['adminSurname'] . '</span> </p></div>
-                           <div class="breaking"><p> Email : <span>' . $oneUser[1]['adminEmail'] . '</span> </p></div>';
-                           echo '<div class="breaking"><p> Department : <span>';
+                           <div class="breaking"><p> ID: <span>' . $oneUser[1]['adminId'] . '</span> </p></div>
+                           <div class="breaking"><p> Name: <span>' . $oneUser[1]['adminName'] . '</span> </p></div>
+                           <div class="breaking"><p> Surname: <span>' . $oneUser[1]['adminSurname'] . '</span> </p></div>
+                           <div class="breaking"><p> Email: <span>' . $oneUser[1]['adminEmail'] . '</span> </p></div>';
+                           echo '<div class="breaking"><p> Department: <span>';
                            $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$oneUser[1]['adminId']}'") or die('query failed');
                            $departmentNames = [];
                            if (mysqli_num_rows($select_departments) > 0) {
@@ -253,10 +253,10 @@ if (!isset($_POST['userSearch'])) {
                            //var_dump($oneUser[0]['userId']);
 
                            echo '<div class="box">
-                           <div class="breaking"><p> ID : <span>' . $oneUser[0]['userId'] . '</span> </p></div>
-                           <div class="breaking"><p> Name : <span>' . $oneUser[0]['userName'] . '</span> </p></div>
-                           <div class="breaking"><p> Surname : <span>' . $oneUser[0]['userSurname'] . '</span> </p></div>
-                           <div class="breaking"><p> Email : <span>' . $oneUser[0]['userEmail'] . '</span> </p></div>';
+                           <div class="breaking"><p> ID: <span>' . $oneUser[0]['userId'] . '</span> </p></div>
+                           <div class="breaking"><p> Name: <span>' . $oneUser[0]['userName'] . '</span> </p></div>
+                           <div class="breaking"><p> Surname: <span>' . $oneUser[0]['userSurname'] . '</span> </p></div>
+                           <div class="breaking"><p> Email: <span>' . $oneUser[0]['userEmail'] . '</span> </p></div>';
                   if ($_SESSION['department'][0] == 'Super-admin') {
                      echo '<input type="hidden" name="user_id" value="' . $oneUser[0]['userId'] . '"><br>
                            <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>

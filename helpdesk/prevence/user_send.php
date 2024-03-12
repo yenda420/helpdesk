@@ -51,7 +51,7 @@ if(isset($_POST['send_btn'])) {
             <input type="text" name="title" required placeholder="An issue with..." maxlength="45">
          </div>
          <div class="inputBox">
-            <span>Ticket type :</span>
+            <span>Ticket type:</span>
             <select name="type" required>
                <option value="" selected>--- Select type ---</option>
               <?php
