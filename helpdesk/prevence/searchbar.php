@@ -167,6 +167,8 @@ function php_search_all_database($search_keyword, $table_associative_array)
                             $columnName = $column;
                         } else if ($table_name == 'departments') {
                             $columnName = $column;
+                        } else if ($table_name == 'tickets') {
+                            $columnName = $column;
                         }
                         
                         echo '<div class="box">';
