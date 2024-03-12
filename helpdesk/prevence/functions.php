@@ -41,6 +41,32 @@ function departmentExists($conn, $departmentName)
         return 0;
     }
 }
+function adminExists($conn, $adminEmail)
+{
+    $sql = "SELECT * FROM admins WHERE adminEmail = '$adminEmail'";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $admin = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    if ($admin) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+function ticketTypeExists($conn, $ticketTypeName)
+{
+    $sql = "SELECT * FROM ticket_types WHERE ticketTypeName = '$ticketTypeName'";
+
+    $sqlResult = mysqli_query($conn, $sql);
+    $type = mysqli_fetch_all($sqlResult, MYSQLI_ASSOC);
+
+    if ($type) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 function returnAdminId($conn, $adminEmail)
 {
@@ -367,15 +393,28 @@ function deleteDepartment($conn, $departmentId)
         return 0;
     }
 }
-function isAdminUnassigned($conn,$adminId){
+function isAdminUnassigned($conn, $adminId)
+{
     $sql = "SELECT * FROM department_lists WHERE adminId = $adminId AND departmentId = 0;";
     $sqlResult = mysqli_query($conn, $sql);
     $numberOfRecords = mysqli_num_rows($sqlResult);
-    if($numberOfRecords == 0){
+    if ($numberOfRecords == 0) {
         return 0;
-    }else{
+    } else {
         return 1;
     }
+}
+function isAdminInDepartment($conn, $adminId)
+{
+    $sql = "SELECT * FROM department_lists WHERE adminId = $adminId";
+    $sqlResult = mysqli_query($conn, $sql);
+    $numberOfRecords = mysqli_num_rows($sqlResult);
+    if ($numberOfRecords == 0) {
+        return 0;
+    } else {
+        return 1;
+    }
+
 }
 function changeAdminDepartment($conn, $admin_id, $department_names)
 {
@@ -413,8 +452,9 @@ function changeAdminDepartment($conn, $admin_id, $department_names)
         return "Departments changed successfully";
     }
 }
-function changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible){
-    if(!departmentExists($conn, $department_responsible)){
+function changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible)
+{
+    if (!departmentExists($conn, $department_responsible)) {
         return "Department doesn't exist";
     }
     $departmentId = returnDepartmentId($conn, $department_responsible)['departmentId'];
@@ -424,4 +464,74 @@ function changeTicketTypeDepartment($conn, $type_id, $type_name, $department_res
     } else {
         return "Error updating ticket type";
     }
+}
+function changeDepartments($conn, $dep_id, $ticket_types, $admins, $dep_name)
+{
+    if (!preg_match('/^(?:[a-zA-Z0-9\s]+\n?)+$/', $ticket_types)) {
+        return "Each ticket type should be on a new line";
+    }
+    $ticket_types = explode("\n", $ticket_types);
+    $ticket_types = array_filter($ticket_types);
+    $ticket_types = array_map('trim', $ticket_types);
+    $ticket_types = array_filter($ticket_types);
+    foreach ($ticket_types as $ticket_type) {
+        if (!ticketTypeExists($conn, $ticket_type)) {
+            return "Ticket type $ticket_type doesn't exist.";
+        }
+    }
+    if (!preg_match('/^(?:[a-zA-Z0-9\s@.]+\n?)+$/', $admins)) {
+        return "Each admin email should be on a new line";
+    }
+    $admins = explode("\n", $admins);
+    $admins = array_filter($admins);
+    $admins = array_map('trim', $admins);
+    $admins = array_filter($admins);
+    foreach ($admins as $admin) {
+        if (!adminExists($conn, $admin)) {
+            return "Admin $admin doesn't exist.";
+        }
+    }
+    $admin_ids = [];
+    $delete_department = "DELETE FROM department_lists WHERE departmentId = $dep_id";
+    if (mysqli_query($conn, $delete_department) && !empty($admins)) {
+        foreach ($admins as $admin) {
+            $admin_ids[] = returnAdminId($conn, $admin);
+        }
+        foreach ($admin_ids as $admin_id) {
+
+
+            if ($dep_id != 0 && $dep_id != 3) {
+                if (isAdminUnassigned($conn, $admin_id['adminId']))
+                    mysqli_query($conn, "UPDATE department_lists SET departmentId = $dep_id WHERE adminId = {$admin_id['adminId']}");
+                else
+                    mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ({$admin_id['adminId']}, $dep_id)");
+            } else {
+                mysqli_query($conn, "DELETE FROM department_lists WHERE adminId = {$admin_id['adminId']}");
+                mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ({$admin_id['adminId']}, $dep_id)");
+            }
+        }
+    }
+    $unassigned_admins = returnAllBackendUsers($conn);
+    foreach ($unassigned_admins as $unassigned_admin) {
+        if (!isAdminInDepartment($conn, $unassigned_admin['adminId'])) {
+            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ({$unassigned_admin['adminId']}, 0)");
+        }
+    }
+    $ticket_types_all = returnTicketTypesForDepartmentName($conn, $dep_name);
+    foreach ($ticket_types_all as $ticket_type) {
+        if (!in_array($ticket_type['ticketTypeName'], $ticket_types)) {
+            $update_tickets = "UPDATE ticket_types SET departmentId = 0 WHERE ticketTypeName = '{$ticket_type['ticketTypeName']}'";
+            mysqli_query($conn, $update_tickets);
+        }
+    }
+    if ($dep_id != 3) {
+        foreach ($ticket_types as $ticket_type) {
+            $update_tickets = "UPDATE ticket_types SET departmentId = $dep_id WHERE ticketTypeName = '$ticket_type'";
+            mysqli_query($conn, $update_tickets);
+        }
+    }
+    if (mysqli_affected_rows($conn) > 0) {
+        return "Department has been changed successfully";
+    }
+    return "The department has not been changed";
 }
