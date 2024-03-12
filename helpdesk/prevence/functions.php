@@ -377,3 +377,39 @@ function isAdminUnassigned($conn,$adminId){
         return 1;
     }
 }
+function changeAdminDepartment($conn, $admin_id, $department_names)
+{
+    if (!preg_match('/^[a-zA-Z0-9\s]+(,\s[a-zA-Z0-9\s]+)*$/', $department_names) && !preg_match('/^[a-zA-Z0-9\s]+(,[a-zA-Z0-9\s]+)*$/', $department_names) && !in_array('Super-admin', explode(',', $department_names)))
+        return "Wrong format, please use: dep1, dep2, dep3.";
+    $department_names = explode(',', $department_names);
+    $department_names = array_map('trim', $department_names);
+    //if there is no department of this name in the database
+    foreach ($department_names as $department_name) {
+        if (!departmentExists($conn, $department_name)) {
+            return "Department $department_name doesn't exist.";
+        }
+    }
+    //if admin is unassigned
+    if (in_array('Unassigned', $department_names)) {
+        if (isAdminUnassigned($conn, $admin_id)) {
+            return "Admin is already unassigned.";
+        }
+    }
+    //if super-admin is selected
+    if (in_array('Super-admin', $department_names)) {
+        if (count($department_names) > 1) {
+            return "Super-admin can't have any other departments.";
+        }
+    }
+    $department_ids = [];
+    foreach ($department_names as $department_name) {
+        $department_ids[] = returnDepartmentId($conn, $department_name);
+    }
+    $delete_department = "DELETE FROM department_lists WHERE adminId = $admin_id";
+    if (mysqli_query($conn, $delete_department)) {
+        foreach ($department_ids as $department_id) {
+            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ($admin_id,{$department_id['departmentId']})");
+        }
+        return "Departments changed successfully";
+    }
+}
