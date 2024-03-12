@@ -61,6 +61,12 @@ $table_associative_array = array(
         'userEmail'
     )
 );
+
+$keywords = array();
+
+if (isset($_POST['keyword'])) {
+    $keywords = explode(' ', $_POST['keyword']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,20 +105,26 @@ $table_associative_array = array(
                     <div class="inputBox">
                         <button type="submit" name="search" class="btn">Search</button>
                     </div><br>
-                    <div class="box-container">
-                        <div class='emptyWrap'>
-                            <div class='emptyDiv'>
-                                <p class='empty'><span style='color:black;'>Searched Keyword: </span><?= $_POST['keyword'] ?></p>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        if (isset($_POST['keyword'])) {
+                            echo '
+                                <div class="box-container">
+                                    <div class="emptyWrap">
+                                        <div class="emptyDiv">
+                                            <p class="empty"><span style="color:black;">Searched Keyword: </span>' . $_POST['keyword'] . '</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ';
+                        }
+                    ?>
                     <div class="box-container">
                         <?php
-                            if (isset($_POST['search'])) {
-                                if (isset($_POST['keyword'])) {
-                                    $search_keyword = $_POST['keyword'];
-                                    php_search_all_database($search_keyword, $table_associative_array);
+                            if (isset($_POST['keyword'])) {
+                                foreach ($keywords as $keyword) {
+                                    php_search_all_database($keyword, $table_associative_array);
                                 }
+                                
                             }
                         ?>
                     </div>
@@ -151,29 +163,33 @@ function php_search_all_database($search_keyword, $table_associative_array)
                             $columnName = substr($column, 4);
                         } else if ($table_name == 'requests') {
                             $columnName = substr($column, 3);
+                        } else if ($table_name == 'ticket_types') {
+                            $columnName = $column;
+                        } else if ($table_name == 'departments') {
+                            $columnName = $column;
                         }
-
+                        
                         echo '<div class="box">';
                             if (($table_name == 'admins') or ($table_name == 'users')) {
-                                echo '<div class="breaking"><p> Page : <span><a href="users.php"> All users
+                                echo '<div class="breaking"><p> Page: <span><a href="users.php"> All users
                                 </a></span></p></div>';
                             } else if ($table_name == 'requests') {
-                                echo '<div class="breaking"><p> Page : <span><a href="admin_page.php"> Requests
+                                echo '<div class="breaking"><p> Page: <span><a href="admin_page.php"> Requests
                                 </a></span></p></div>';
                             } else if ($table_name == 'departments') {
-                                echo '<div class="breaking"><p> Page : <span><a href="departments.php"> Departments
+                                echo '<div class="breaking"><p> Page: <span><a href="departments.php"> Departments
                                 </a></span></p></div>';
                             } else if ($table_name == 'tickets') {
-                                echo '<div class="breaking"><p> Page : <span><a href="admin_tickets.php"> Tickets
+                                echo '<div class="breaking"><p> Page: <span><a href="admin_tickets.php"> Tickets
                                 </a></span></p></div>';
                             } else if ($table_name == 'ticket_types') {
-                                echo '<div class="breaking"><p> Page : <span><a href="tck_types.php"> Ticket types
+                                echo '<div class="breaking"><p> Page: <span><a href="tck_types.php"> Ticket types
                                 </a></span></p></div>';
                             }
 
-                            echo '<div class="breaking"><p>Column name : <span>' . $columnName . "</span></p></div>";
-                            echo '<div class="breaking"><p>Row : <span>' . $row[0] . "</span></p></div>";
-                            echo '<div class="breaking"><p>Value : <span>' . $row[$column] . "</span></p></div>";
+                            echo '<div class="breaking"><p>Column name: <span>' . $columnName . "</span></p></div>";
+                            echo '<div class="breaking"><p>Row: <span>' . $row[0] . "</span></p></div>";
+                            echo '<div class="breaking"><p>Value: <span>' . $row[$column] . "</span></p></div>";
                         echo '</div>';
                     }
                 } else {
