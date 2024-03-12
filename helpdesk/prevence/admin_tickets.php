@@ -213,8 +213,8 @@ require("admin_header.php");
         </form>
 
         <?php
-        if (empty($_POST["users"]) && empty($_POST["types"]) && 
-            empty($_POST["date"]) && empty($_POST["enumValues"])) { //List of all tickets:
+        if (empty($_POST["users"]) && empty($_POST["types"]) && empty($_POST["start"]) &&
+            empty($_POST["end"]) && empty($_POST["enumValues"])) { //List of all tickets:
             if (numberOfTickets($conn) != 0) { ?>
                 <div class="box-container">
                     <?php
