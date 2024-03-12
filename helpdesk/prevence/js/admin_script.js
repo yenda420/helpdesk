@@ -43,7 +43,9 @@ function confirmDeletingDepartment() {
 function confirmChangingTicketType() {
    return confirm('Are you sure you want to change this ticket type?');
 }
-
 function confirmChangingDepartments() {
    return confirm('Are you sure you want to change the departments?');
+}
+function confirmAlteringDepartments() {
+   return confirm('Are you sure you want to alter the departments?');
 }

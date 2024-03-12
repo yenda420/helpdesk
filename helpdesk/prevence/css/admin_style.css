@@ -449,6 +449,13 @@ section {
 .orders .box-container .box p span {
   color: var(--orange);
 }
+.dashboard .box-container .box p textarea{
+  color: var(--orange);
+  font-size: 2rem;
+  text-align: center;
+  background-color: var(--light-bg);
+  scrollbar-width: none;
+}
 
 .orders .box-container .box form {
   text-align: center;

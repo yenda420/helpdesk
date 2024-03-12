@@ -367,3 +367,13 @@ function deleteDepartment($conn, $departmentId)
         return 0;
     }
 }
+function isAdminUnassigned($conn,$adminId){
+    $sql = "SELECT * FROM department_lists WHERE adminId = $adminId AND departmentId = 0;";
+    $sqlResult = mysqli_query($conn, $sql);
+    $numberOfRecords = mysqli_num_rows($sqlResult);
+    if($numberOfRecords == 0){
+        return 0;
+    }else{
+        return 1;
+    }
+}
