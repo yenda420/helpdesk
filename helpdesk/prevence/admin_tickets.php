@@ -114,8 +114,6 @@ if (!isset($_POST['types'])) {
 if (!isset($_POST['types'])) {
     $_POST['enumValues'] = null;
 }
-
-require("admin_header.php");
 ?>
 
 <!DOCTYPE html>
@@ -136,6 +134,8 @@ require("admin_header.php");
     <link rel="stylesheet" href="css/searchbar.css">
     <link rel="stylesheet" href="css/daterange.css">
 </head>
+
+<?php require("admin_header.php"); ?>
 
 <body>
     <section class="dashboard">
