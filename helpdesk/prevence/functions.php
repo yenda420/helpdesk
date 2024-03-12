@@ -413,3 +413,15 @@ function changeAdminDepartment($conn, $admin_id, $department_names)
         return "Departments changed successfully";
     }
 }
+function changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible){
+    if(!departmentExists($conn, $department_responsible)){
+        return "Department doesn't exist";
+    }
+    $departmentId = returnDepartmentId($conn, $department_responsible)['departmentId'];
+    $update_type = mysqli_query($conn, "UPDATE `ticket_types` SET ticketTypeName = '$type_name', departmentId = $departmentId WHERE ticketTypeId = $type_id");
+    if ($update_type) {
+        return "Ticket type updated successfully";
+    } else {
+        return "Error updating ticket type";
+    }
+}

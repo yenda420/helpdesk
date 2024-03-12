@@ -29,13 +29,7 @@ if (isset($_POST['change_type'])) {
     $type_id = $_POST['type_id'];
     $type_name = $_POST['type_name'];
     $department_responsible = $_POST['department_responsible'];
-    $departmentId = returnDepartmentId($conn, $department_responsible)['departmentId'];
-    $update_type = mysqli_query($conn, "UPDATE `ticket_types` SET ticketTypeName = '$type_name', departmentId = $departmentId WHERE ticketTypeId = $type_id");
-    if ($update_type) {
-        $message[] = "Ticket type updated successfully";
-    } else {
-        $message[] = "Error updating ticket type";
-    }
+    $message[] = changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible);
 }
 ?>
 
@@ -81,7 +75,7 @@ if (isset($_POST['change_type'])) {
                                     </span> </p>
                             </div>
                             <div class="breaking">
-                                <p>Department responsible : <span>
+                                <p>Department : <span>
                                     <input type="text" name="department_responsible" value="<?php echo returnDepartmentName($conn,$fetch_types['departmentId']); ?>">
                                     </span> </p>
                             </div>
