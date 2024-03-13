@@ -71,7 +71,7 @@ if (isset($_POST['change_dep'])) {
                                     $ticket_types = returnTicketTypesForDepartmentName($conn, $fetch_deps['departmentName']);
                                     $last_index = count($ticket_types) - 1;
                                     echo count($ticket_types);
-                                    echo "<textarea name='ticket_types' rows='" . count($ticket_types) . "' cols='22'>";
+                                    echo "<textarea name='ticket_types' rows='" . count($ticket_types) . "' cols='21'>";
                                     foreach ($ticket_types as $ticket_type) {
                                         $ticketTypeName = $ticket_type['ticketTypeName'] . ',';
                                         echo str_replace(',', "\n", $ticketTypeName);
@@ -86,7 +86,7 @@ if (isset($_POST['change_dep'])) {
                                     $admins = array();
                                     $admins = returnAllBackendsForDepartmentId($conn, $fetch_deps['departmentId']);
                                     echo count($admins);
-                                    echo "<textarea name='admins' rows='" . count($admins) . "'cols='22'>";
+                                    echo "<textarea name='admins' rows='" . count($admins) . "'cols='21'>";
                                     foreach ($admins as $admin) {
                                         $admin = $admin['adminEmail'] . ',';
                                         echo str_replace(',', "\n", $admin);
