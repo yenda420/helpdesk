@@ -133,7 +133,7 @@ if (isset($_POST['keyword'])) {
                                     echo '
                                         <div class="emptyWrap">
                                             <div class="emptyDiv">
-                                                <p class="empty"><span style="color:black"> No results found for </span>' . $search_keyword . ' </p>
+                                                <p class="empty"><span style="color:black"> No results found for </span>' . $_POST['keyword'] . ' </p>
                                             </div>
                                         </div>
                                     ';
