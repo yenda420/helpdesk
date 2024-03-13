@@ -32,12 +32,12 @@ if(isset($_POST['accept_request'])) {
    if($insert_user) {
        $delete_query = mysqli_query($conn, "DELETE FROM `requests` WHERE requestId = $request_id");
        if($delete_query) {
-         $message[] = "User created successfully";
+         $message[] = "User added successfully";
        } else {
          $message[] = "Error deleting request";
        }
    } else {
-      $message[] = "Error creating user"; 
+      $message[] = "Error adding user"; 
    }
 }
 
