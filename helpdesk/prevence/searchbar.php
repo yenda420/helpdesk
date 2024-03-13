@@ -121,10 +121,23 @@ if (isset($_POST['keyword'])) {
                     <div class="box-container">
                         <?php
                             if (isset($_POST['keyword'])) {
+                                $noResults = true;
+
                                 foreach ($keywords as $keyword) {
-                                    php_search_all_database($keyword, $table_associative_array);
+                                    if (php_search_all_database($keyword, $table_associative_array)) {
+                                        $noResults = false;
+                                    }
                                 }
-                                
+
+                                if ($noResults) {
+                                    echo '
+                                        <div class="emptyWrap">
+                                            <div class="emptyDiv">
+                                                <p class="empty"><span style="color:black"> No results found for </span>' . $search_keyword . ' </p>
+                                            </div>
+                                        </div>
+                                    ';
+                                }
                             }
                         ?>
                     </div>
@@ -203,6 +216,8 @@ function php_search_all_database($search_keyword, $table_associative_array)
         }
     }
     if ($count >= 24) {
-        echo '<div class="emptyWrap"><div class="emptyDiv"><p class="empty"><span style="color:black"> No results found for </span>' . $search_keyword . ' </p></div></div>';
+        return 0;
+    } else {
+        return 1;
     }
 }
