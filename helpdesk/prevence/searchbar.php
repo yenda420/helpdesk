@@ -86,7 +86,7 @@ if (!empty($_POST['keyword'])) {
                 <div class="flex">
                     <div class="filters">
                         <div class="inputBox" align="center">
-                            <input class="search" type="text" name="keyword" />
+                            <input class="search" type="text" name="keyword" placeholder="Enter keywords" />
                         </div>
                     </div>
                     <div class="inputBox">
