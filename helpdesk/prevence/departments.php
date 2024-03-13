@@ -12,7 +12,11 @@ if (isset($_SESSION['admin_id'])) {
 }
 if (isset($_POST['delete_dep'])) {
     $dep_id = $_POST['dep_id'];
-
+    if (deleteDepartment($conn, $dep_id)) {
+        $message[] = "Department deleted successfully";
+    } else {
+        $message[] = "Error deleting department";
+    }
 }
 if (isset($_POST['change_dep'])) {
     $dep_id = $_POST['dep_id'];
