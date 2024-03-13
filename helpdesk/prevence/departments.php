@@ -17,6 +17,12 @@ if (isset($_POST['delete_dep'])) {
     } else {
         $message[] = "Error deleting department";
     }
+    $unassigned_admins = returnAllBackendUsers($conn);
+    foreach ($unassigned_admins as $unassigned_admin) {
+        if (!isAdminInDepartment($conn, $unassigned_admin['adminId'])) {
+            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ({$unassigned_admin['adminId']}, 0)");
+        }
+    }
 }
 if (isset($_POST['change_dep'])) {
     $dep_id = $_POST['dep_id'];
