@@ -147,10 +147,10 @@ if (!isset($_POST['userSearch'])) {
                      if (isset($frontendUsers)) {
                         foreach ($frontendUsers as $user) {
                            echo '<div class="box">
-                                       <div class="breaking"><p> ID : <span>' . $user['userId'] . '</span> </p></div>
-                                       <div class="breaking"><p> Name : <span>' . $user['userName'] . '</span> </p></div>
-                                       <div class="breaking"><p> Surname : <span>' . $user['userSurname'] . '</span> </p></div>
-                                       <div class="breaking"><p> Email : <span>' . $user['userEmail'] . '</span> </p></div>';
+                                       <div class="breaking"><p> ID: <span>' . $user['userId'] . '</span> </p></div>
+                                       <div class="breaking"><p> Name: <span>' . $user['userName'] . '</span> </p></div>
+                                       <div class="breaking"><p> Surname: <span>' . $user['userSurname'] . '</span> </p></div>
+                                       <div class="breaking"><p> Email: <span>' . $user['userEmail'] . '</span> </p></div>';
                            if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="user_id" value="' . $user['userId'] . '"><br>
                                        <button type="submit" name="delete_user" class="delete-btn" onclick="return confirmDeletingUser()">Delete</button>
@@ -166,10 +166,10 @@ if (!isset($_POST['userSearch'])) {
                         foreach ($backendUsers as $user) {
                            echo '<form method="post">';
                            echo '<div class="box">
-                                      <div class="breaking"><p> ID : <span>' . $user['adminId'] . '</span> </p></div>
-                                      <div class="breaking"><p> Name : <span>' . $user['adminName'] . '</span> </p></div>
-                                      <div class="breaking"><p> Surname : <span>' . $user['adminSurname'] . '</span> </p></div>
-                                      <div class="breaking"><p> Email : <span>' . $user['adminEmail'] . '</span> </p></div>';
+                                      <div class="breaking"><p> ID: <span>' . $user['adminId'] . '</span> </p></div>
+                                      <div class="breaking"><p> Name: <span>' . $user['adminName'] . '</span> </p></div>
+                                      <div class="breaking"><p> Surname: <span>' . $user['adminSurname'] . '</span> </p></div>
+                                      <div class="breaking"><p> Email: <span>' . $user['adminEmail'] . '</span> </p></div>';
                            echo '<div class="breaking" style="overflow:hidden;"><p> Department : <span align="center" style="justify-content: center;">';
                            $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$user['adminId']}'") or die('query failed');
                            $departmentNames = [];
