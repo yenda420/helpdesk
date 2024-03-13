@@ -598,3 +598,35 @@ function php_search_all_database($conn, $search_keyword, $table_associative_arra
         return 1;
     }
 }
+
+function resultsFound($conn, $search_keyword, $table_associative_array)
+{
+    $count = 0;
+
+    if (mysqli_connect_errno()) {		// Check if database connection is ok
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    }
+
+    if (count($table_associative_array) > 0) {
+        foreach ($table_associative_array as $table_name => $columnn_name) {
+            foreach ($columnn_name as $column) {
+                $db_search_result_fields = $column . " LIKE ('%" . $search_keyword . "%')";
+                $db_search_result = $conn->query("SELECT * FROM " . $table_name . " WHERE " . $db_search_result_fields);
+
+                if ($db_search_result->num_rows > 0) {
+                    return true;
+                } else {
+                    if ($db_search_result->num_rows == 0) {
+                        $count++;
+                    }
+                }
+            }
+        }
+    }
+
+    if ($count >= 24) {
+        return false;
+    } else {
+        return true;
+    }
+}

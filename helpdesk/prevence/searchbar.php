@@ -94,48 +94,55 @@ if (!empty($_POST['keyword'])) {
                     </div><br>
                     <?php
                         if (!empty($_POST['keyword'])) {
+                            $resultsFound = false;
+
+                            foreach ($keywords as $keyword) {
+                                if (resultsFound($conn, $keyword, $table_associative_array)) {
+                                    $resultsFound = true;
+                                    break;
+                                }
+                            }
+
+                            if ($resultsFound) {
+                                echo '
+                                    <div class="box-container">
+                                        <div class="emptyWrap">
+                                            <div class="emptyDiv">
+                                                <p class="empty"><span style="color:black;">Results for </span>' . $_POST['keyword'] . ':</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ';
+
+                                echo '<div class="box-container">';
+                                    foreach ($keywords as $keyword) {
+                                        php_search_all_database($conn, $keyword, $table_associative_array);
+                                    }
+                                echo '</div>';
+
+                            } else {
+                                echo '
+                                    <div class="box-container">
+                                        <div class="emptyWrap">
+                                            <div class="emptyDiv">
+                                                <p class="empty"><span style="color:black"> No results found for </span>' . $_POST['keyword'] . ' </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ';
+                            }
+                        } else {
                             echo '
                                 <div class="box-container">
                                     <div class="emptyWrap">
                                         <div class="emptyDiv">
-                                            <p class="empty"><span style="color:black;">Searched Keyword: </span>' . $_POST['keyword'] . '</p>
+                                            <p class="empty"><span style="color:black">Type to search the database</span></p>
                                         </div>
                                     </div>
                                 </div>
                             ';
                         }
                     ?>
-                    <div class="box-container">
-                        <?php
-                            if (!empty($_POST['keyword'])) {
-                                $noResults = true;
-
-                                foreach ($keywords as $keyword) {
-                                    if (php_search_all_database($conn, $keyword, $table_associative_array)) {
-                                        $noResults = false;
-                                    }
-                                }
-
-                                if ($noResults) {
-                                    echo '
-                                        <div class="emptyWrap">
-                                            <div class="emptyDiv">
-                                                <p class="empty"><span style="color:black"> No results found for </span>' . $_POST['keyword'] . ' </p>
-                                            </div>
-                                        </div>
-                                    ';
-                                }
-                            } else {
-                                echo '
-                                    <div class="emptyWrap">
-                                        <div class="emptyDiv">
-                                            <p class="empty"><span style="color:black">Type to search the database</span></p>
-                                        </div>
-                                    </div>
-                                ';
-                            }
-                        ?>
-                    </div>
                 </div>
             </form>
         </section>
