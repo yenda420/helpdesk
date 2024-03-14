@@ -25,7 +25,7 @@
 }
 
 *::selection {
-  background-color: var(--orange);
+  background-color: var(--logo-color);
   color: var(--white);
 }
 
@@ -39,7 +39,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--orange);
+  background-color: var(--logo-color);
 }
 
 html {
@@ -275,7 +275,7 @@ header .btn {
 }
 
 .header .flex .account-box p span {
-  color: var(--orange);
+  color: var(--logo-color);
 }
 
 .header .flex .account-box .delete-btn {
@@ -560,7 +560,7 @@ header .btn {
 }
 
 .footer .credit span {
-  color: var(--orange);
+  color: var(--logo-color);
 }
 
 .dashboard {

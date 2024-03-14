@@ -8,6 +8,7 @@
    --light-color: #666;
    --light-white: #ccc;
    --light-bg: #f5f5f5;
+   --logo-color: #f08963;
    --border: .1rem solid var(--black);
    --box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
 }
@@ -24,7 +25,7 @@
 }
 
 *::selection {
-   background-color: var(--orange);
+   background-color: var(--logo-color);
    color: var(--white);
 }
 
@@ -38,7 +39,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-   background-color: var(--orange);
+   background-color: var(--logo-color);
 }
 
 html {
@@ -118,7 +119,7 @@ section {
 
 .white-btn,
 .btn {
-   background-color: var(--orange);
+   background-color: var(--logo-color);
 }
 
 .option-btn {
@@ -217,7 +218,7 @@ section {
 }
 
 .form-container form p a {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 .form-container form p a:hover {
@@ -259,7 +260,7 @@ section {
 }
 
 .header .header-1 .flex .share a:hover {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 .header .header-1 .flex p {
@@ -268,7 +269,7 @@ section {
 }
 
 .header .header-1 .flex p a {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 .header .header-1 .flex p a:hover {
@@ -291,7 +292,7 @@ section {
 }
 
 .header .header-2 .flex .navbar a:hover {
-   color: var(--orange);
+   color: var(--logo-color);
    text-decoration: underline;
 }
 
@@ -303,7 +304,7 @@ section {
 }
 
 .header .header-2 .flex .icons>*:hover {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 #menu-btn {
@@ -337,7 +338,7 @@ section {
 }
 
 .header .flex .user-box p span {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 .header .flex .user-box .delete-btn {
@@ -824,7 +825,7 @@ textarea {
 }
 
 .footer .credit span {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 body {
@@ -1002,7 +1003,7 @@ td {
 }
 
 .users .box-container .box p span {
-   color: var(--orange);
+   color: var(--logo-color);
 }
 
 .users .box-container .box .delete-btn {
