@@ -182,13 +182,13 @@ header .btn {
 }
 
 .header {
-  top: 0;
-  left: 0;
-  right: 0;
   z-index: 1000;
   background-color: var(--white);
   box-shadow: var(--box-shadow);
   min-height: 12rem;
+  align-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .header .flex {
@@ -211,7 +211,7 @@ header .btn {
 }
 
 .logo img{
-  max-width:  50%;
+  max-width: 50%;
   height: auto;
   position: relative;
   top:10px;
@@ -221,6 +221,8 @@ header .btn {
   order: -1;
   width:30%;
   margin-right: 0px;
+  align-items: flex-start;
+  display: flex;
 }
 
 .logo p {
@@ -970,6 +972,13 @@ textarea {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+
+  .logo img {
+    max-width: 85%;
+    height: auto;
+    position: relative;
+    top: 10px;
+  }
 }
 
 @media screen and (max-width: 661px) {
@@ -1226,8 +1235,8 @@ textarea {
   }
 
   .logo img {
-    max-width: 80%;
-    min-width: 75%;
+    max-width: 150%;
+    min-width: 150%;
     height: auto;
     position: relative;
     top: 10px;

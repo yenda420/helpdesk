@@ -94,7 +94,7 @@ if (is_array($_SESSION['department'])) {
       </nav>
 
 
-   <form method="POST" action="searchbar.php" class="searchbar">
+   <form method="POST" action="searchbar.php" class="searchbar" style="margin-right: 2rem;"> 
       <div class="iconsParent">
          <div style="flex:1;margin-right:1rem;">
            <input class="search" placeholder="Search" type="text" name="keyword" />
