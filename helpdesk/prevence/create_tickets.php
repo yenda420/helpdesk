@@ -6,7 +6,7 @@ require('functions.php');
 session_start();
 
 if (isset($_SESSION['admin_id'])) {
-   if ($_SESSION['department'][0]!='Super-admin') {
+   if ($_SESSION['department'][0] != 'Super-admin') {
       header('location:admin_page.php');
    }
 } else {
@@ -15,30 +15,45 @@ if (isset($_SESSION['admin_id'])) {
 
 if (isset($_POST['submit'])) {
    $name = mysqli_real_escape_string($conn, $_POST['ticketName']);
-   //if the department name is already in the database, don't add it again
-   $sql = "SELECT ticketTypeName FROM ticket_types WHERE ticketTypeName='$name'";
-   $result = mysqli_query($conn, $sql);
-   $ticket = mysqli_fetch_assoc($result);
+
+   // Prepare a SELECT statement to check if the ticket type already exists
+   $stmt = $conn->prepare("SELECT ticketTypeName FROM ticket_types WHERE ticketTypeName=?");
+   $stmt->bind_param("s", $name);
+   $stmt->execute();
+   $result = $stmt->get_result();
+   $ticket = $result->fetch_assoc();
+
    if ($ticket) {
-      $message[] = 'Ticket type already exists.';
+      $_SESSION['message'] = 'Ticket type already exists.';
    } else {
       $departmentName = $_POST['departmentName'];
-      if(departmentExists($conn,$departmentName)) {
+      if (departmentExists($conn, $departmentName)) {
          $department = returnDepartmentId($conn, $departmentName);
          $departmentId = $department['departmentId'];
-         $query = "INSERT INTO `ticket_types` (ticketTypeName, departmentId) VALUES ('$name', '$departmentId');";
-         $result2 = mysqli_query($conn, $query);
+
+         // Prepare an INSERT statement to add the new ticket type
+         $stmt = $conn->prepare("INSERT INTO `ticket_types` (ticketTypeName, departmentId) VALUES (?, ?)");
+         $stmt->bind_param("si", $name, $departmentId);
+         $result2 = $stmt->execute();
+
          if ($result2) {
-            $message[] = 'Ticket type was successfuly created.';
+            $_SESSION['message'] = 'Ticket type was successfuly created.';
          } else {
-            $message[] = 'Query failed.';
+            $_SESSION['message'] = 'Query failed.';
          }
-      }
-      else {
-         $message[] = 'Department does not exist.';
+      } else {
+         $_SESSION['message'] = 'Department does not exist.';
       }
    }
- 
+   $stmt->close();
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
+}
+?>
+<?php
+if (isset($_SESSION['message'])) {
+   $message[] = $_SESSION['message'];
+   unset($_SESSION['message']);
 }
 ?>
 
@@ -73,7 +88,8 @@ if (isset($_POST['submit'])) {
                   <input type="text" class="textInput" name="ticketName" placeholder="Ticket type name" required />
                </div>
                <div class="inputBox">
-                  <input type="text" class="textInput" name="departmentName" placeholder="Department responsible" required />
+                  <input type="text" class="textInput" name="departmentName" placeholder="Department responsible"
+                     required />
                </div>
             </div>
             <input type="submit" value="Add" class="btn" name="submit">
