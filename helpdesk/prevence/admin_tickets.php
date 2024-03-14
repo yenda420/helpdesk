@@ -12,14 +12,18 @@ require("functions.php");
 
 if (isset($_POST['delete_ticket'])) {
     $ticket_id = $_POST['ticket_id'];
-    // Perform the deletion query
-    $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketId = '$ticket_id'");
+    // Prepare the deletion query
+    $stmt = $conn->prepare("DELETE FROM tickets WHERE ticketId = ?");
+    $stmt->bind_param("i", $ticket_id);
+    $delete_query = $stmt->execute();
     if ($delete_query) {
-        // Redirect to the same page after deletio
-        $message[] = "Ticket deleted successfully";
+        $_SESSION['message'] = "Ticket deleted successfully";
     } else {
-        $message[] = "Failed to delete ticket";
+        $_SESSION['message'] = "Failed to delete ticket";
     }
+    $stmt->close();
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 $users = returnAllFrontendUsers($conn);
@@ -121,6 +125,12 @@ if (!isset($_POST['types'])) {
 
 if (!isset($_POST['types'])) {
     $_POST['enumValues'] = null;
+}
+?>
+<?php
+if (isset($_SESSION['message'])) {
+    $message[] = $_SESSION['message'];
+    unset($_SESSION['message']);
 }
 ?>
 
