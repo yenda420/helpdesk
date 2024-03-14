@@ -56,12 +56,11 @@ if (isset($_POST['submit'])) {
             $_SESSION['message'] = 'Invalid email or password';
          }
          header('location:admin_page.php');
+         exit;
       }
    } else {
       $_SESSION['message'] = 'Invalid email or password';
    }
-   header("Location: " . $_SERVER['PHP_SELF']);
-   exit;
 
 }
 ?>
