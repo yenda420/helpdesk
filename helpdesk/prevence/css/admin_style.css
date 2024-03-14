@@ -310,7 +310,7 @@ header .btn {
 
 .filters {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -670,6 +670,7 @@ header .search {
 
 form .flex .inputBox {
   flex: 1 1 40rem;
+  width: 100%;
 }
 
 form .flex input[type="submit"] {
@@ -875,4 +876,8 @@ textarea {
 
 div label {
   font-size: small;
+}
+
+.inputBox .btn {
+  padding: 1.25rem 5rem;
 }

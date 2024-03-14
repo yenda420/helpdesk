@@ -211,12 +211,16 @@ if (!isset($_POST['types'])) {
 
                     <input type="hidden" id="start" name="start">
                     <input type="hidden" id="end" name="end">
-                    <div id="reportrange" class="dateRange">
+                    <div id="reportrange" class="dateRange inputBox">
                         <i class="fa fa-calendar"></i>&nbsp;
                         <span>Select a date</span> <i class="fa fa-caret-down"></i>
                     </div>
+
+                    <div class="inputBox" align="center">
+                        <input type="submit" value="Clear filters" class="btn" name="clear_filters">
+                    </div>
                 </div>
-                <input type="submit" value="Clear filters" class="btn" name="clear_filters">
+                
                 <input type="submit" value="Show tickets" class="btn" name="show_tickets">
             </div>
         </form>
