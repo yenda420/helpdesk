@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
          <form method="post" id="adminForm">
             <div class="flex">
                <div class="inputBox">
-                  <input type="text" name="createDepartmentName" placeholder="Department name" required />
+                  <input type="text" class="textInput" name="createDepartmentName" placeholder="Department name" required />
                </div>
             </div>
             <input type="submit" value="Add" class="btn" name="submit">

@@ -70,10 +70,10 @@ if (isset($_POST['submit'])) {
          <form method="post" id="adminForm">
             <div class="flex">
                <div class="inputBox">
-                  <input type="text" name="ticketName" placeholder="Ticket type name" required />
+                  <input type="text" class="textInput" name="ticketName" placeholder="Ticket type name" required />
                </div>
                <div class="inputBox">
-                  <input type="text" name="departmentName" placeholder="Department responsible  " required />
+                  <input type="text" class="textInput" name="departmentName" placeholder="Department responsible" required />
                </div>
             </div>
             <input type="submit" value="Add" class="btn" name="submit">
