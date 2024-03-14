@@ -1,8 +1,9 @@
 :root {
     --ss-primary-color: rgb(224, 224, 230);
     --ss-white: #ffffff;
-    --ss-black: #000000;
+    --ss-black: hsl(0, 0%, 0%);
     --ss-orange: #f39c12;
+    --ss-logo-color: #f08963;
     --ss-lightest-gray: #eeeeee;
     --ss-lighter-gray: #ddd;
     --ss-light-gray: #ccc;
@@ -235,7 +236,7 @@
 
 .daterangepicker td.active,
 .daterangepicker td.active:hover {
-    background-color: var(--ss-orange);
+    background-color: var(--ss-logo-color);
     border-color: transparent;
     color: var(--ss-white);
 }
@@ -361,7 +362,7 @@
 }
 
 .daterangepicker .ranges li.active {
-    background-color: var(--ss-orange);
+    background-color: var(--ss-logo-color);
     color: var(--ss-white);
 }
 
