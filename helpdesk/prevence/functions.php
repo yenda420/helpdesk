@@ -496,7 +496,7 @@ function changeTicketTypeDepartment($conn, $type_id, $type_name, $department_res
     }
     $departmentId = returnDepartmentId($conn, $department_responsible)['departmentId'];
     $stmt = $conn->prepare("UPDATE ticket_types SET ticketTypeName = ?, departmentId = ? WHERE ticketTypeId = ?");
-    $stmt->bind_param("isi", $departmentId, $type_id);
+    $stmt->bind_param("sii", $type_name, $departmentId, $type_id);
     if ($stmt->execute()) {
         $stmt->close();
         return "Department changed successfully";
