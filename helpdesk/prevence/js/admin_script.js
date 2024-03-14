@@ -46,6 +46,9 @@ function confirmChangingTicketType() {
 function confirmChangingDepartments() {
    return confirm('Are you sure you want to change the departments?');
 }
+function confirmAcceptingRequest() {
+   return confirm('Are you sure you want to accept the request?');
+}
 function confirmAlteringDepartments() {
    return confirm('Are you sure you want to alter the departments?');
 }

@@ -269,13 +269,13 @@ function emailInDatabase($conn, $email)
         ");
 
     $sqlUsers->bind_param("s", $email);
-    $sqlRequests->bind_param("s", $email);
-    $sqlAdmins->bind_param("s", $email);
     $sqlUsers->execute();
+    $resultUsers = $sqlUsers->get_result();	
+    $sqlRequests->bind_param("s", $email);
     $sqlRequests->execute();
-    $sqlAdmins->execute();
-    $resultUsers = $sqlUsers->get_result();
     $resultRequests = $sqlRequests->get_result();
+    $sqlAdmins->bind_param("s", $email);
+    $sqlAdmins->execute();
     $resultAdmins = $sqlAdmins->get_result();
     $numberOfRecordsUsers = $resultUsers->num_rows;
     $numberOfRecordsRequests = $resultRequests->num_rows;
@@ -283,10 +283,10 @@ function emailInDatabase($conn, $email)
     $sqlUsers->close();
     $sqlRequests->close();
     $sqlAdmins->close();
-    if ($numberOfRecordsUsers > 0 && $numberOfRecordsRequests > 0 && $numberOfRecordsAdmins > 0) {
-        return 0;
-    } else {
+    if ($numberOfRecordsUsers > 0 || $numberOfRecordsRequests > 0 || $numberOfRecordsAdmins > 0) {
         return 1;
+    } else {
+        return 0;
     }
 
 }
