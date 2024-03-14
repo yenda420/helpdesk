@@ -13,23 +13,37 @@ if (isset($_SESSION['admin_id'])) {
 if (isset($_POST['delete_user'])) {
    if (isset($_POST['user_id'])) {
       $user_id = $_POST['user_id'];
-      $delete_query = mysqli_query($conn, "DELETE FROM `tickets` WHERE userId = $user_id");
+
+      $stmt = $conn->prepare("DELETE FROM `tickets` WHERE userId = ?");
+      $stmt->bind_param("i", $$user_id);
+      $stmt->execute();
+      $delete_query = $stmt->get_result();
+
       if ($delete_query) {
-         $delete_query = mysqli_query($conn, "DELETE FROM `users` WHERE userId = $user_id");
-         $message[] = "User deleted successfully";
+         $stmt = $conn->prepare("DELETE FROM `users` WHERE userId = ?");
+         $stmt->bind_param("i", $$user_id);
+         $stmt->execute();
+         $delete_query = $stmt->get_result();
+         if ($delete_query) {
+            $message[] = "User deleted successfully";
+         } else {
+            $message[] = "Error deleting user";
+         }
       } else {
          $message[] = "Error deleting user";
       }
    } else if (isset($_POST['admin_id'])) {
       $admin_id = $_POST['admin_id'];
-      $delete_query = mysqli_query($conn, "DELETE FROM `admins` WHERE adminId = $admin_id");
+      $stmt = $conn->prepare("DELETE FROM `admins` WHERE adminId = ?");
+      $stmt->bind_param("i", $admin_id);
+      $stmt->execute();
+      $delete_query = $stmt->get_result();
+
       if ($delete_query) {
          $message[] = "Admin deleted successfully";
       } else {
          $message[] = "Error deleting admin";
       }
-
-
    }
 }
 if (isset($_POST["change_dept"])) {
@@ -58,37 +72,28 @@ if (isset($_POST['filter'])) {
 if (!isset($_POST['userSearch'])) {
    $_POST['userSearch'] = null;
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Users</title>
-
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
    <link rel="stylesheet" href="css/admin_style.css">
    <link rel="stylesheet" href="css/searchbar.css">
-
 </head>
-
 <body>
-
-   <?php include 'admin_header.php';
-   if (!isset($_POST['users'])) {
-      $_POST['users'] = null;
-   }
+   <?php 
+      include 'admin_header.php';
+      if (!isset($_POST['users'])) {
+         $_POST['users'] = null;
+      }
    ?>
    <section class="dashboard">
       <section class="users">
-
          <h1 class="title">Users</h1>
          <form method="post">
             <div class="flex">
@@ -123,7 +128,6 @@ if (!isset($_POST['userSearch'])) {
                               <?= $user['adminEmail'] ?>
                            </option>
                         <?php } ?>
-
 
                      </select>
                      <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
@@ -162,7 +166,6 @@ if (!isset($_POST['userSearch'])) {
                         }
                      }
 
-
                      if (isset($backendUsers)) {
                         foreach ($backendUsers as $user) {
                            echo '<form method="post">';
@@ -172,11 +175,16 @@ if (!isset($_POST['userSearch'])) {
                                       <div class="breaking"><p> Surname: <span>' . $user['adminSurname'] . '</span> </p></div>
                                       <div class="breaking"><p> Email: <span>' . $user['adminEmail'] . '</span> </p></div>';
                            echo '<div class="breaking" style="overflow:hidden;"><p> Department : <span align="center" style="justify-content: center;">';
-                           $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$user['adminId']}'") or die('query failed');
+                           $stmt = $conn->prepare("SELECT * FROM `department_lists` where adminId = ?");
+                           $stmt->bind_param("i", $user['adminId']);
+                           $stmt->execute();
+                           $result = $stmt->get_result();
+                           $fetch_departments = $result->fetch_all(MYSQLI_ASSOC);
+                           
                            $departmentNames = [];
-                           if (mysqli_num_rows($select_departments) > 0) {
-                              while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
-                                 $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
+                           if (mysqli_num_rows($result) > 0) {
+                              foreach ($fetch_departments as $department) {
+                                 $departmentNames[] = returnDepartmentName($conn, $department['departmentId']);
                               }
                            }
                            echo "<textarea name='department' rows='" . count($departmentNames) . "' cols='21'>";
@@ -194,26 +202,23 @@ if (!isset($_POST['userSearch'])) {
                            echo '</form>';
                         }
                      }
-
-
-
                   } else {
                      if (isset($_POST['userSearch'])) {
                         $oneUser[] = returnUser($conn, $_POST['userSearch']);
-                        // echo count($oneUser, 1);
                         if (count($oneUser, 1) == 1 && isset($backendUsers)) {
-                           //echo "prazdne";
                            $oneUser[] = returnAdmin($conn, $_POST['userSearch']);
-                           //var_dump($oneUser[1]);
-                           //echo count($oneUser, 1);
-                  
                            echo '<div class="box">
-                           <div class="breaking"><p> ID: <span>' . $oneUser[1]['adminId'] . '</span> </p></div>
-                           <div class="breaking"><p> Name: <span>' . $oneUser[1]['adminName'] . '</span> </p></div>
-                           <div class="breaking"><p> Surname: <span>' . $oneUser[1]['adminSurname'] . '</span> </p></div>
-                           <div class="breaking"><p> Email: <span>' . $oneUser[1]['adminEmail'] . '</span> </p></div>';
+                                    <div class="breaking"><p> ID: <span>' . $oneUser[1]['adminId'] . '</span> </p></div>
+                                    <div class="breaking"><p> Name: <span>' . $oneUser[1]['adminName'] . '</span> </p></div>
+                                    <div class="breaking"><p> Surname: <span>' . $oneUser[1]['adminSurname'] . '</span> </p></div>
+                                    <div class="breaking"><p> Email: <span>' . $oneUser[1]['adminEmail'] . '</span> </p></div>';
                            echo '<div class="breaking"><p> Department: <span>';
-                           $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$oneUser[1]['adminId']}'") or die('query failed');
+
+                           $stmt = $conn->prepare("SELECT * FROM `department_lists` where adminId = ?");
+                           $stmt->bind_param("i", $oneUser[1]['adminId']);
+                           $stmt->execute();
+                           $select_departments = $stmt->get_result();
+                           
                            $departmentNames = [];
                            if (mysqli_num_rows($select_departments) > 0) {
                               while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
@@ -229,12 +234,11 @@ if (!isset($_POST['userSearch'])) {
                            } else {
                               echo '</div>';
                            }
-
                         } else {
-                           //var_dump($oneUser[0]['userId']);
                            if (!isset($frontendUsers))
                               echo '<p class="empty">No Frontend Users</p>';
                         }
+
                         if (count($oneUser, 1) != 1 && isset($frontendUsers) && $oneUser[0]['userId'] != null) {
                            echo '<div class="box">
                            <div class="breaking"><p> ID: <span>' . $oneUser[0]['userId'] . '</span> </p></div>
@@ -256,7 +260,6 @@ if (!isset($_POST['userSearch'])) {
                      }
                   }
 
-                  //if there are no users
                   if (isset($backendUsers) && isset($frontendUsers)) {
                      if (count($frontendUsers) == 0 && count($backendUsers) == 0) {
                         echo '<p class="empty">No users</p>';
@@ -268,9 +271,6 @@ if (!isset($_POST['userSearch'])) {
                         echo '<p class="empty">No backend users</p>';
                      }
                   }
-
-
-
                   ?>
                </div>
             </div>
@@ -278,7 +278,9 @@ if (!isset($_POST['userSearch'])) {
       </section>
    </section>
    <script src="js/admin_script.js"></script>
-   <?php include 'footer.php'; ?>
+   <?php 
+      include 'footer.php';
+      $stmt->close();
+   ?>
 </body>
-
 </html>
