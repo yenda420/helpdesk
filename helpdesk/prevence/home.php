@@ -34,33 +34,45 @@ session_start();
             $userId = $_SESSION['user_id'];
             if (numberOfTicketsForUserId($conn, $userId) != 0) {
 
-               $select_tickets = mysqli_query($conn, "SELECT * FROM `tickets`") or die('query failed');
+               $stmt = $conn->prepare("SELECT * FROM tickets");
+               $stmt->execute();
+               $select_tickets = $stmt->get_result();
 
-               while ($fetch_tickets = mysqli_fetch_assoc($select_tickets)) {
-                     if ($userId == $fetch_tickets['userId']) {
-                        $ticketDate = date_create($fetch_tickets['ticketDate']); ?>
-                        
-                        <div class="box">
-                           <div class="breaking"><p> Title: <span>
+               while ($fetch_tickets = $select_tickets->fetch_assoc()) {
+                  if ($userId == $fetch_tickets['userId']) {
+                     $ticketDate = date_create($fetch_tickets['ticketDate']); ?>
+
+                     <div class="box">
+                        <div class="breaking">
+                           <p> Title: <span>
                                  <?php echo $fetch_tickets['title']; ?>
-                              </span> </p></div>
-                              <div class="breaking"><p> Status: <span>
-                                 <?php echo $fetch_tickets['status']; ?>
-                              </span> </p></div>
-                              <div class="breaking"><p> Type: <span>
-                                 <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
-                              </span> </p></div>
-                              <div class="breaking"><p> Date: <span>
-                                 <?php echo date_format($ticketDate, 'd.m.Y'); ?>
-                              </span> </p></div>
-                              <div class="breaking"><p> Description: <span>
-                                 <?php echo $fetch_tickets['ticketDesc']; ?>
-                              </span> </p></div>
+                              </span> </p>
                         </div>
-                        <?php
-                     }
+                        <div class="breaking">
+                           <p> Status: <span>
+                                 <?php echo $fetch_tickets['status']; ?>
+                              </span> </p>
+                        </div>
+                        <div class="breaking">
+                           <p> Type: <span>
+                                 <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
+                              </span> </p>
+                        </div>
+                        <div class="breaking">
+                           <p> Date: <span>
+                                 <?php echo date_format($ticketDate, 'd.m.Y'); ?>
+                              </span> </p>
+                        </div>
+                        <div class="breaking">
+                           <p> Description: <span>
+                                 <?php echo $fetch_tickets['ticketDesc']; ?>
+                              </span> </p>
+                        </div>
+                     </div>
+                     <?php
                   }
-                  
+               }
+
             } else { ?>
                <p class="empty">No tickets</p>
             <?php } ?>
