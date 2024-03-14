@@ -236,7 +236,7 @@ if (!isset($_POST['userSearch'])) {
                            }
                         } else {
                            if (!isset($frontendUsers))
-                              echo '<p class="empty">No Frontend Users</p>';
+                              echo '<p class="empty">No Backend Users</p>';
                         }
 
                         if (count($oneUser, 1) != 1 && isset($frontendUsers) && $oneUser[0]['userId'] != null) {
@@ -255,7 +255,7 @@ if (!isset($_POST['userSearch'])) {
                            echo '</form>';
                         } else {
                            if (!isset($backendUsers))
-                              echo '<p class="empty">No Backend Users</p>';
+                              echo '<p class="empty">No Frontend Users</p>';
                         }
                      }
                   }
