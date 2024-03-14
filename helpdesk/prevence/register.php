@@ -5,8 +5,6 @@ require('functions.php');
 
 if (isset($_POST['submit'])) {
    $_SESSION['message'] = registerUser($conn, $_POST);
-   header("Location: " . $_SERVER['PHP_SELF']);
-   exit;
 }
 ?>
 <?php
