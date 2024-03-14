@@ -10,21 +10,28 @@ require('functions.php');
 session_start();
 
 if (isset($_POST['submit'])) {
-
    $pass = hash('sha256', mysqli_real_escape_string($conn, $_POST['password']));
    $email = mysqli_real_escape_string($conn, $_POST['email']);
-   //echo $name . " " . $last_name . " " . $pass . "<br>";
 
-   $select_users = mysqli_query($conn, "SELECT * FROM `users` where userPasswd = '$pass' and userEmail='$email'") or die('query failed');
-   $select_admins = mysqli_query($conn, "SELECT * FROM `admins` where adminPasswd = '$pass' and adminEmail='$email'") or die('query failed');
-   //$select_users = mysqli_query($conn, "SELECT * FROM `users` ") or die('query failed');
+   // Prepare a SELECT statement for users
+   $stmt = $conn->prepare("SELECT * FROM `users` where userPasswd = ? and userEmail = ?");
+   $stmt->bind_param("ss", $pass, $email);
+   $stmt->execute();
+   $select_users = $stmt->get_result();
+
+   // Prepare a SELECT statement for admins
+   $stmt = $conn->prepare("SELECT * FROM `admins` where adminPasswd = ? and adminEmail = ?");
+   $stmt->bind_param("ss", $pass, $email);
+   $stmt->execute();
+   $select_admins = $stmt->get_result();
+
    if (mysqli_num_rows($select_users) > 0) {
       while ($fetch_users = mysqli_fetch_assoc($select_users)) {
-            $_SESSION['user_name'] = $fetch_users['userName'];
-            $_SESSION['user_email'] = $fetch_users['userEmail'];
-            $_SESSION['user_id'] = $fetch_users['userId'];
-            $_SESSION['user_surname'] = $fetch_users['userSurname'];
-            header('location:home.php');
+         $_SESSION['user_name'] = $fetch_users['userName'];
+         $_SESSION['user_email'] = $fetch_users['userEmail'];
+         $_SESSION['user_id'] = $fetch_users['userId'];
+         $_SESSION['user_surname'] = $fetch_users['userSurname'];
+         header('location:home.php');
       }
    } else if (mysqli_num_rows($select_admins) > 0) {
       $_SESSION['admin_departments'] = array();
@@ -33,28 +40,36 @@ if (isset($_POST['submit'])) {
          $_SESSION['admin_email'] = $fetch_admins['adminEmail'];
          $_SESSION['admin_id'] = $fetch_admins['adminId'];
          $_SESSION['admin_surname'] = $fetch_admins['adminSurname'];
-         //there is a table department_lists, an admin can have multiple departments
-         $select_departments = mysqli_query($conn, "SELECT * FROM `department_lists` where adminId = '{$_SESSION['admin_id']}'") or die('query failed');
+
+         // Prepare a SELECT statement for departments
+         $stmt = $conn->prepare("SELECT * FROM `department_lists` where adminId = ?");
+         $stmt->bind_param("i", $_SESSION['admin_id']);
+         $stmt->execute();
+         $select_departments = $stmt->get_result();
+
          if (mysqli_num_rows($select_departments) > 0) {
             while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
-               //if there are more departmentIds for the same adminId, save them in an array
-               $_SESSION['departmentId'][]= $fetch_departments['departmentId'];
-               //now do the same for the department names
+               $_SESSION['departmentId'][] = $fetch_departments['departmentId'];
                $_SESSION['department'][] = returnDepartmentName($conn, $fetch_departments['departmentId']);
-
-              
             }
          } else {
-            $message[] = 'Invalid email or password';
+            $_SESSION['message'] = 'Invalid email or password';
          }
          header('location:admin_page.php');
       }
    } else {
-      $message[] = 'Invalid email or password';
+      $_SESSION['message'] = 'Invalid email or password';
    }
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
 
 }
-
+?>
+<?php
+ if (isset($_SESSION['message'])) {
+      $message[] = $_SESSION['message'];
+      unset($_SESSION['message']);
+   }
 ?>
 
 <!DOCTYPE html>
