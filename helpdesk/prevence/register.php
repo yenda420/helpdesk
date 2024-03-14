@@ -1,15 +1,23 @@
 <?php
 
-   include 'config.php';
-   require('functions.php');
+include 'config.php';
+require('functions.php');
 
-   if (isset($_POST['submit'])) {
-      $message[] = registerUser($conn, $_POST);
-   }
+if (isset($_POST['submit'])) {
+   $_SESSION['message'] = registerUser($conn, $_POST);
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
+}
 ?>
-
+<?php
+if (isset($_SESSION['message'])) {
+   $message[] = $_SESSION['message'];
+   unset($_SESSION['message']);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,11 +27,12 @@
    <link rel="stylesheet" href="css/style.css">
 
 </head>
+
 <body>
 
 
 
-<?php
+   <?php
    if (isset($message)) {
       foreach ($message as $message) {
          echo '
@@ -43,22 +52,23 @@
          ';
       }
    }
-?>
-   
-<div class="form-container">
+   ?>
 
-   <form action="" method="post">
-      <h3>Request an account</h3>
-      <input type="text" name="name" placeholder="Name" required class="box">
-      <input type="text" name="surname" placeholder="Surname" required class="box">
-      <input type="email" name="email" placeholder="Email" required class="box">
-      <input type="password" name="password" placeholder="Create password" required class="box">
-      <input type="password" name="cpassword" placeholder="Confirm password" required class="box">
-      <input type="submit" name="submit" value="Send request" class="btn">
-      <p>Have an account? <a href="index.php">Login</a></p>
-   </form>
+   <div class="form-container">
 
-</div>
+      <form action="" method="post">
+         <h3>Request an account</h3>
+         <input type="text" name="name" placeholder="Name" required class="box">
+         <input type="text" name="surname" placeholder="Surname" required class="box">
+         <input type="email" name="email" placeholder="Email" required class="box">
+         <input type="password" name="password" placeholder="Create password" required class="box">
+         <input type="password" name="cpassword" placeholder="Confirm password" required class="box">
+         <input type="submit" name="submit" value="Send request" class="btn">
+         <p>Have an account? <a href="index.php">Login</a></p>
+      </form>
+
+   </div>
 
 </body>
+
 </html>
