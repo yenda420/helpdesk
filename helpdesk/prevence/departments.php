@@ -13,23 +13,36 @@ if (isset($_SESSION['admin_id'])) {
 if (isset($_POST['delete_dep'])) {
     $dep_id = $_POST['dep_id'];
     if (deleteDepartment($conn, $dep_id)) {
-        $message[] = "Department deleted successfully";
+        $_SESSION['message'] = "Department deleted successfully";
     } else {
-        $message[] = "Error deleting department";
+        $_SESSION['message'] = "Error deleting department";
     }
     $unassigned_admins = returnAllBackendUsers($conn);
     foreach ($unassigned_admins as $unassigned_admin) {
         if (!isAdminInDepartment($conn, $unassigned_admin['adminId'])) {
-            mysqli_query($conn, "INSERT INTO department_lists (adminId, departmentId) VALUES ({$unassigned_admin['adminId']}, 0)");
+            $stmt = $conn->prepare("INSERT INTO department_lists (adminId, departmentId) VALUES (?, 0)");
+            $stmt->bind_param("i", $unassigned_admin['adminId']);
+            $stmt->execute();
+            $stmt->close();
         }
     }
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 if (isset($_POST['change_dep'])) {
     $dep_id = $_POST['dep_id'];
     $ticket_types = $_POST['ticket_types'];
     $admins = $_POST['admins'];
     $dep_name = $_POST['dep_name'];
-    $message[] = changeDepartments($conn,$dep_id, $ticket_types,$admins,$dep_name);
+    $_SESSION['message'] = changeDepartments($conn, $dep_id, $ticket_types, $admins, $dep_name);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+?>
+<?php
+if (isset($_SESSION['message'])) {
+    $message[] = $_SESSION['message'];
+    unset($_SESSION['message']);
 }
 ?>
 
@@ -59,8 +72,10 @@ if (isset($_POST['change_dep'])) {
 
             <div class="box-container">
                 <?php
-                $select_deps = mysqli_query($conn, "SELECT * FROM `departments`") or die('query failed');
-                while ($fetch_deps = mysqli_fetch_assoc($select_deps)) {
+                $stmt = $conn->prepare("SELECT * FROM departments");
+                $stmt->execute();
+                $select_deps = $stmt->get_result();
+                while ($fetch_deps = $select_deps->fetch_assoc()) {
                     ?>
                     <div class="box">
                         <div class="breaking">
@@ -109,11 +124,11 @@ if (isset($_POST['change_dep'])) {
                             <input type="hidden" name="dep_id" value="<?php echo $fetch_deps['departmentId']; ?>">
                             <input type="hidden" name="dep_name" value="<?php echo $fetch_deps['departmentName']; ?>">
                             <?php
-                            if($fetch_deps['departmentName'] != 'Super-admin' && $fetch_deps['departmentName'] != 'Unassigned'){
-                            ?>
-                            <button type="submit" name="delete_dep" class="delete-btn"
-                                onclick="return confirmDeletingDepartment()">Delete</button>
-                            <?php
+                            if ($fetch_deps['departmentName'] != 'Super-admin' && $fetch_deps['departmentName'] != 'Unassigned') {
+                                ?>
+                                <button type="submit" name="delete_dep" class="delete-btn"
+                                    onclick="return confirmDeletingDepartment()">Delete</button>
+                                <?php
                             }
                             ?>
                             <button type="submit" name="change_dep" class="btn"
