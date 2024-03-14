@@ -35,14 +35,14 @@ if (is_array($_SESSION['department'])) {
          <img src="img/techbase_logo.png" alt="logo">
       </a>
 
-      <nav class="navbar" id="navbar-responsive">
+      <nav class="navbar iconsParent" id="navbar-responsive">
          <?php
             if ($depNames[0] == 'Super-admin') {
                echo '
                   <a href="admin_page.php" class="active">Requests</a>
 
-                  <div class="dropdown">
-                     <button class="dropbtn">Users
+                  <div class="dropdown iconChild">
+                     <button class="dropbtn" style="width:75px">Users
                         <i class="fa fa-caret-down"></i>
                      </button>
                      <div class="dropdown-content">
@@ -51,8 +51,8 @@ if (is_array($_SESSION['department'])) {
                      </div>
                   </div>
 
-                  <div class="dropdown">
-                     <button class="dropbtn">Departments
+                  <div class="dropdown iconChild">
+                     <button class="dropbtn dropbtnWidth">Departments
                         <i class="fa fa-caret-down"></i>
                      </button>
                      <div class="dropdown-content">
@@ -61,11 +61,11 @@ if (is_array($_SESSION['department'])) {
                      </div>
                   </div>
          
-                  <div class="dropdown">
-                     <button class="dropbtn">Tickets
+                  <div class="dropdown iconChild">
+                     <button class="dropbtn" style="width:85px">Tickets
                         <i class="fa fa-caret-down"></i>
                      </button>
-                     <div class="dropdown-content">
+                     <div class="dropdown-content dropdown-contentRight">
                         <a href="admin_tickets.php">See all tickets</a>
                         <a href="tck_types.php">See all ticket types</a>
                         <a href="create_tickets.php">Create ticket types</a>
@@ -94,14 +94,20 @@ if (is_array($_SESSION['department'])) {
       </nav>
 
 
-      <form method="POST" action="searchbar.php">
-      <input class="search" type="text" name="keyword" />
-      <input class="btn" type="submit" name="search" value="Search"/>
+   <form method="POST" action="searchbar.php" class="searchbar">
+      <div class="iconsParent">
+         <div style="flex:1;margin-right:1rem;">
+           <input class="search" placeholder="Search" type="text" name="keyword" />
+         </div>
+         <div style="flex:1; width:fit-content;">
+            <button style="margin-bottom:10px" class="btn" type="submit" name="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+         </div>
+      </div>
     </form>
 
-      <div class="icons">
-         <div id="menu-btn" class="fas fa-bars"></div>
-         <div id="user-btn" class="fas fa-user"></div>
+      <div class="icons iconsParent">
+         <div id="menu-btn" class="fas fa-bars iconsChild"></div>
+         <div id="user-btn" class="fas fa-user iconsChild"></div>
       </div>
 
       <div class="account-box">
