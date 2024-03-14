@@ -140,7 +140,7 @@ section {
 
 .white-btn,
 .btn {
-  background-color: var(--orange);
+  background-color: var(--logo-color);
 }
 
 header .btn {
@@ -158,7 +158,7 @@ header .btn:hover {
 }
 
 header .btn {
-  background-color: var(--orange);
+  background-color: var(--logo-color);
 }
 
 .option-btn {
@@ -343,7 +343,7 @@ header .btn {
 }
 
 .dashboard .box-container .box p span {
-  color: var(--orange);
+  color: var(--logo-color);
 }
 
 .add-products form {
@@ -479,10 +479,11 @@ header .btn {
 }
 
 .orders .box-container .box p span {
-  color: var(--orange);
+  color: var(--logo-color);
 }
+
 .dashboard .box-container .box p textarea{
-  color: var(--orange);
+  color: var(--logo-color);
   font-size: 2rem;
   text-align: center;
   background-color: var(--light-bg);
@@ -530,10 +531,11 @@ header .btn {
 }
 
 .users .box-container .box p span {
-  color: var(--orange);
+  color: var(--logo-color);
 }
+
 .dashboard .box-container .box p input{
-  color: var(--orange);
+  color: var(--logo-color);
   font-size: 2rem;
   text-align: center;
   background-color: var(--light-bg);
