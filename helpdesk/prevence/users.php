@@ -37,6 +37,7 @@ if (isset($_POST["change_dept"])) {
       $admin_id = $_POST['admin_id'];
       $department_names = $_POST['department'];
       $message[] = changeAdminDepartment($conn, $admin_id, $department_names);
+    
    }
 }
 if (isset($_POST['filter'])) {
@@ -178,7 +179,9 @@ if (!isset($_POST['userSearch'])) {
                                  $departmentNames[] = returnDepartmentName($conn, $fetch_departments['departmentId']);
                               }
                            }
-                           echo '<input style="width:fit-content; max-width: 20rem" type="text" name="department" value="' . implode(', ', $departmentNames) . '">';
+                           echo "<textarea name='department' rows='" . count($departmentNames) . "' cols='21'>";
+                           echo implode("\n", $departmentNames);
+                           echo '</textarea>';
                            echo '</span></p></div>';
                            if ($_SESSION['department'][0] == 'Super-admin') {
                               echo '<input type="hidden" name="admin_id" value="' . $user['adminId'] . '"> <br>

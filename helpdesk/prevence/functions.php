@@ -446,10 +446,13 @@ function isAdminInDepartment($conn, $adminId)
 }
 function changeAdminDepartment($conn, $admin_id, $department_names)
 {
-    if (!preg_match('/^[a-zA-Z0-9\s]+(,\s[a-zA-Z0-9\s]+)*$/', $department_names) && !preg_match('/^[a-zA-Z0-9\s]+(,\s[a-zA-Z0-9\s]+)*$/', $department_names) && !in_array('Super-admin', explode(',', $department_names)))
-        return "Wrong format, please use: dep1, dep2, dep3.";
-    $department_names = explode(',', $department_names);
+    if (!preg_match('/^(?:[a-zA-Z0-9\s]+\n?)+$/', $department_names)) {
+            return "Each department should be on a new line.";
+        }
+    $department_names = explode("\n", $department_names);
+    $department_names = array_filter($department_names);
     $department_names = array_map('trim', $department_names);
+    $department_names = array_filter($department_names);
     //if there is no department of this name in the database
     foreach ($department_names as $department_name) {
         if (!departmentExists($conn, $department_name)) {
@@ -556,12 +559,8 @@ function changeDepartments($conn, $dep_id, $ticket_types, $admins, $dep_name)
                 $stmt4->execute();
             }
         }
-        $stmt1->close();
-        $stmt2->close();
-        $stmt3->close();
-        $stmt4->close();
     }
-    $stmt->close();
+    //$stmt->close();
     $unassigned_admins = returnAllBackendUsers($conn);
     $stmt5 = $conn->prepare("INSERT INTO department_lists (adminId, departmentId) VALUES (?, 0)");
     foreach ($unassigned_admins as $unassigned_admin) {
@@ -570,7 +569,6 @@ function changeDepartments($conn, $dep_id, $ticket_types, $admins, $dep_name)
             $stmt5->execute();
         }
     }
-    $stmt5->close();
     $ticket_types_all = returnTicketTypesForDepartmentName($conn, $dep_name);
     $stmt6 = $conn->prepare("UPDATE ticket_types SET departmentId = 0 WHERE ticketTypeName = ?");
     foreach ($ticket_types_all as $ticket_type) {
@@ -579,19 +577,18 @@ function changeDepartments($conn, $dep_id, $ticket_types, $admins, $dep_name)
             $stmt6->execute();
         }
     }
-    $stmt6->close();
     if ($dep_id != 3) {
         $stmt7 = $conn->prepare("UPDATE ticket_types SET departmentId = ? WHERE ticketTypeName = ?");
         foreach ($ticket_types as $ticket_type) {
             $stmt7->bind_param("is", $dep_id, $ticket_type);
             $stmt7->execute();
         }
-        $stmt7->close();
     }
-    if (mysqli_affected_rows($conn) > 0) {
-        return "Department has been changed successfully";
+    if ($stmt1->affected_rows > 0 || $stmt2->affected_rows > 0 || $stmt3->affected_rows > 0 || $stmt4->affected_rows > 0 || $stmt5->affected_rows > 0 || $stmt6->affected_rows > 0 || $stmt7->affected_rows > 0) {
+        return "Departments changed successfully";
+    } else {
+        return "No changes were made";
     }
-    return "The department has not been changed";
 }
 function camelCaseToWords($str)
 {
