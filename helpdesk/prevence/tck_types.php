@@ -13,23 +13,37 @@ if (isset($_SESSION['admin_id'])) {
 if (isset($_POST['delete_type'])) {
     $type_id = $_POST['type_id'];
     // Perform the deletion query
-    $delete_tickets = mysqli_query($conn, "DELETE FROM `tickets` WHERE ticketTypeId = $type_id");
+    $stmt = $conn->prepare("DELETE FROM `tickets` WHERE ticketTypeId = ?");
+    $stmt->bind_param("i", $type_id);
+    $delete_tickets = $stmt->execute();
     if ($delete_tickets) {
-        $delete_type = mysqli_query($conn, "DELETE FROM `ticket_types` WHERE ticketTypeId = $type_id");
+        $stmt = $conn->prepare("DELETE FROM `ticket_types` WHERE ticketTypeId = ?");
+        $stmt->bind_param("i", $type_id);
+        $delete_type = $stmt->execute();
         if ($delete_type) {
-            $message[] = "Ticket type deleted successfully";
+            $_SESSION['message'] = "Ticket type deleted successfully";
         } else {
-            $message[] = "Error deleting ticket type";
+            $_SESSION['message'] = "Error deleting ticket type";
         }
     } else {
-        $message[] = "Error deleting ticket type";
+        $_SESSION['message'] = "Error deleting ticket type";
     }
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 if (isset($_POST['change_type'])) {
     $type_id = $_POST['type_id'];
     $type_name = $_POST['type_name'];
     $department_responsible = $_POST['department_responsible'];
-    $message[] = changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible);
+    $_SESSION['message'] = changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+?>
+<?php
+if (isset($_SESSION['message'])) {
+    $message[] = $_SESSION['message'];
+    unset($_SESSION['message']);
 }
 ?>
 
@@ -59,8 +73,10 @@ if (isset($_POST['change_type'])) {
 
             <div class="box-container">
                 <?php
-                $select_types = mysqli_query($conn, "SELECT * FROM `ticket_types`") or die('query failed');
-                while ($fetch_types = mysqli_fetch_assoc($select_types)) {
+                $stmt = $conn->prepare("SELECT * FROM ticket_types");
+                $stmt->execute();
+                $select_types = $stmt->get_result();
+                while ($fetch_types = $select_types->fetch_assoc()) {
                     ?>
                     <form method="POST">
                         <div class="box">
@@ -71,19 +87,21 @@ if (isset($_POST['change_type'])) {
                             </div>
                             <div class="breaking">
                                 <p> Type name: <span>
-                                        <input type="text" name="type_name" value="<?php echo $fetch_types['ticketTypeName']; ?>">
+                                        <input type="text" name="type_name"
+                                            value="<?php echo $fetch_types['ticketTypeName']; ?>">
                                     </span> </p>
                             </div>
                             <div class="breaking">
                                 <p>Department: <span>
-                                    <input type="text" name="department_responsible" value="<?php echo returnDepartmentName($conn,$fetch_types['departmentId']); ?>">
+                                        <input type="text" name="department_responsible"
+                                            value="<?php echo returnDepartmentName($conn, $fetch_types['departmentId']); ?>">
                                     </span> </p>
                             </div>
 
                             <input type="hidden" name="type_id" value="<?php echo $fetch_types['ticketTypeId']; ?>">
                             <button type="submit" name="delete_type" class="delete-btn"
                                 onclick="return confirmDeletingTicketType()">Delete</button>
-                                <button type="submit" name="change_type" class="btn"
+                            <button type="submit" name="change_type" class="btn"
                                 onclick="return confirmChangingTicketType()">Change</button>
                         </div>
                     </form>
