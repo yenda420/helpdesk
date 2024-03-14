@@ -93,10 +93,10 @@ if (!isset($_POST['userSearch'])) {
    <section class="dashboard">
       <section class="users">
          <h1 class="title">Users</h1>
-
+         <form method="post">
          <div class="flex">
             <div class="filters">
-               <form method="post">
+               
                   <div class="inputBox">
                      <select name="users" class="" required>
                         <option value="all">--- Choose a user type ---</option>
@@ -106,11 +106,11 @@ if (!isset($_POST['userSearch'])) {
                            <option <?php if ($_POST['users'] == 'backend')
                            echo 'selected' ?> value="backend">Backend
                            </option>
-                        </select>
-                     </div>
-                     <div class="inputBox" align="center">
-                        <select name="userSearch" id="userSearch">
-                           <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
+                     </select>
+                  </div>
+                  <div class="inputBox" align="center">
+                     <select name="userSearch" id="userSearch">
+                        <option style="font-size: 1.8rem;" value="">Select a user or type to search</option>
 
                         <?php foreach ($frontendUsers as $user) {
                            ?>
@@ -129,6 +129,7 @@ if (!isset($_POST['userSearch'])) {
                         <?php } ?>
 
                      </select>
+                  </div>
                      <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.0/slimselect.min.js"
                         integrity="sha512-mG8eLOuzKowvifd2czChe3LabGrcIU8naD1b9FUVe4+gzvtyzSy+5AafrHR57rHB+msrHlWsFaEYtumxkC90rg=="
                         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -137,8 +138,7 @@ if (!isset($_POST['userSearch'])) {
                            select: "#userSearch"
                         });
                      </script>
-                  </div>
-               </form>
+               
             </div>
             <div class="inputBox">
                <button type="submit" name="filter" class="btn">Show users</button>
@@ -278,7 +278,7 @@ if (!isset($_POST['userSearch'])) {
                ?>
             </div>
          </div>
-
+         </form>
       </section>
    </section>
    <script src="js/admin_script.js"></script>
