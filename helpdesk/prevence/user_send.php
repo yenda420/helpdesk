@@ -4,23 +4,32 @@ include 'config.php';
 require('functions.php');
 
 session_start();
-if(isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user_id'])) {
    $user_id = $_SESSION['user_id'];
 } else {
    header('location:index.php');
 }
-if(isset($_POST['send_btn'])) {
+if (isset($_POST['send_btn'])) {
    $title = $_POST['title'];
    $type = $_POST['type'];
    $description = $_POST['description'];
    $date = date('Y-m-d');
-   $send_query = mysqli_query($conn, "INSERT INTO `tickets` (`title`, `status`, `ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) 
-                                       VALUES ('$title', 'Waiting', '$description','$date','$user_id', '$type')");
-   if($send_query) {
-      $message[] = "Ticket sent successfully";
+   $stmt = $conn->prepare("INSERT INTO `tickets` (`title`, `status`, `ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) VALUES (?,'Waiting',?,?,?,?)");
+   $stmt->bind_param("sssi", $title, $description, $date, $user_id, $type);
+   $send_query = $stmt->execute();
+   if ($send_query) {
+      $_SESSION['message'] = "Ticket sent successfully";
    } else {
-      $message[] = "Error sending ticket";
+      $_SESSION['message'] = "Error sending ticket";
    }
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
+}
+?>
+<?php
+if (isset($_SESSION['message'])) {
+   $message[] = $_SESSION['message'];
+   unset($_SESSION['message']);
 }
 ?>
 <!DOCTYPE html>
@@ -43,39 +52,39 @@ if(isset($_POST['send_btn'])) {
    <?php include 'header.php'; ?>
    <section class="checkout">
 
-   <form action="" method="post">
-      <h3>What's wrong?</h3>
-      <div class="flex">
-         <div class="inputBox">
-            <span>Ticket title: </span>
-            <input type="text" name="title" required placeholder="An issue with..." maxlength="45">
-         </div>
-         <div class="inputBox">
-            <span>Ticket type:</span>
-            <select name="type" required>
-               <option value="" selected>--- Select type ---</option>
-              <?php
-               $ticket_types = returnTicketTypes($conn);
-               foreach ($ticket_types as $ticket_type) {
-                  echo "<option value='{$ticket_type['ticketTypeId']}'>{$ticket_type['ticketTypeName']}</option>";
-               }
-                 
-               ?>
-            </select>
-         </div>
-         <div class="inputBox">
-            <span>Description:</span> <br>
-            <textarea name="description" required placeholder="Describe the problem" maxlength="10000"></textarea>
-         </div>
-      </div>
-      <input type="submit" value="Send" class="btn" name="send_btn">
-   </form>
+      <form action="" method="post">
+         <h3>What's wrong?</h3>
+         <div class="flex">
+            <div class="inputBox">
+               <span>Ticket title: </span>
+               <input type="text" name="title" required placeholder="An issue with..." maxlength="45">
+            </div>
+            <div class="inputBox">
+               <span>Ticket type:</span>
+               <select name="type" required>
+                  <option value="" selected>--- Select type ---</option>
+                  <?php
+                  $ticket_types = returnTicketTypes($conn);
+                  foreach ($ticket_types as $ticket_type) {
+                     echo "<option value='{$ticket_type['ticketTypeId']}'>{$ticket_type['ticketTypeName']}</option>";
+                  }
 
-</section>
+                  ?>
+               </select>
+            </div>
+            <div class="inputBox">
+               <span>Description:</span> <br>
+               <textarea name="description" required placeholder="Describe the problem" maxlength="10000"></textarea>
+            </div>
+         </div>
+         <input type="submit" value="Send" class="btn" name="send_btn">
+      </form>
+
+   </section>
    <script src="js/script.js"></script>
    <?php include 'footer.php'; ?>
 </body>
 
 </html>
 
-<!-- Mam male pele a stydim se za to -PŠ -->
+<!-- Mam male pele a stydim se za to -JN -->
