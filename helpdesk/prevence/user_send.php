@@ -15,7 +15,7 @@ if (isset($_POST['send_btn'])) {
    $description = $_POST['description'];
    $date = date('Y-m-d');
    $stmt = $conn->prepare("INSERT INTO `tickets` (`title`, `status`, `ticketDesc`,`ticketDate`,`userId`,`ticketTypeId`) VALUES (?,'Waiting',?,?,?,?)");
-   $stmt->bind_param("sssi", $title, $description, $date, $user_id, $type);
+   $stmt->bind_param("sssii", $title, $description, $date, $user_id, $type);
    $send_query = $stmt->execute();
    if ($send_query) {
       $_SESSION['message'] = "Ticket sent successfully";
