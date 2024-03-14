@@ -13,23 +13,32 @@ if (isset($_SESSION['admin_id'])) {
 }
 
 if (isset($_POST['submit'])) {
-   $name = mysqli_real_escape_string($conn, $_POST['createDepartmentName']);
-   //if the department name is already in the database, don't add it again
-   $sql = "SELECT departmentName FROM departments WHERE departmentName='$name'";
-   $result = mysqli_query($conn, $sql);
-   $department = mysqli_fetch_assoc($result);
+   $name = $_POST['createDepartmentName'];
+   $stmt = $conn->prepare("SELECT departmentName FROM departments WHERE departmentName=?");
+   $stmt->bind_param('s', $name);
+   $stmt->execute();
+   $result = $stmt->get_result();
+   $department = $result->fetch_assoc();
    if ($department) {
-      $message[] = 'Department already exists.';
+       $message[] = 'Department already exists.';
    } else {
-      $query = "INSERT INTO `departments` (departmentName) VALUES ('$name');";
-      $result = mysqli_query($conn, $query);
-      if ($result) {
-         $message[] = 'Department was successfuly created.';
-      } else {
-         $message[] = 'Query failed.';
-      }
+       $stmt = $conn->prepare("INSERT INTO `departments` (departmentName) VALUES (?)");
+       $stmt->bind_param('s', $name);
+       if ($stmt->execute()) {
+           $_SESSION['message'] = 'Department was successfuly created.';
+       } else {
+           $_SESSION['message'] = 'Query failed.';
+       }
    }
- 
+   $stmt->close();
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
+}
+?>
+<?php
+if(isset($_SESSION['message'])){
+   $message[] = $_SESSION['message'];
+   unset($_SESSION['message']);
 }
 ?>
 

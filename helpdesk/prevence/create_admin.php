@@ -12,7 +12,15 @@ if (isset($_SESSION['admin_id'])) {
 }
 
 if (isset($_POST['submit'])) {
-   $message[] = createAdmin($conn, $_POST);
+   $_SESSION['message'] = createAdmin($conn, $_POST);
+   header("Location: " . $_SERVER['PHP_SELF']);
+   exit;
+}
+?>
+<?php
+if(isset($_SESSION['message'])){
+   $message[] = $_SESSION['message'];
+   unset($_SESSION['message']);
 }
 ?>
 
