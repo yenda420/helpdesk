@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap");
 
 :root {
-  --orange: #368845;
   --red: #c0392b;
   --orange: #f39c12;
   --black: #333;
@@ -731,7 +730,7 @@ form .flex input[type="submit"] {
 }
 
 .checkout form .flex select,
-.checkout form .flex input,
+.checkout form .flex .textInput,
 .checkout form .flex textarea {
   width: 100%;
   border-radius: .5rem;
@@ -872,4 +871,8 @@ textarea {
      width: 100%;
      text-align: left;
   }
+}
+
+div label {
+  font-size: small;
 }

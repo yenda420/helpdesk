@@ -45,19 +45,19 @@ if (isset($_POST['submit'])) {
          <form method="post" id="adminForm">
             <div class="flex">
                <div class="inputBox">
-                  <input type="text" name="createAdminName" placeholder="Name" required />
+                  <input type="text" class="textInput" name="createAdminName" placeholder="Name" required />
                </div>
                <div class="inputBox">
-                  <input type="text" name="createAdminSurname" placeholder="Surname" required />
+                  <input type="text" class="textInput" name="createAdminSurname" placeholder="Surname" required />
                </div>
                <div class="inputBox">
-                  <input type="email" name="createAdminEmail" placeholder="Email" required />
+                  <input type="email" class="textInput" name="createAdminEmail" placeholder="Email" required />
                </div>
                <div class="inputBox">
-                  <input type="password" name="createAdminPasswd" placeholder="Password" required />
+                  <input type="password" class="textInput" name="createAdminPasswd" placeholder="Password" required />
                </div>
                <div class="inputBox">
-                  <input type="password" name="createAdminPasswdConf" placeholder="Confirm password" required />
+                  <input type="password" class="textInput" name="createAdminPasswdConf" placeholder="Confirm password" required />
                </div><br/>
                   <?php
                   $departments = returnDepartments($conn);
