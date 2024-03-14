@@ -36,7 +36,7 @@ if (isset($_POST['delete_user'])) {
       $stmt = $conn->prepare("DELETE FROM `admins` WHERE adminId = ?");
       $stmt->bind_param("i", $admin_id);
       $stmt->execute();
-      if ($conn ->affected_rows > 0) {
+      if ($stmt->affected_rows > 0) {
          $message[] = "Admin deleted successfully";
       } else {
          $message[] = "Error deleting admin";
