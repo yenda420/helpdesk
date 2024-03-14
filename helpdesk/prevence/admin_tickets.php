@@ -57,7 +57,6 @@ $end = strrpos($enumString, ')');
 $enumString = substr($enumString, $start, $end - $start);
 $enumValues = explode(',', str_replace("'", "", $enumString));
 
-
 $fullQuery = "
     SELECT DISTINCT tck.ticketId, tck.title, tck.status, tck.ticketDesc, tck.ticketDate, tck.userId, tck.ticketTypeId 
     FROM tickets tck inner join ticket_types tps on tck.ticketTypeId = tps.ticketTypeId
@@ -102,6 +101,15 @@ $fullQuery .= " ORDER BY tck.ticketDate;";
 
 $fullQueryResult = mysqli_query($conn, $fullQuery);
 $tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
+
+if (isset($_POST['clear_filters'])) {
+    $_POST['users'] = null;
+    $_POST['types'] = null;
+    $_POST['enumValues'] = null;
+    $_POST['start'] = null;
+    $_POST['end'] = null;
+    header("Refresh:0");
+}
 
 if (!isset($_POST['users'])) {
     $_POST['users'] = null;
@@ -208,6 +216,7 @@ if (!isset($_POST['types'])) {
                         <span>Select a date</span> <i class="fa fa-caret-down"></i>
                     </div>
                 </div>
+                <input type="submit" value="Clear filters" class="btn" name="clear_filters">
                 <input type="submit" value="Show tickets" class="btn" name="show_tickets">
             </div>
         </form>
