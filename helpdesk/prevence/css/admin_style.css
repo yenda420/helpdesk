@@ -192,6 +192,7 @@ header .btn {
 }
 
 .header .flex .logo {
+  margin-right: -10%;
   font-size: 2.5rem;
   color: var(--black);
 }
