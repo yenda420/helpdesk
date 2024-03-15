@@ -119,9 +119,7 @@ section {
 }
 
 .btn,
-.option-btn,
-.delete-btn,
-.white-btn {
+.delete-btn {
   display: inline-block;
   margin-top: 1rem;
   padding: 1rem 3rem;
@@ -133,12 +131,10 @@ section {
 }
 
 .btn:hover,
-.option-btn:hover,
 .delete-btn:hover {
   background-color: var(--black);
 }
 
-.white-btn,
 .btn {
   background-color: var(--logo-color);
 }
@@ -168,12 +164,6 @@ header .btn {
 .delete-btn {
   background-color: var(--red);
 }
-
-.white-btn:hover {
-  background-color: var(--white);
-  color: var(--black);
-}
-
 @keyframes fadeIn {
   0% {
     transform: translateY(1rem);
@@ -350,141 +340,6 @@ header .btn {
   color: var(--logo-color);
 }
 
-.add-products form {
-  background-color: var(--white);
-  border-radius: 0.5rem;
-  padding: 2rem;
-  text-align: center;
-  box-shadow: var(--box-shadow);
-  border: var(--border);
-  max-width: 50rem;
-  margin: 0 auto;
-}
-
-.add-products form h3 {
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  color: var(--black);
-  margin-bottom: 1.5rem;
-}
-
-.add-products form .box {
-  width: 100%;
-  background-color: var(--light-bg);
-  border-radius: 0.5rem;
-  margin: 1rem 0;
-  padding: 1.2rem 1.4rem;
-  color: var(--black);
-  font-size: 1.8rem;
-  border: var(--border);
-}
-
-.show-products .box-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 30rem);
-  justify-content: center;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: flex-start;
-}
-
-.show-products {
-  padding-top: 0;
-}
-
-.show-products .box-container .box {
-  text-align: center;
-  padding: 2rem;
-  border-radius: 1rem;
-  border: var(--border);
-  box-shadow: var(--box-shadow);
-  background-color: var(--white);
-}
-
-.show-products .box-container .box img {
-  height: 25.5rem;
-  border: var(--orange) 2px solid;
-  border-radius: 1rem;
-}
-
-.show-products .box-container .box .name {
-  padding: 1rem 0;
-  font-size: 2rem;
-  color: var(--black);
-}
-
-.show-products .box-container .box .price {
-  padding: 1rem 0;
-  font-size: 2.5rem;
-}
-
-.edit-product-form {
-  min-height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  overflow-y: scroll;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1200;
-  width: 100%;
-}
-
-.edit-product-form form {
-  width: 50rem;
-  padding: 2rem;
-  text-align: center;
-  border-radius: 0.5rem;
-  background-color: var(--white);
-}
-
-.edit-product-form form img {
-  height: 25rem;
-  margin-bottom: 1rem;
-}
-
-.edit-product-form form .box {
-  margin: 1rem 0;
-  padding: 1.2rem 1.4rem;
-  border: var(--border);
-  border-radius: 0.5rem;
-  background-color: var(--light-bg);
-  font-size: 1.8rem;
-  color: var(--black);
-  width: 100%;
-}
-
-.orders .box-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 30rem);
-  justify-content: center;
-  gap: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: flex-start;
-}
-
-.orders .box-container .box {
-  background-color: var(--white);
-  padding: 2rem;
-  border: var(--border);
-  box-shadow: var(--box-shadow);
-  border-radius: 0.5rem;
-}
-
-.orders .box-container .box p {
-  padding-bottom: 1rem;
-  font-size: 2rem;
-  color: var(--light-color);
-}
-
-.orders .box-container .box p span {
-  color: var(--logo-color);
-}
 
 .dashboard .box-container .box p textarea{
   color: var(--logo-color);
@@ -492,21 +347,6 @@ header .btn {
   text-align: center;
   background-color: var(--light-bg);
   scrollbar-width: none;
-}
-
-.orders .box-container .box form {
-  text-align: center;
-}
-
-.orders .box-container .box form select {
-  border-radius: 0.5rem;
-  margin: 0.5rem 0;
-  width: 100%;
-  background-color: var(--light-bg);
-  border: var(--border);
-  padding: 1.2rem 1.4rem;
-  font-size: 1.8rem;
-  color: var(--black);
 }
 
 .users .box-container {
@@ -570,11 +410,6 @@ header .btn {
 .dashboard {
   margin-bottom: 278px;
 }
-
-.orders {
-  margin-bottom: 559px;
-}
-
 .users {
   margin-bottom: 375px;
 }
@@ -822,11 +657,6 @@ textarea {
   width: fit-content;
 }
 
-
-
-/*****************************
-        media queries 
-*****************************/
 
 
 
