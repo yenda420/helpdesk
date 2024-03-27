@@ -1,0 +1,2 @@
+* index.php a register.php - přidat ikonku oka pro zobrazení hesla
+* index.php a register.php - nechat údaje ve formuláři vyplněné při chybném zadání 
