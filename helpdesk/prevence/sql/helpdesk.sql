@@ -137,6 +137,7 @@ CREATE TABLE `tickets` (
   `ticketId` int(10) UNSIGNED NOT NULL,
   `title` varchar(45) NOT NULL,
   `status` enum('Waiting','Pending','Resolved') NOT NULL,
+  `resolver` int(10) UNSIGNED,
   `ticketDesc` longtext NOT NULL,
   `ticketDate` date NOT NULL,
   `userId` int(10) UNSIGNED NOT NULL,
@@ -246,6 +247,7 @@ ALTER TABLE `requests`
 ALTER TABLE `tickets`
   ADD PRIMARY KEY (`ticketId`),
   ADD UNIQUE KEY `ticketId_UNIQUE` (`ticketId`),
+  ADD KEY `FK_Resolver_AdminID` (`resolver`),
   ADD KEY `FK_TicketTicket_types` (`ticketTypeId`),
   ADD KEY `FK_TicketsUsers` (`userId`);
 
@@ -333,6 +335,7 @@ ALTER TABLE `messages`
 -- Omezení pro tabulku `tickets`
 --
 ALTER TABLE `tickets`
+  ADD CONSTRAINT `FK_Resolver_AdminID` FOREIGN KEY (`resolver`) REFERENCES `admins` (`adminId`),
   ADD CONSTRAINT `FK_TicketTicket_types` FOREIGN KEY (`ticketTypeId`) REFERENCES `ticket_types` (`ticketTypeId`);
 
 --
