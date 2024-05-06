@@ -222,7 +222,8 @@ ALTER TABLE `departments`
 --
 ALTER TABLE `department_lists`
   ADD PRIMARY KEY (`departmentId`,`adminId`),
-  ADD KEY `FK_Department_listsAdmins` (`adminId`);
+  ADD KEY `FK_Department_listsAdmins` (`adminId`),
+  ADD KEY `FK_Department_listsDepartments` (departmentId);
 
 --
 -- Indexy pro tabulku `messages`
