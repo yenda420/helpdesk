@@ -1,2 +1,3 @@
 * index.php a register.php - přidat ikonku oka pro zobrazení hesla
 * index.php a register.php - nechat údaje ve formuláři vyplněné při chybném zadání 
+* ve filtrech blbne ten kalendr - automaticky je vybrana moznost last 30 days a neni moznost pro zobrazeni vsecho za celou dobu
