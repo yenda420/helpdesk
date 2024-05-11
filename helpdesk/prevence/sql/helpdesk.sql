@@ -98,12 +98,12 @@ INSERT INTO `department_lists` (`departmentId`, `adminId`) VALUES
 --
 
 CREATE TABLE `messages` (
-  `msgId` int(4) UNSIGNED NOT NULL,
-  `msgDesc` varchar(255) NOT NULL,
-  `adminId` int(4) UNSIGNED NOT NULL,
-  `userId` int(4) UNSIGNED NOT NULL,
+  `msgId` int(10) UNSIGNED NOT NULL,
+  `msgDesc` longtext NOT NULL,
+  `adminId` int(10) UNSIGNED NOT NULL,
+  `userId` int(10) UNSIGNED NOT NULL,
   `msgFrom` enum('user','admin') NOT NULL,
-  `ticketId` int(4) UNSIGNED NOT NULL
+  `ticketId` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
