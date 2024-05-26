@@ -86,5 +86,3 @@ if (isset($_SESSION['message'])) {
 </body>
 
 </html>
-
-<!-- Mam male pele a stydim se za to -JN -->
