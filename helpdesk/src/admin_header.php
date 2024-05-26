@@ -32,7 +32,7 @@ if (is_array($_SESSION['department'])) {
 <header class="header">
    <div class="flex">
       <a href="admin_page.php" class="logo">
-         <img src="../img/techbase_logo.png" alt="logo">
+         <img src="../img/logo.png" alt="logo">
       </a>
 
       <nav class="navbar iconsParent" id="navbar-responsive">

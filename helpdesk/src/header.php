@@ -26,7 +26,7 @@ if (isset($message)) {
       <div class="flex">
       <div class="logo">
          <a href="home.php">
-            <img src="img/techbase_logo.png" alt="logo">
+            <img src="../img/logo.png" alt="logo">
          </a>
       </div>
 
