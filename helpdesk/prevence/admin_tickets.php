@@ -26,6 +26,46 @@ if (isset($_POST['delete_ticket'])) {
     exit;
 }
 
+if (isset($_POST["usr_msg_send"])) {
+    $msdId = $_POST["usr_msg"];
+    //Prepare the insert query (conversation table)
+    $stmt = $conn->prepare("INSERT INTO `conversation` (userId, adminId, ticketId) values (?, ?, ?)");
+    $stmt->bind_param("iii", $_POST["user_Id"], $_POST["admin_Id"], $_POST["ticket_Id"]);
+    $insert_covno_query = $stmt->execute();
+    if($insert_covno_query) {
+        $_SESSION["message"] = "Convo inserted successfully";
+    } else {
+        $_SESSION["message"] = "Failed to insert convo";
+    }
+    $stmt->close();
+
+    $convoId = ReturnConvoId($conn, $_POST["ticket_Id"]);
+    //Prepare the insert query (messages table)
+    $stmt = $conn->prepare("INSERT INTO `messages` (msgContent, senderAdminId, conversationId) values (?, ?, ?)");
+    $stmt->bind_param("sii", $_POST["usr_msg"], $_POST["admin_Id"], $convoId);
+    $insert_msg_query = $stmt->execute();
+    if($insert_msg_query) {
+        $_SESSION["message"] = "Message inserted successfully";
+    } else {
+        $_SESSION["message"] = "Failed to insert message";
+    }
+    $stmt->close();
+
+    //Prepare the update query (tickets table)
+    $stmt = $conn->prepare("UPDATE `tickets` SET `status`='Pending',`resolver`=? WHERE ticketId=?");
+    $stmt->bind_param("ii", $_POST["admin_Id"], $_POST["ticket_Id"]);
+    $update_status_query = $stmt->execute();
+    if($update_status_query) {
+        $_SESSION["message"] = "Status updated successfully";
+    } else {
+        $_SESSION["message"] = "Failed to update status";
+    }
+    $stmt->close();
+
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
 $users = returnAllFrontendUsers($conn);
 
 $departmentNames = array();
@@ -292,6 +332,19 @@ if (isset($_SESSION['message'])) {
                                         <?= date_format($ticketDate, 'd.m.Y'); ?>
                                     </span></p>
                             </div>
+                            <?php
+                            
+                            if($ticket["status"] === "Waiting") {
+                                echo '<form method="POST" >
+                                <input type="hidden" name="admin_Id" value="'.$admin_id.'" />
+                                <input type="hidden" name="user_Id" value="'.$user["userId"].'" />
+                                <input type="hidden" name="ticket_Id" value="'.$ticket["ticketId"].'" />
+                                <input type="text" placeholder="Send a message to the user" name="usr_msg" class="msg_send_admin_form" />
+                                <button type="submit" name="usr_msg_send" class="btn">Send</button>
+                            </form>';
+                            }
+
+                            ?>
                             <form method="POST" onsubmit="return confirmDeletingTicket();">
                                 <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
                                 <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>
@@ -344,6 +397,19 @@ if (isset($_SESSION['message'])) {
                                         <?= date_format($ticketDate, 'd.m.Y'); ?>
                                     </span></p>
                             </div>
+                            <?php
+                            
+                            if($ticket["status"] === "Waiting") {
+                                echo '<form method="POST" >
+                                <input type="hidden" name="admin_Id" value="'.$admin_id.'" />
+                                <input type="hidden" name="user_Id" value="'.$user["userId"].'" />
+                                <input type="hidden" name="ticket_Id" value="'.$ticket["ticketId"].'" />
+                                <input type="text" placeholder="Send a message to the user" name="usr_msg" class="msg_send_admin_form" />
+                                <button type="submit" name="usr_msg_send" class="btn">Send</button>
+                            </form>';
+                            }
+
+                            ?>
                             <form method="POST" onsubmit="return confirmDeletingTicket();">
                                 <input type="hidden" name="ticket_id" value="<?php echo $ticket['ticketId']; ?>"> <br>
                                 <button type="submit" name="delete_ticket" class="delete-btn">Delete</button>

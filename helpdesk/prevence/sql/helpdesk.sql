@@ -136,7 +136,7 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `messages` (
-  `msgId` int(10) unsigned NOT NULL,
+  `msgId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `msgContent` longtext NOT NULL,
   `senderUserId` int(10) unsigned DEFAULT NULL,
   `senderAdminId` int(10) unsigned DEFAULT NULL,

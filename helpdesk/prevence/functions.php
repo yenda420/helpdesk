@@ -694,3 +694,13 @@ function resultsFound($conn, $search_keyword, $table_associative_array)
         return true;
     }
 }
+
+function ReturnConvoId($conn, $ticketId) {
+    $stmt = $conn->prepare("SELECT * FROM conversation WHERE ticketId = ?");
+    $stmt->bind_param("i", $ticketId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $convoId = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $convoId;
+}

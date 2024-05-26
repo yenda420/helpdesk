@@ -563,6 +563,16 @@ form .flex input[type="submit"] {
   margin: 1rem 0;
 }
 
+.msg_send_admin_form {
+  border-radius: .5rem;
+  background-color: var(--light-bg);
+  padding: 1.2rem 1.4rem;
+  font-size: 1.8rem;
+  color: var(--black);
+  border: var(--border);
+  margin: 1rem 0;
+}
+
 textarea {
   resize: vertical;
 }
