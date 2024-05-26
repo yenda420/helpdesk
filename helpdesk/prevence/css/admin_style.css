@@ -201,16 +201,16 @@ header .btn {
   color: var(--orange);
 }
 
-.logo img{
+.logo img {
   max-width: 50%;
   height: auto;
   position: relative;
-  top:10px;
+  top: 10px;
 }
 
 .logo {
   order: -1;
-  width:30%;
+  width: 30%;
   margin-right: 0px;
   align-items: flex-start;
   display: flex;
@@ -341,8 +341,7 @@ header .btn {
   color: var(--logo-color);
 }
 
-
-.dashboard .box-container .box p textarea{
+.dashboard .box-container .box p textarea {
   color: var(--logo-color);
   font-size: 2rem;
   text-align: center;
@@ -379,7 +378,7 @@ header .btn {
   color: var(--logo-color);
 }
 
-.dashboard .box-container .box p input{
+.dashboard .box-container .box p input {
   color: var(--logo-color);
   font-size: 2rem;
   text-align: center;
@@ -430,7 +429,7 @@ form .flex {
 form .flex select,
 form .flex input[type="date"] {
   border: var(--border);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--white);
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
@@ -441,7 +440,7 @@ form .flex input[type="date"] {
 form .flex .select {
   border: var(--border);
   width: 20%;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   width: 20%;
   background-color: var(--white);
   padding: 1.2rem 1.4rem;
@@ -452,7 +451,7 @@ form .flex .select {
 .search {
   border: var(--border);
   width: 20%;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--white);
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
@@ -461,7 +460,7 @@ form .flex .select {
 
 header .search {
   border: var(--border);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--white);
   padding: 0.6rem 0.7rem;
   font-size: 17px;
@@ -519,7 +518,7 @@ form .flex input[type="submit"] {
 .checkout form {
   padding: 2rem;
   width: 50rem;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   box-shadow: var(--box-shadow);
   border: var(--border);
   background-color: var(--light-bg);
@@ -554,7 +553,7 @@ form .flex input[type="submit"] {
 .checkout form .flex .textInput,
 .checkout form .flex textarea {
   width: 100%;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--white);
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
@@ -564,7 +563,7 @@ form .flex input[type="submit"] {
 }
 
 .msg_send_admin_form {
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--light-bg);
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
@@ -580,7 +579,7 @@ textarea {
 
 .dateRange {
   border: var(--border);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--white);
   padding: 1.2rem 1.4rem;
   font-size: 1.8rem;
@@ -669,9 +668,6 @@ textarea {
   width: fit-content;
 }
 
-
-
-
 @media (max-width: 991px) {
   html {
     font-size: 55%;
@@ -684,7 +680,6 @@ textarea {
     position: relative;
     top: 10px;
   }
-
 }
 
 @media screen and (max-width: 1250px) {
@@ -1157,7 +1152,6 @@ textarea {
   .dropbtnWidth {
     width: 130px;
   }
-
 }
 
 div label {
@@ -1187,4 +1181,8 @@ div label {
   .reply-form button[type="submit"] {
     max-width: 100px;
   }
+}
+
+.inputBox, .cursor-pointer {
+  cursor: pointer;
 }

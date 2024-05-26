@@ -241,7 +241,7 @@ if (isset($_SESSION['message'])) {
                     </div>
 
                     <div class="inputBox" align="center">
-                    <select name="enumValues" id="enumValuesI #typesidd" class="">
+                    <select name="enumValues" id="enumValues #typesidd" class="cursor-pointer">
                             <option style="font-size: 1.8rem;" value="">Select a ticket status</option>
                             <?php foreach ($enumValues as $value) { ?>
                                 <option style="font-size: 1.8rem;" <?php if ($_POST['enumValues'] == $value)
