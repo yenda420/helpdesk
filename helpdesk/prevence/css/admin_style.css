@@ -570,7 +570,8 @@ form .flex input[type="submit"] {
   font-size: 1.8rem;
   color: var(--black);
   border: var(--border);
-  margin: 1rem 0;
+  margin: 1rem;
+  width: 100%;
 }
 
 textarea {
@@ -1165,4 +1166,25 @@ div label {
 
 .inputBox .btn {
   padding: 1.25rem 5rem;
+}
+
+.reply-form {
+  display: flex;
+  justify-content: space-evenly;
+  justify-items: center;
+  align-items: center;
+}
+
+.reply-send-btn {
+  margin: 0;
+}
+
+@media screen and (max-width: 760px) {
+  .reply-form {
+    display: grid;
+  }
+
+  .reply-form button[type="submit"] {
+    max-width: 100px;
+  }
 }

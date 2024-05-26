@@ -211,7 +211,7 @@ CREATE TABLE `ticket_types` (
 
 LOCK TABLES `ticket_types` WRITE;
 /*!40000 ALTER TABLE `ticket_types` DISABLE KEYS */;
-INSERT INTO `ticket_types` VALUES (7,'Technical Issues',2),(8,'Billing and Payments',0),(9,'Product Inquiries',16),(10,'Complaints and Feedback',2),(11,'Account Management',16),(12,'Policy Questions',2),(21,'Administration problems',20),(22,'Other',2),(22,'Other',16),(22,'Other',20);
+INSERT INTO `ticket_types` VALUES (7,'Technical Issues',2),(8,'Billing and Payments',0),(9,'Product Inquiries',16),(10,'Complaints and Feedback',2),(11,'Account Management',16),(12,'Policy Questions',2),(21,'Administration problems',20),(22,'Other',2);
 /*!40000 ALTER TABLE `ticket_types` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -270,7 +270,7 @@ function emailInDatabase($conn, $email)
 
     $sqlUsers->bind_param("s", $email);
     $sqlUsers->execute();
-    $resultUsers = $sqlUsers->get_result();	
+    $resultUsers = $sqlUsers->get_result();
     $sqlRequests->bind_param("s", $email);
     $sqlRequests->execute();
     $resultRequests = $sqlRequests->get_result();
@@ -447,8 +447,8 @@ function isAdminInDepartment($conn, $adminId)
 function changeAdminDepartment($conn, $admin_id, $department_names)
 {
     if (!preg_match('/^(?:[a-zA-Z0-9\s]+\n?)+$/', $department_names)) {
-            return "Each department should be on a new line.";
-        }
+        return "Each department should be on a new line.";
+    }
     $department_names = explode("\n", $department_names);
     $department_names = array_filter($department_names);
     $department_names = array_map('trim', $department_names);
@@ -693,14 +693,4 @@ function resultsFound($conn, $search_keyword, $table_associative_array)
     } else {
         return true;
     }
-}
-
-function ReturnConvoId($conn, $ticketId) {
-    $stmt = $conn->prepare("SELECT * FROM conversation WHERE ticketId = ?");
-    $stmt->bind_param("i", $ticketId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $convoId = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-    return $convoId;
 }
