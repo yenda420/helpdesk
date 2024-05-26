@@ -189,6 +189,17 @@ function returnAdmin($conn, $adminId)
     return $admin[0];
 }
 
+function returnTicket($conn, $ticketId)
+{
+    $stmt = $conn->prepare("SELECT * FROM tickets WHERE ticketId = ?");
+    $stmt->bind_param("i", $ticketId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $ticket = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $ticket[0];
+}
+
 function numberOfTicketsForUser($conn, $data)
 {
     $stmt = $conn->prepare("SELECT * FROM users u, tickets t WHERE u.userId = t.userId AND u.userId = ?");
@@ -693,4 +704,35 @@ function resultsFound($conn, $search_keyword, $table_associative_array)
     } else {
         return true;
     }
+}
+
+function returnConvos($conn, $userId) {
+    $query = "
+        SELECT * 
+        FROM conversation 
+        WHERE convoId IS NOT NULL 
+            AND userId = ?;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $convos = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $convos;
+}
+
+function returnMessages($conn, $convoId) {
+    $query = "
+        SELECT * 
+        FROM messages 
+        WHERE conversationId = ?;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $convoId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $messages = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $messages;
 }
