@@ -128,8 +128,8 @@ CREATE TABLE `messages` (
   `senderUserId` int(10) UNSIGNED DEFAULT NULL,
   `senderAdminId` int(10) UNSIGNED DEFAULT NULL,
   `conversationId` int(10) UNSIGNED NOT NULL,
-  `userReacted` tinyint(1) DEFAULT 0,
-  `adminReacted` tinyint(1) DEFAULT 0
+  `userReplied` tinyint(1) DEFAULT 0,
+  `adminReplied` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
