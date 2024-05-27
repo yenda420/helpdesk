@@ -722,11 +722,12 @@ function returnConvos($conn, $userId) {
     return $convos;
 }
 
-function returnMessages($conn, $convoId) {
+function returnMessagesFromAdmin($conn, $convoId) {
     $query = "
         SELECT * 
         FROM messages 
-        WHERE conversationId = ?;
+        WHERE senderAdminId IS NOT NULL
+            AND conversationId = ?;
     ";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $convoId);

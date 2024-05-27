@@ -31,8 +31,8 @@ if (isset($message)) {
       </div>
 
          <nav class="navbar">
-            <a href="user_messages.php">My messages</a>
             <a href="home.php">My tickets</a>
+            <a href="user_messages.php">My messages</a>
             <a href="user_send.php">Send a ticket</a>
          </nav>
 
