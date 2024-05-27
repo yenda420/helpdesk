@@ -1,291 +1,394 @@
-CREATE DATABASE  IF NOT EXISTS `helpdesk` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
-USE `helpdesk`;
--- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1    Database: test
--- ------------------------------------------------------
--- Server version	5.5.5-10.4.32-MariaDB
+-- Počítač: 127.0.0.1
+-- Vytvořeno: Pon 27. kvě 2024, 20:39
+-- Verze serveru: 10.4.32-MariaDB
+-- Verze PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `admins`
+-- Databáze: `helpdesk`
 --
 
-DROP TABLE IF EXISTS `admins`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `admins`
+--
+
 CREATE TABLE `admins` (
-  `adminId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `adminId` int(10) UNSIGNED NOT NULL,
   `adminName` varchar(45) NOT NULL,
   `adminSurname` varchar(45) NOT NULL,
   `adminEmail` varchar(45) NOT NULL,
-  `adminPasswd` varchar(255) NOT NULL,
-  PRIMARY KEY (`adminId`),
-  UNIQUE KEY `adminEmail_UNIQUE` (`adminEmail`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `adminPasswd` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `admins`
+-- Vypisuji data pro tabulku `admins`
 --
 
-LOCK TABLES `admins` WRITE;
-/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,'admin','admin','admin@admin.com','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'),(30,'sales','admin','sales@admin.com','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),(32,'log','admin','log@admin.com','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),(52,'Admin','LogisticsSales','log@sales.admin','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc');
-/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `admins` (`adminId`, `adminName`, `adminSurname`, `adminEmail`, `adminPasswd`) VALUES
+(1, 'admin', 'admin', 'admin@admin.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'),
+(30, 'sales', 'admin', 'sales@admin.com', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),
+(32, 'log', 'admin', 'log@admin.com', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),
+(52, 'Admin', 'LogisticsSales', 'log@sales.admin', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `conversation`
+-- Struktura tabulky `conversation`
 --
 
-DROP TABLE IF EXISTS `conversation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `conversation` (
-  `convoId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `userId` int(10) unsigned NOT NULL,
-  `adminId` int(10) unsigned NOT NULL,
-  `ticketId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`convoId`),
-  KEY `FK_convoUsers` (`userId`),
-  KEY `FK_convoAdmins` (`adminId`),
-  KEY `FK_convoTickets` (`ticketId`),
-  CONSTRAINT `FK_convoAdmins` FOREIGN KEY (`adminId`) REFERENCES `admins` (`adminId`),
-  CONSTRAINT `FK_convoTickets` FOREIGN KEY (`ticketId`) REFERENCES `tickets` (`ticketId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_convoUsers` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
+  `convoId` int(10) UNSIGNED NOT NULL,
+  `userId` int(10) UNSIGNED NOT NULL,
+  `adminId` int(10) UNSIGNED NOT NULL,
+  `ticketId` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `conversation`
+-- Vypisuji data pro tabulku `conversation`
 --
 
-LOCK TABLES `conversation` WRITE;
-/*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `conversation` (`convoId`, `userId`, `adminId`, `ticketId`) VALUES
+(2, 88, 1, 125),
+(3, 88, 1, 125),
+(4, 88, 1, 125),
+(5, 88, 1, 125),
+(6, 88, 1, 125),
+(7, 88, 1, 130);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `department_lists`
+-- Struktura tabulky `departments`
 --
 
-DROP TABLE IF EXISTS `department_lists`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `department_lists` (
-  `departmentId` int(10) unsigned NOT NULL,
-  `adminId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`departmentId`,`adminId`),
-  KEY `FK_Department_listsAdmins` (`adminId`),
-  KEY `FK_Department_listsDepartments` (`departmentId`),
-  CONSTRAINT `FK_Department_listsAdmins` FOREIGN KEY (`adminId`) REFERENCES `admins` (`adminId`),
-  CONSTRAINT `FK_Department_listsDepartments` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `department_lists`
---
-
-LOCK TABLES `department_lists` WRITE;
-/*!40000 ALTER TABLE `department_lists` DISABLE KEYS */;
-INSERT INTO `department_lists` VALUES (1,1),(2,30),(2,32),(2,52),(16,30),(16,32),(16,52);
-/*!40000 ALTER TABLE `department_lists` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `departments`
---
-
-DROP TABLE IF EXISTS `departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `departments` (
-  `departmentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `departmentName` varchar(45) NOT NULL,
-  PRIMARY KEY (`departmentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `departments`
---
-
-LOCK TABLES `departments` WRITE;
-/*!40000 ALTER TABLE `departments` DISABLE KEYS */;
-INSERT INTO `departments` VALUES (0,'Unassigned'),(1,'Super-admin'),(2,'Logistics'),(16,'Sales'),(20,'Administrations');
-/*!40000 ALTER TABLE `departments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `messages`
---
-
-DROP TABLE IF EXISTS `messages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `messages` (
-  `msgId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `msgContent` longtext NOT NULL,
-  `senderUserId` int(10) unsigned DEFAULT NULL,
-  `senderAdminId` int(10) unsigned DEFAULT NULL,
-  `conversationId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`msgId`),
-  KEY `FK_msgUsers` (`senderUserId`),
-  KEY `FK_msgAdmins` (`senderAdminId`),
-  KEY `FK_msgConvo` (`conversationId`),
-  CONSTRAINT `FK_msgAdmins` FOREIGN KEY (`senderAdminId`) REFERENCES `admins` (`adminId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_msgConvo` FOREIGN KEY (`conversationId`) REFERENCES `conversation` (`convoId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_msgUsers` FOREIGN KEY (`senderUserId`) REFERENCES `users` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  `departmentId` int(10) UNSIGNED NOT NULL,
+  `departmentName` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `messages`
+-- Vypisuji data pro tabulku `departments`
 --
 
-LOCK TABLES `messages` WRITE;
-/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `departments` (`departmentId`, `departmentName`) VALUES
+(0, 'Unassigned'),
+(1, 'Super-admin'),
+(2, 'Logistics'),
+(16, 'Sales'),
+(20, 'Administrations');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `requests`
+-- Struktura tabulky `department_lists`
 --
 
-DROP TABLE IF EXISTS `requests`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `department_lists` (
+  `departmentId` int(10) UNSIGNED NOT NULL,
+  `adminId` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Vypisuji data pro tabulku `department_lists`
+--
+
+INSERT INTO `department_lists` (`departmentId`, `adminId`) VALUES
+(1, 1),
+(2, 30),
+(2, 32),
+(2, 52),
+(16, 30),
+(16, 32),
+(16, 52);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `messages`
+--
+
+CREATE TABLE `messages` (
+  `msgId` int(10) UNSIGNED NOT NULL,
+  `msgContent` longtext NOT NULL,
+  `senderUserId` int(10) UNSIGNED DEFAULT NULL,
+  `senderAdminId` int(10) UNSIGNED DEFAULT NULL,
+  `conversationId` int(10) UNSIGNED NOT NULL,
+  `userReacted` tinyint(1) DEFAULT 0,
+  `adminReacted` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `requests`
+--
+
 CREATE TABLE `requests` (
   `requestId` int(10) NOT NULL,
   `reqName` varchar(45) NOT NULL,
   `reqSurname` varchar(45) NOT NULL,
   `reqEmail` varchar(45) NOT NULL,
-  `reqPasswd` varchar(255) NOT NULL,
-  PRIMARY KEY (`requestId`),
-  UNIQUE KEY `reqEmail_UNIQUE` (`reqEmail`)
+  `reqPasswd` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `requests`
+-- Vypisuji data pro tabulku `requests`
 --
 
-LOCK TABLES `requests` WRITE;
-/*!40000 ALTER TABLE `requests` DISABLE KEYS */;
-INSERT INTO `requests` VALUES (140,'request','one','request@one.com','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc');
-/*!40000 ALTER TABLE `requests` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `requests` (`requestId`, `reqName`, `reqSurname`, `reqEmail`, `reqPasswd`) VALUES
+(140, 'request', 'one', 'request@one.com', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `ticket_types`
+-- Struktura tabulky `tickets`
 --
 
-DROP TABLE IF EXISTS `ticket_types`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ticket_types` (
-  `ticketTypeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ticketTypeName` varchar(45) NOT NULL,
-  `departmentId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`ticketTypeId`,`departmentId`),
-  KEY `FK_Ticket_typesDepartments` (`departmentId`),
-  CONSTRAINT `FK_Ticket_typesDepartments` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ticket_types`
---
-
-LOCK TABLES `ticket_types` WRITE;
-/*!40000 ALTER TABLE `ticket_types` DISABLE KEYS */;
-INSERT INTO `ticket_types` VALUES (7,'Technical Issues',2),(8,'Billing and Payments',0),(9,'Product Inquiries',16),(10,'Complaints and Feedback',2),(11,'Account Management',16),(12,'Policy Questions',2),(21,'Administration problems',20),(22,'Other',2);
-/*!40000 ALTER TABLE `ticket_types` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tickets`
---
-
-DROP TABLE IF EXISTS `tickets`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tickets` (
-  `ticketId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ticketId` int(10) UNSIGNED NOT NULL,
   `title` varchar(45) NOT NULL,
   `status` enum('Waiting','Pending','Resolved') NOT NULL,
-  `resolver` int(10) unsigned DEFAULT NULL,
+  `resolver` int(10) UNSIGNED DEFAULT NULL,
   `ticketDesc` longtext NOT NULL,
   `ticketDate` date NOT NULL,
-  `userId` int(10) unsigned NOT NULL,
-  `ticketTypeId` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`ticketId`),
-  KEY `FK_Resolver_AdminID` (`resolver`),
-  KEY `FK_TicketTicket_types` (`ticketTypeId`),
-  KEY `FK_TicketsUsers` (`userId`),
-  CONSTRAINT `FK_Resolver_AdminID` FOREIGN KEY (`resolver`) REFERENCES `admins` (`adminId`),
-  CONSTRAINT `FK_TicketTicket_types` FOREIGN KEY (`ticketTypeId`) REFERENCES `ticket_types` (`ticketTypeId`),
-  CONSTRAINT `FK_ticketsUsers` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `userId` int(10) UNSIGNED NOT NULL,
+  `ticketTypeId` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tickets`
+-- Vypisuji data pro tabulku `tickets`
 --
 
-LOCK TABLES `tickets` WRITE;
-/*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (125,'My account got lost','Waiting',NULL,'I tried to log in and...','2024-03-14',88,11),(129,'Uvař čaj','Waiting',NULL,'Uvař čaj','2024-03-18',110,7);
-/*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `tickets` (`ticketId`, `title`, `status`, `resolver`, `ticketDesc`, `ticketDate`, `userId`, `ticketTypeId`) VALUES
+(125, 'My account got lost', 'Pending', 1, 'I tried to log in and...', '2024-03-14', 88, 11),
+(129, 'Uvař čaj', 'Waiting', NULL, 'Uvař čaj', '2024-03-18', 110, 7),
+(130, 'asdfasdfasfd', 'Resolved', 1, 'asdfasfdasfdasf', '2024-05-26', 88, 7);
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktura tabulky `ticket_types`
 --
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticket_types` (
+  `ticketTypeId` int(10) UNSIGNED NOT NULL,
+  `ticketTypeName` varchar(45) NOT NULL,
+  `departmentId` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Vypisuji data pro tabulku `ticket_types`
+--
+
+INSERT INTO `ticket_types` (`ticketTypeId`, `ticketTypeName`, `departmentId`) VALUES
+(7, 'Technical Issues', 2),
+(8, 'Billing and Payments', 0),
+(9, 'Product Inquiries', 16),
+(10, 'Complaints and Feedback', 2),
+(11, 'Account Management', 16),
+(12, 'Policy Questions', 2),
+(21, 'Administration problems', 20),
+(22, 'Other', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `users`
+--
+
 CREATE TABLE `users` (
-  `userId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) UNSIGNED NOT NULL,
   `userName` varchar(45) NOT NULL,
   `userSurname` varchar(45) NOT NULL,
   `userEmail` varchar(45) NOT NULL,
-  `userPasswd` varchar(255) NOT NULL,
-  PRIMARY KEY (`userId`),
-  UNIQUE KEY `userEmail_UNIQUE` (`userEmail`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `userPasswd` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Vypisuji data pro tabulku `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (88,'user3','user3','user3@user3.com','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),(109,'request','three','request@three.com','6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),(110,'z','n','z.n@k.cz','82cb1afac451095fc29b51f54a7b749bc9d816ded14c9b2518a9dfeb4d772fb6');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `users` (`userId`, `userName`, `userSurname`, `userEmail`, `userPasswd`) VALUES
+(88, 'user3', 'user3', 'user3@user3.com', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),
+(109, 'request', 'three', 'request@three.com', '6892013d1b9cebd6b285cf87a9727cd9705a0234cd6787aa1cbb23932477a8bc'),
+(110, 'z', 'n', 'z.n@k.cz', '82cb1afac451095fc29b51f54a7b749bc9d816ded14c9b2518a9dfeb4d772fb6');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indexy pro exportované tabulky
+--
+
+--
+-- Indexy pro tabulku `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`adminId`),
+  ADD UNIQUE KEY `adminEmail_UNIQUE` (`adminEmail`);
+
+--
+-- Indexy pro tabulku `conversation`
+--
+ALTER TABLE `conversation`
+  ADD PRIMARY KEY (`convoId`),
+  ADD KEY `FK_convoUsers` (`userId`),
+  ADD KEY `FK_convoAdmins` (`adminId`),
+  ADD KEY `FK_convoTickets` (`ticketId`);
+
+--
+-- Indexy pro tabulku `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`departmentId`);
+
+--
+-- Indexy pro tabulku `department_lists`
+--
+ALTER TABLE `department_lists`
+  ADD PRIMARY KEY (`departmentId`,`adminId`),
+  ADD KEY `FK_Department_listsAdmins` (`adminId`),
+  ADD KEY `FK_Department_listsDepartments` (`departmentId`);
+
+--
+-- Indexy pro tabulku `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`msgId`),
+  ADD KEY `FK_msgUsers` (`senderUserId`),
+  ADD KEY `FK_msgAdmins` (`senderAdminId`),
+  ADD KEY `FK_msgConvo` (`conversationId`);
+
+--
+-- Indexy pro tabulku `requests`
+--
+ALTER TABLE `requests`
+  ADD PRIMARY KEY (`requestId`),
+  ADD UNIQUE KEY `reqEmail_UNIQUE` (`reqEmail`);
+
+--
+-- Indexy pro tabulku `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`ticketId`),
+  ADD KEY `FK_Resolver_AdminID` (`resolver`),
+  ADD KEY `FK_TicketTicket_types` (`ticketTypeId`),
+  ADD KEY `FK_TicketsUsers` (`userId`);
+
+--
+-- Indexy pro tabulku `ticket_types`
+--
+ALTER TABLE `ticket_types`
+  ADD PRIMARY KEY (`ticketTypeId`,`departmentId`),
+  ADD KEY `FK_Ticket_typesDepartments` (`departmentId`);
+
+--
+-- Indexy pro tabulku `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`userId`),
+  ADD UNIQUE KEY `userEmail_UNIQUE` (`userEmail`);
+
+--
+-- AUTO_INCREMENT pro tabulky
+--
+
+--
+-- AUTO_INCREMENT pro tabulku `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `adminId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+
+--
+-- AUTO_INCREMENT pro tabulku `conversation`
+--
+ALTER TABLE `conversation`
+  MODIFY `convoId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT pro tabulku `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `departmentId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT pro tabulku `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `msgId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT pro tabulku `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `ticketId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+
+--
+-- AUTO_INCREMENT pro tabulku `ticket_types`
+--
+ALTER TABLE `ticket_types`
+  MODIFY `ticketTypeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT pro tabulku `users`
+--
+ALTER TABLE `users`
+  MODIFY `userId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+
+--
+-- Omezení pro exportované tabulky
+--
+
+--
+-- Omezení pro tabulku `conversation`
+--
+ALTER TABLE `conversation`
+  ADD CONSTRAINT `FK_convoAdmins` FOREIGN KEY (`adminId`) REFERENCES `admins` (`adminId`),
+  ADD CONSTRAINT `FK_convoTickets` FOREIGN KEY (`ticketId`) REFERENCES `tickets` (`ticketId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_convoUsers` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
+
+--
+-- Omezení pro tabulku `department_lists`
+--
+ALTER TABLE `department_lists`
+  ADD CONSTRAINT `FK_Department_listsAdmins` FOREIGN KEY (`adminId`) REFERENCES `admins` (`adminId`),
+  ADD CONSTRAINT `FK_Department_listsDepartments` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`);
+
+--
+-- Omezení pro tabulku `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `FK_msgAdmins` FOREIGN KEY (`senderAdminId`) REFERENCES `admins` (`adminId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_msgConvo` FOREIGN KEY (`conversationId`) REFERENCES `conversation` (`convoId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_msgUsers` FOREIGN KEY (`senderUserId`) REFERENCES `users` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `tickets`
+--
+ALTER TABLE `tickets`
+  ADD CONSTRAINT `FK_Resolver_AdminID` FOREIGN KEY (`resolver`) REFERENCES `admins` (`adminId`),
+  ADD CONSTRAINT `FK_TicketTicket_types` FOREIGN KEY (`ticketTypeId`) REFERENCES `ticket_types` (`ticketTypeId`),
+  ADD CONSTRAINT `FK_ticketsUsers` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
+
+--
+-- Omezení pro tabulku `ticket_types`
+--
+ALTER TABLE `ticket_types`
+  ADD CONSTRAINT `FK_Ticket_typesDepartments` FOREIGN KEY (`departmentId`) REFERENCES `departments` (`departmentId`);
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-05-15 22:54:00
