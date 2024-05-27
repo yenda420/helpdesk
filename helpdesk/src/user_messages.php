@@ -5,6 +5,8 @@ include 'functions.php';
 
 session_start();
 
+$msgCount = 0;
+
 if (isset($_POST['helped'])) {
     $query = '
         UPDATE tickets
@@ -36,7 +38,18 @@ if (isset($_POST['usr_msg_send'])) {
     $insert_msg_query = $stmt->execute();
     $stmt->close();
 
-    if ($insert_msg_query) {
+    $query = '
+        UPDATE messages
+        SET userReplied = 1
+        WHERE msgId = ?
+    ';
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $_POST['message_id']);
+    $update_msg_query = $stmt->execute();
+    $stmt->close();
+
+    if ($insert_msg_query && $update_msg_query) {
         $_SESSION['message'] = "Message sent successfully";
     } else {
         $_SESSION['message'] = "Failed to send message";
@@ -65,60 +78,67 @@ if (isset($_POST['usr_msg_send'])) {
             <h1 class="title">Your Messages</h1>
             <div class="box-container">
                 <?php
-                foreach (returnConvos($conn, 88) as $convo) {
+                foreach (returnConvos($conn, $_SESSION['user_id']) as $convo) {
                     foreach (returnMessagesFromAdmin($conn, $convo["convoId"]) as $message) {
-                        $senderName = returnAdmin($conn, $message["senderAdminId"])['adminName'] . " " .
-                            returnAdmin($conn, $message["senderAdminId"])['adminSurname'];
-                        $senderEmail = returnAdmin($conn, $message["senderAdminId"])['adminEmail'];
-                        $ticketTitle = returnTicket($conn, $convo["ticketId"])['title'];
-                        $msgContent = $message["msgContent"]; ?>
+                        if (!$message["userReplied"]) {
+                            $senderName = returnAdmin($conn, $message["senderAdminId"])['adminName'] . " " .
+                                returnAdmin($conn, $message["senderAdminId"])['adminSurname'];
+                            $senderEmail = returnAdmin($conn, $message["senderAdminId"])['adminEmail'];
+                            $ticketTitle = returnTicket($conn, $convo["ticketId"])['title'];
+                            $msgContent = $message["msgContent"];
+                            $msgCount++; ?>
 
-                        <div class="box">
-                            <div class="breaking">
-                                <p> Message from:
-                                    <span>
-                                        <?= $senderName ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="breaking">
-                                <p> Senders contact:
-                                    <span>
-                                        <?= $senderEmail ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="breaking">
-                                <p> Response for:
-                                    <span>
-                                        <?= $ticketTitle ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="breaking">
-                                <p> Message:
-                                    <span>
-                                        <?= $msgContent ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <form method="POST" class="help-form">
-                                <div class="help-text">Did this help you?</div>
-                                <div>
-                                    <input type="hidden" name="convo_id" value="<?php echo $convo["convoId"]; ?>">
-                                    <input type="hidden" name="ticket_id" value="<?php echo $convo["ticketId"]; ?>">
-                                    <button type="submit" name="helped" class="btn">Yes</button>
-                                    <button class="delete-btn no-btn">No</button>
-                                    <div class="user-reply notActive">
-                                        <textarea name="usr_msg" id="usr_msg" class="msg_send_user_form"
-                                            placeholder="Please describe your problem in more detail. Did our reply change the state of your issue?"></textarea>
-                                        <button type="submit" name="usr_msg_send" class="btn reply-send-btn">Send</button>
-                                    </div>
+                            <div class="box">
+                                <div class="breaking">
+                                    <p> Message from:
+                                        <span>
+                                            <?= $senderName ?>
+                                        </span>
+                                    </p>
                                 </div>
-                            </form>
-                        </div>
-              <?php }
-                } ?>
+                                <div class="breaking">
+                                    <p> Senders contact:
+                                        <span>
+                                            <?= $senderEmail ?>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="breaking">
+                                    <p> Response for:
+                                        <span>
+                                            <?= $ticketTitle ?>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="breaking">
+                                    <p> Message:
+                                        <span>
+                                            <?= $msgContent ?>
+                                        </span>
+                                    </p>
+                                </div>
+                                <form method="POST" class="help-form">
+                                    <div class="help-text">Did this help you?</div>
+                                    <div>
+                                        <input type="hidden" name="convo_id" value="<?php echo $convo["convoId"]; ?>">
+                                        <input type="hidden" name="ticket_id" value="<?php echo $convo["ticketId"]; ?>">
+                                        <input type="hidden" name="message_id" value="<?php echo $message["msgId"]; ?>">
+                                        <button type="submit" name="helped" class="btn">Yes</button>
+                                        <button class="delete-btn no-btn">No</button>
+                                        <div class="user-reply notActive">
+                                            <textarea name="usr_msg" id="usr_msg" class="msg_send_user_form"
+                                                placeholder="Please describe your problem in more detail. Did our reply change the state of your issue?"></textarea>
+                                            <button type="submit" name="usr_msg_send" class="btn reply-send-btn">Send</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                  <?php }
+                    }
+                }
+                if ($msgCount == 0) { ?>
+                    <p class="empty">No new messages</p>
+                <?php } ?>
             </div>
         </section>
     </section>
