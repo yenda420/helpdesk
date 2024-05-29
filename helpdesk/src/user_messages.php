@@ -21,7 +21,20 @@ if (isset($_POST['helped'])) {
     if ($stmt->affected_rows <= 0)
         $_SESSION['message'] = "Error updating database";
 
+    $query = '
+        UPDATE messages
+        SET userReplied = 1
+        WHERE msgId = ?
+    ';
+
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $_POST['message_id']);
+    $update_msg_query = $stmt->execute();
     $stmt->close();
+
+    if (!$update_msg_query)
+        if (!in_array("Error updating database", $_SESSION['message']))
+            $_SESSION['message'] = "Error updating database";
 
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;

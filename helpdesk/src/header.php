@@ -32,7 +32,7 @@ if (isset($message)) {
 
          <nav class="navbar">
             <a href="home.php">My tickets</a>
-            <a href="user_messages.php">My messages</a>
+            <a href="user_messages.php">New messages</a>
             <a href="user_send.php">Send a ticket</a>
          </nav>
 
