@@ -14,7 +14,15 @@ if (isset($_POST['delete_user'])) {
    if (isset($_POST['user_id'])) {
       $user_id = $_POST['user_id'];
 
+      $stmt = $conn->prepare("DELETE FROM `conversation` WHERE userId = ?");
+      $stmt->bind_param("i", $user_id);
+      $stmt->execute();
+
       $stmt = $conn->prepare("DELETE FROM `tickets` WHERE userId = ?");
+      $stmt->bind_param("i", $user_id);
+      $stmt->execute();
+
+      $stmt = $conn->prepare("DELETE FROM `messages` WHERE senderUserId = ?");
       $stmt->bind_param("i", $user_id);
       $stmt->execute();
 
@@ -30,12 +38,28 @@ if (isset($_POST['delete_user'])) {
 
    } else if (isset($_POST['admin_id'])) {
       $admin_id = $_POST['admin_id'];
+
+      $stmt = $conn->prepare("DELETE FROM `conversation` WHERE adminId = ?");
+      $stmt->bind_param("i", $admin_id);
+      $stmt->execute();
+
       $stmt = $conn->prepare("DELETE FROM `department_lists` WHERE adminId = ?");
       $stmt->bind_param("i", $admin_id);
       $stmt->execute();
+
+      $stmt = $conn->prepare("DELETE FROM `messages` WHERE senderAdminId = ?");
+      $stmt->bind_param("i", $admin_id);
+      $stmt->execute();
+
+      $stmt = $conn->prepare("UPDATE `tickets` SET `resolver`=? WHERE resolver=?");
+      $null = null;
+      $stmt->bind_param("ii", $null, $admin_id);
+      $stmt->execute();
+
       $stmt = $conn->prepare("DELETE FROM `admins` WHERE adminId = ?");
       $stmt->bind_param("i", $admin_id);
       $stmt->execute();
+
       if ($stmt->affected_rows > 0) {
          $message[] = "Admin deleted successfully";
       } else {
