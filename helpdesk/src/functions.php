@@ -722,11 +722,43 @@ function returnConvos($conn, $userId) {
     return $convos;
 }
 
+function returnConvosAdmin($conn, $adminId) {
+    $query = "
+        SELECT * 
+        FROM conversation 
+        WHERE convoId IS NOT NULL 
+            AND adminId = ?;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $adminId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $convos = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $convos;
+}
+
 function returnMessagesFromAdmin($conn, $convoId) {
     $query = "
         SELECT * 
         FROM messages 
         WHERE senderAdminId IS NOT NULL
+            AND conversationId = ?;
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $convoId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $messages = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $messages;
+}
+
+function returnMessagesFromUser($conn, $convoId) {
+    $query = "
+        SELECT * 
+        FROM messages 
+        WHERE senderUserId IS NOT NULL
             AND conversationId = ?;
     ";
     $stmt = $conn->prepare($query);

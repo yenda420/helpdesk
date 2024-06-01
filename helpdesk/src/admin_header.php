@@ -69,7 +69,8 @@ if (is_array($_SESSION['department'])) {
                         <a href="admin_tickets.php">See all tickets</a>
                         <a href="tck_types.php">See all ticket types</a>
                         <a href="create_tickets.php">Create ticket types</a>
-                     </div>
+                        <a href="admin_messages.php">See all messages</a>
+                        </div>
                   </div>
                ';
             } else {
