@@ -196,4 +196,3 @@ class DepartmentManager
         return $admins;
     }
 }
-?>

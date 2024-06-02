@@ -1,14 +1,17 @@
 <?php
 
-class RequestManager {
+class RequestManager
+{
     private $conn;
     private $table_name = "requests";
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function deleteRequest($request_id) {
+    public function deleteRequest($request_id)
+    {
         $stmt = $this->conn->prepare("DELETE FROM " . $this->table_name . " WHERE requestId = ?");
         $stmt->bind_param("i", $request_id);
         $stmt->execute();
@@ -17,7 +20,8 @@ class RequestManager {
         return $result;
     }
 
-    public function acceptRequest($request_id) {
+    public function acceptRequest($request_id)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table_name . " WHERE requestId = ?");
         $stmt->bind_param("i", $request_id);
         $stmt->execute();
@@ -44,7 +48,8 @@ class RequestManager {
         return false;
     }
 
-    public function getAllRequests() {
+    public function getAllRequests()
+    {
         $stmt = $this->conn->prepare("SELECT * FROM " . $this->table_name);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -58,4 +63,3 @@ class RequestManager {
         return $requests;
     }
 }
-?>

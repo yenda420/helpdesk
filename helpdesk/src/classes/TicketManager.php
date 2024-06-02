@@ -80,4 +80,3 @@ class TicketManager
         return $user[0];
     }
 }
-?>

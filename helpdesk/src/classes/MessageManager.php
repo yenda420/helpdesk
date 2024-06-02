@@ -1,7 +1,9 @@
 <?php
 
-class MessageManager {
-    public function displayMessages($messages) {
+class MessageManager
+{
+    public function displayMessages($messages)
+    {
         if (isset($messages)) {
             error_reporting(E_ALL ^ E_WARNING);
             foreach ($messages as $message) {
@@ -24,4 +26,3 @@ class MessageManager {
         }
     }
 }
-?>

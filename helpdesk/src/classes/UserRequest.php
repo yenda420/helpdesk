@@ -43,6 +43,5 @@ class UserRequest
 
         $stmt->close();
         return 'Request for an account was successful.';
-    }   
+    }
 }
-?>

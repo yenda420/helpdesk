@@ -200,10 +200,10 @@ class UserManager
             $stmt->bind_param("i", $userId);
             $stmt->execute();
         }
-        if($stmt->affected_rows > 0){
+        if ($stmt->affected_rows > 0) {
             return true;
-        }
-        else return false;
+        } else
+            return false;
     }
 
     public function deleteAdmin($adminId)
@@ -220,10 +220,10 @@ class UserManager
             $stmt->bind_param("i", $adminId);
             $stmt->execute();
         }
-        if($stmt->affected_rows > 0){
+        if ($stmt->affected_rows > 0) {
             return true;
-        }
-        else return false;
+        } else
+            return false;
     }
     public function changeAdminDepartment($admin_id, $department_names)
     {
@@ -271,4 +271,3 @@ class UserManager
         $stmt->close();
     }
 }
-?>
