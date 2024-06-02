@@ -1,75 +1,61 @@
 <?php
 
-include 'config.php';
-include 'functions.php';
+require 'classes/TicketManager.php';
+require 'classes/TicketTypeManager.php';
+require 'classes/Database.php';
+require 'classes/SessionManager.php';
+require 'classes/ConvoMessageManager.php';
+require 'classes/MessageManager.php';
+require 'classes/UserManager.php';
+require 'classes/Utility.php';
 
-session_start();
 
+$sessionManager = new SessionManager();
+$messageManager = new MessageManager();
+
+$database = new Database();
+$db = $database->getConnection();
+$ticketTypeManager = new TicketTypeManager($db);
+$ticketManager = new TicketManager($db);
+$userManager = new UserManager($db);
+$convoMessageManager = new ConvoMessageManager($db);
+
+$sessionManager->startSession();
+
+$user_id = $sessionManager->getUserId();
+if (!$user_id) {
+    header('location:index.php');
+    exit;
+}
 $msgCount = 0;
 
+
 if (isset($_POST['helped'])) {
-    $query = '
-        UPDATE tickets
-        SET status = "Resolved"
-        WHERE ticketId = ?
-    ';
+    $ticketUpdated = $ticketManager->markAsResolved($_POST['sender_id'],$_POST['ticket_id']);
+    $messageUpdated = $convoMessageManager->updateUserReplied($_POST['message_id']);
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $_POST['ticket_id']);
-    $stmt->execute();
-
-    if ($stmt->affected_rows <= 0)
-        $_SESSION['message'] = "Error updating database";
-
-    $query = '
-        UPDATE messages
-        SET userReplied = 1
-        WHERE msgId = ?
-    ';
-
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $_POST['message_id']);
-    $update_msg_query = $stmt->execute();
-    $stmt->close();
-
-    if (!$update_msg_query)
-        if (!in_array("Error updating database", $_SESSION['message']))
-            $_SESSION['message'] = "Error updating database";
+    if ($ticketUpdated && $messageUpdated) {
+        $sessionManager->setMessage("Ticket marked as resolved");
+    } else {
+        $sessionManager->setMessage("Failed to mark ticket as resolved");
+    }
 
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
 
 if (isset($_POST['usr_msg_send'])) {
-    $query = '
-        INSERT INTO messages (conversationId, msgContent, senderUserId)
-        VALUES (?, ?, ?)
-    ';
+    $messageInserted = $convoMessageManager->insertMessage($_POST['convo_id'], $_POST['usr_msg'], $_SESSION['user_id']);
+    $messageUpdated = $convoMessageManager->updateUserReplied($_POST['message_id']);
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("isi", $_POST['convo_id'], $_POST['usr_msg'], $_SESSION['user_id']);
-    $insert_msg_query = $stmt->execute();
-    $stmt->close();
-
-    $query = '
-        UPDATE messages
-        SET userReplied = 1
-        WHERE msgId = ?
-    ';
-
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $_POST['message_id']);
-    $update_msg_query = $stmt->execute();
-    $stmt->close();
-
-    if ($insert_msg_query && $update_msg_query) {
-        $_SESSION['message'] = "Message sent successfully";
+    if ($messageInserted && $messageUpdated) {
+        $sessionManager->setMessage("Message sent successfully");
     } else {
-        $_SESSION['message'] = "Failed to send message";
+        $sessionManager->setMessage("Failed to send message");
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
-    exit; 
+    exit;
 }
 ?>
 
@@ -85,54 +71,47 @@ if (isset($_POST['usr_msg_send'])) {
 </head>
 
 <body>
-    <?php include 'header.php'; ?>
+    <?php require 'header.php'; ?>
     <section class="dashboard">
         <section class="users">
             <h1 class="title">Your Messages</h1>
             <div class="box-container">
                 <?php
-                foreach (returnConvos($conn, $_SESSION['user_id']) as $convo) {
-                    foreach (returnMessagesFromAdmin($conn, $convo["convoId"]) as $message) {
+                foreach ($userManager->getUserConversations($_SESSION['user_id']) as $convo) {
+                    foreach ($convoMessageManager->getMessagesFromAdmin($convo["convoId"]) as $message) {
                         if (!$message["userReplied"]) {
-                            $senderName = returnAdmin($conn, $message["senderAdminId"])['adminName'] . " " .
-                                returnAdmin($conn, $message["senderAdminId"])['adminSurname'];
-                            $senderEmail = returnAdmin($conn, $message["senderAdminId"])['adminEmail'];
-                            $ticketTitle = returnTicket($conn, $convo["ticketId"])['title'];
+                            $admin = $userManager->getAdminDetails($message["senderAdminId"]);
+                            $senderName = $admin['adminName'] . " " . $admin['adminSurname'];
+                            $senderEmail = $admin['adminEmail'];
+                            $ticketTitle = $ticketManager->getTicketTitle($convo["ticketId"]);
                             $msgContent = $message["msgContent"];
                             $msgCount++; ?>
 
                             <div class="box">
                                 <div class="breaking">
                                     <p> Message from:
-                                        <span>
-                                            <?= $senderName ?>
-                                        </span>
+                                        <span><?= $senderName ?></span>
                                     </p>
                                 </div>
                                 <div class="breaking">
                                     <p> Senders contact:
-                                        <span>
-                                            <?= $senderEmail ?>
-                                        </span>
+                                        <span><?= $senderEmail ?></span>
                                     </p>
                                 </div>
                                 <div class="breaking">
                                     <p> Response for:
-                                        <span>
-                                            <?= $ticketTitle ?>
-                                        </span>
+                                        <span><?= $ticketTitle ?></span>
                                     </p>
                                 </div>
                                 <div class="breaking">
                                     <p> Message:
-                                        <span>
-                                            <?= $msgContent ?>
-                                        </span>
+                                        <span><?= $msgContent ?></span>
                                     </p>
                                 </div>
                                 <form method="POST" class="help-form">
                                     <div class="help-text">Did this help you?</div>
                                     <div>
+                                        <input type="hidden" name="sender_id" value="<?php echo $message["senderAdminId"]; ?>">
                                         <input type="hidden" name="convo_id" value="<?php echo $convo["convoId"]; ?>">
                                         <input type="hidden" name="ticket_id" value="<?php echo $convo["ticketId"]; ?>">
                                         <input type="hidden" name="message_id" value="<?php echo $message["msgId"]; ?>">
@@ -146,7 +125,7 @@ if (isset($_POST['usr_msg_send'])) {
                                     </div>
                                 </form>
                             </div>
-                  <?php }
+                        <?php }
                     }
                 }
                 if ($msgCount == 0) { ?>
@@ -156,6 +135,6 @@ if (isset($_POST['usr_msg_send'])) {
         </section>
     </section>
     <script src="js/script.js"></script>
-    <?php include 'footer.php'; ?>
+    <?php require 'footer.php'; ?>
 </body>
 </html>

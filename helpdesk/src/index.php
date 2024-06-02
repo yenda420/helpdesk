@@ -1,76 +1,54 @@
 <?php
 
-session_start();
-session_unset();
-session_destroy();
+require 'classes/Database.php';
+require 'classes/SessionManager.php';
+require 'classes/MessageManager.php';
+require 'classes/AuthManager.php';
 
-include 'config.php';
-require('functions.php');
+$messageManager = new MessageManager();
+$sessionManager = new SessionManager();
+$sessionManager->destroySession();
+$sessionManager->startSession();
 
-session_start();
+$database = new Database();
+$authManager = new AuthManager($database);
 
 if (isset($_POST['submit'])) {
-   $pass = hash('sha256', mysqli_real_escape_string($conn, $_POST['password']));
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-   // Prepare a SELECT statement for users
-   $stmt = $conn->prepare("SELECT * FROM `users` where userPasswd = ? and userEmail = ?");
-   $stmt->bind_param("ss", $pass, $email);
-   $stmt->execute();
-   $select_users = $stmt->get_result();
+    $authResult = $authManager->authenticateUser($email, $password);
 
-   // Prepare a SELECT statement for admins
-   $stmt = $conn->prepare("SELECT * FROM `admins` where adminPasswd = ? and adminEmail = ?");
-   $stmt->bind_param("ss", $pass, $email);
-   $stmt->execute();
-   $select_admins = $stmt->get_result();
+    if ($authResult) {
+        if ($authResult['role'] == 'user') {
+            $user = $authResult['data'];
+            $sessionManager->setSession('user_name', $user['userName']);
+            $sessionManager->setSession('user_email', $user['userEmail']);
+            $sessionManager->setSession('user_id', $user['userId']);
+            $sessionManager->setSession('user_surname', $user['userSurname']);
+            header('location:home.php');
+        } elseif ($authResult['role'] == 'admin') {
+            $admin = $authResult['data'];
+            $sessionManager->setSession('admin_name', $admin['adminName']);
+            $sessionManager->setSession('admin_email', $admin['adminEmail']);
+            $sessionManager->setSession('admin_id', $admin['adminId']);
+            $sessionManager->setSession('admin_surname', $admin['adminSurname']);
 
-   if (mysqli_num_rows($select_users) > 0) {
-      while ($fetch_users = mysqli_fetch_assoc($select_users)) {
-         $_SESSION['user_name'] = $fetch_users['userName'];
-         $_SESSION['user_email'] = $fetch_users['userEmail'];
-         $_SESSION['user_id'] = $fetch_users['userId'];
-         $_SESSION['user_surname'] = $fetch_users['userSurname'];
-         header('location:home.php');
-      }
-   } else if (mysqli_num_rows($select_admins) > 0) {
-      $_SESSION['admin_departments'] = array();
-      while ($fetch_admins = mysqli_fetch_assoc($select_admins)) {
-         $_SESSION['admin_name'] = $fetch_admins['adminName'];
-         $_SESSION['admin_email'] = $fetch_admins['adminEmail'];
-         $_SESSION['admin_id'] = $fetch_admins['adminId'];
-         $_SESSION['admin_surname'] = $fetch_admins['adminSurname'];
-
-         // Prepare a SELECT statement for departments
-         $stmt = $conn->prepare("SELECT * FROM `department_lists` where adminId = ?");
-         $stmt->bind_param("i", $_SESSION['admin_id']);
-         $stmt->execute();
-         $select_departments = $stmt->get_result();
-
-         if (mysqli_num_rows($select_departments) > 0) {
-            while ($fetch_departments = mysqli_fetch_assoc($select_departments)) {
-               $_SESSION['departmentId'][] = $fetch_departments['departmentId'];
-               $_SESSION['department'][] = returnDepartmentName($conn, $fetch_departments['departmentId']);
+            $departments = $authManager->getAdminDepartments($admin['adminId']);
+            foreach ($departments as $department) {
+               $sessionManager->addToSessionArray('departmentId', $department['departmentId']);
+               $sessionManager->addToSessionArray('department', $authManager->getDepartmentName($department['departmentId']));
+                print_r($sessionManager->getDepartments());
             }
-         } else {
-            $_SESSION['message'] = 'Invalid email or password';
-         }
-         header('location:admin_page.php');
-         exit;
-      }
-   } else {
-      $_SESSION['message'] = 'Invalid email or password';
-   }
-
+            header('location:admin_page.php');
+        }
+    } else {
+        $sessionManager->setSession('message', 'Invalid email or password');
+    }
 }
-?>
-<?php
- if (isset($_SESSION['message'])) {
-      $message[] = $_SESSION['message'];
-      unset($_SESSION['message']);
-   }
-?>
 
+$message = $sessionManager->getSession('message');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,35 +59,17 @@ if (isset($_POST['submit'])) {
    <title>Login</title>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <link rel="stylesheet" href="css/style.css">
-
 </head>
 
 <body>
 
    <?php
-   if (isset($message)) {
-      foreach ($message as $message) {
-         echo '
-         <div class="message">
-            <span>' . $message . '</span>
-            <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-            <script>
-               setTimeout(function() {
-                  document.querySelector(".message").style.opacity = "0";
-                  document.querySelector(".message").style.transition = "all 0.5s";
-                  setTimeout(function() {
-                     document.querySelector(".message").remove();
-                  }, 500);
-               }, 3500);
-            </script>
-         </div>
-         ';
-      }
+   if ($message) {
+      $messageManager->displayMessages([$message]);
    }
    ?>
 
    <div class="form-container">
-
       <form action="" method="post">
          <h3>Login</h3>
          <input type="email" name="email" placeholder="Email" class="box" required>
@@ -117,9 +77,7 @@ if (isset($_POST['submit'])) {
          <input type="submit" name="submit" value="Login" class="btn">
          <p>Don't have an account? <a href="register.php">Request an account</a></p>
       </form>
-
    </div>
 
 </body>
-
 </html>

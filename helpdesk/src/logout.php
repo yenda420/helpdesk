@@ -1,9 +1,7 @@
 <?php
 
-include 'config.php';
-
-session_start();
-session_unset();
-session_destroy();
+require 'classes/SessionManager.php';
+$sessionManager = new SessionManager();
+$sessionManager->destroySession();
 
 header('location:index.php');

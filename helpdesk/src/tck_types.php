@@ -1,50 +1,50 @@
 <?php
 
-require 'config.php';
-require 'functions.php';
+require 'classes/SessionManager.php';
+require 'classes/MessageManager.php';
+require 'classes/TicketTypeManager.php';
+require 'classes/UserManager.php';
+require 'classes/Database.php';
+require 'classes/Utility.php';
 
-session_start();
+$sessionManager = new SessionManager();
+$messageManager = new MessageManager();
 
-if (isset($_SESSION['admin_id'])) {
-    $admin_id = $_SESSION['admin_id'];
-} else {
+$database = new Database();
+$db = $database->getConnection();
+$ticketTypeManager = new TicketTypeManager($db);
+$userManager = new UserManager($db);
+
+$sessionManager->startSession();
+
+$admin_id = $sessionManager->getAdminId();
+if (!$admin_id) {
     header('location:index.php');
+    exit;
 }
+
 if (isset($_POST['delete_type'])) {
-    $type_id = $_POST['type_id'];
-    // Perform the deletion query
-    $stmt = $conn->prepare("DELETE FROM `tickets` WHERE ticketTypeId = ?");
-    $stmt->bind_param("i", $type_id);
-    $delete_tickets = $stmt->execute();
-    if ($delete_tickets) {
-        $stmt = $conn->prepare("DELETE FROM `ticket_types` WHERE ticketTypeId = ?");
-        $stmt->bind_param("i", $type_id);
-        $delete_type = $stmt->execute();
-        if ($delete_type) {
-            $_SESSION['message'] = "Ticket type deleted successfully";
-        } else {
-            $_SESSION['message'] = "Error deleting ticket type";
-        }
+    $typeId = $_POST['type_id'];
+    if ($ticketTypeManager->deleteTicketType($typeId)) {
+        $sessionManager->setMessage("Ticket type deleted successfully");
     } else {
-        $_SESSION['message'] = "Error deleting ticket type";
+        $sessionManager->setMessage("Error deleting ticket type");
     }
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
+
 if (isset($_POST['change_type'])) {
-    $type_id = $_POST['type_id'];
-    $type_name = $_POST['type_name'];
-    $department_responsible = $_POST['department_responsible'];
-    $_SESSION['message'] = changeTicketTypeDepartment($conn, $type_id, $type_name, $department_responsible);
+    $typeId = $_POST['type_id'];
+    $typeName = $_POST['type_name'];
+    $departmentResponsible = $_POST['department_responsible'];
+    
+    $sessionManager->setMessage($ticketTypeManager->changeTicketType($typeId, $typeName, $departmentResponsible));
+   
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
-?>
-<?php
-if (isset($_SESSION['message'])) {
-    $message[] = $_SESSION['message'];
-    unset($_SESSION['message']);
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -54,12 +54,9 @@ if (isset($_SESSION['message'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket_types</title>
-
-
+    <title>Ticket Types</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
-
 </head>
 
 <body>
@@ -69,50 +66,39 @@ if (isset($_SESSION['message'])) {
     <section class="dashboard">
         <section class="users">
 
-            <h1 class="title">Ticket types</h1>
-
+            <h1 class="title">Ticket Types</h1>
             <div class="box-container">
                 <?php
-                $stmt = $conn->prepare("SELECT * FROM ticket_types");
-                $stmt->execute();
-                $select_types = $stmt->get_result();
-                while ($fetch_types = $select_types->fetch_assoc()) {
-                    ?>
+                $ticketTypes = $ticketTypeManager->getTicketTypes();
+                while ($type = $ticketTypes->fetch_assoc()) {
+                ?>
                     <form method="POST">
                         <div class="box">
                             <div class="breaking">
-                                <p> ID: <span>
-                                        <?php echo $fetch_types['ticketTypeId']; ?>
-                                    </span> </p>
+                                <p> ID: <span><?= $type['ticketTypeId'] ?></span> </p>
                             </div>
                             <div class="breaking">
                                 <p> Type name: <span>
-                                        <input type="text" name="type_name"
-                                            value="<?php echo $fetch_types['ticketTypeName']; ?>">
+                                        <input type="text" name="type_name" value="<?= $type['ticketTypeName'] ?>">
                                     </span> </p>
                             </div>
                             <div class="breaking">
                                 <p>Department: <span>
-                                        <input type="text" name="department_responsible"
-                                            value="<?php echo returnDepartmentName($conn, $fetch_types['departmentId']); ?>">
+                                        <input type="text" name="department_responsible" value="<?= $userManager->returnDepartmentName($type['departmentId']) ?>">
                                     </span> </p>
                             </div>
 
-                            <input type="hidden" name="type_id" value="<?php echo $fetch_types['ticketTypeId']; ?>">
-                            <button type="submit" name="delete_type" class="delete-btn"
-                                onclick="return confirmDeletingTicketType()">Delete</button>
-                            <button type="submit" name="change_type" class="btn"
-                                onclick="return confirmChangingTicketType()">Change</button>
+                            <input type="hidden" name="type_id" value="<?= $type['ticketTypeId'] ?>">
+                            <button type="submit" name="delete_type" class="delete-btn" onclick="return confirmDeletingTicketType()">Delete</button>
+                            <button type="submit" name="change_type" class="btn" onclick="return confirmChangingTicketType()">Change</button>
                         </div>
                     </form>
-                    <?php
+                <?php
                 }
-                ;
-                if (mysqli_num_rows($select_types) == 0) {
+                if (mysqli_num_rows($ticketTypes) == 0) {
                     echo '<p class="empty">No requests</p>';
                 }
                 ?>
-                </form>
             </div>
         </section>
     </section>

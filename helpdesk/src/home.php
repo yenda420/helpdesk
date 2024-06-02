@@ -1,9 +1,27 @@
 <?php
 
-include 'config.php';
-include 'functions.php';
+require 'classes/Database.php';
+require 'classes/SessionManager.php';
+require 'classes/MessageManager.php';
+require 'classes/TicketManager.php';
 
-session_start();
+$messageManager = new MessageManager();
+$sessionManager = new SessionManager();
+$sessionManager->startSession();
+
+$userId = $sessionManager->getUserId();
+$userEmail = $sessionManager->getUserEmail();
+
+if (!$userId) {
+    header('location:index.php');
+    exit;
+}
+
+$database = new Database();
+$db = $database->getConnection();
+
+$ticketManager = new TicketManager($db);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,11 +31,8 @@ session_start();
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Your Tickets</title>
-
-
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
    <link rel="stylesheet" href="css/style.css">
-
 </head>
 
 <body>
@@ -30,56 +45,41 @@ session_start();
          <div class="box-container">
 
             <?php
-            $user_email = $_SESSION['user_email'];
-            $userId = $_SESSION['user_id'];
-            if (numberOfTicketsForUserId($conn, $userId) != 0) {
-
-               $stmt = $conn->prepare("SELECT * FROM tickets");
-               $stmt->execute();
-               $select_tickets = $stmt->get_result();
-
-               while ($fetch_tickets = $select_tickets->fetch_assoc()) {
-                  if ($userId == $fetch_tickets['userId']) {
-                     $ticketDate = date_create($fetch_tickets['ticketDate']); ?>
-
-                     <div class="box">
-                        <div class="breaking">
-                           <p> Title: <span>
-                                 <?php echo $fetch_tickets['title']; ?>
-                              </span> </p>
-                        </div>
-                        <div class="breaking">
-                           <p> Status: <span>
-                                 <?php echo $fetch_tickets['status']; ?>
-                              </span> </p>
-                        </div>
-                        <div class="breaking">
-                           <p> Type: <span>
-                                 <?php echo returnTicketTypeName($conn, $fetch_tickets['ticketTypeId'])['ticketTypeName']; ?>
-                              </span> </p>
-                        </div>
-                        <div class="breaking">
-                           <p> Date: <span>
-                                 <?php echo date_format($ticketDate, 'd.m.Y'); ?>
-                              </span> </p>
-                        </div>
-                        <div class="breaking">
-                           <p> Description: <span>
-                                 <?php echo $fetch_tickets['ticketDesc']; ?>
-                              </span> </p>
-                        </div>
-                     </div>
-                     <?php
-                  }
+            if ($ticketManager->numberOfTicketsForUserId($userId) != 0) {
+               $tickets = $ticketManager->getTicketsByUserId($userId);
+               while ($ticket = $tickets->fetch_assoc()) {
+                  $ticketDate = date_create($ticket['ticketDate']);
+            ?>
+               <div class="box">
+                  <div class="breaking">
+                     <p> Title: <span><?php echo $ticket['title']; ?></span> </p>
+                  </div>
+                  <div class="breaking">
+                     <p> Status: <span><?php echo $ticket['status']; ?></span> </p>
+                  </div>
+                  <div class="breaking">
+                     <p> Type: <span><?php echo $ticketManager->getTicketTypeName($ticket['ticketTypeId'])['ticketTypeName']; ?></span> </p>
+                  </div>
+                  <div class="breaking">
+                     <p> Date: <span><?php echo date_format($ticketDate, 'd.m.Y'); ?></span> </p>
+                  </div>
+                  <div class="breaking">
+                     <p> Description: <span><?php echo $ticket['ticketDesc']; ?></span> </p>
+                  </div>
+               </div>
+            <?php
                }
-
-            } else { ?>
+            } else {
+            ?>
                <p class="empty">No tickets</p>
-            <?php } ?>
+            <?php
+            }
+            ?>
 
          </div>
       </section>
    </section>
+
    <script src="js/script.js"></script>
    <?php include 'footer.php'; ?>
 </body>

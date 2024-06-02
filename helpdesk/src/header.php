@@ -1,22 +1,11 @@
 <?php
-if (isset($message)) {
-   foreach ($message as $message) {
-      echo '
-      <div class="message">
-         <span>' . $message . '</span>
-         <i class="fas fa-times" onclick="this.parentElement.remove();"></i>
-         <script>
-         setTimeout(function() {
-            document.querySelector(".message").style.opacity = "0";
-            document.querySelector(".message").style.transition = "all 0.5s";
-            setTimeout(function() {
-               document.querySelector(".message").remove();
-            }, 500);
-         }, 3500);
-      </script>
-      </div>
-      ';
-   }
+$user_name = $sessionManager->getUserName();
+$user_surname = $sessionManager->getUserSurname();
+$user_email = $sessionManager->getUserEmail();
+$message = $sessionManager->getMessage();
+
+if ($message) {
+   $messageManager->displayMessages([$message]);
 }
 ?>
 
@@ -42,9 +31,9 @@ if (isset($message)) {
          </div>
 
          <div class="user-box">
-            <p>Name : <span><?php echo $_SESSION['user_name']; ?></span></p>
-            <p>Surname: <span><?php echo $_SESSION['user_surname']; ?></span></p>
-            <p>Email : <span><?php echo $_SESSION['user_email']; ?></span></p>
+            <p>Name : <span><?php echo $user_name?></span></p>
+            <p>Surname: <span><?php echo $user_surname?></span></p>
+            <p>Email : <span><?php echo $user_email ?></span></p>
             <a href="logout.php" class="delete-btn">logout</a>
          </div>
       </div>

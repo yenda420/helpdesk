@@ -1,26 +1,76 @@
 <?php
-session_start();
-if (isset($_SESSION['admin_id'])) {
-    $admin_id = $_SESSION['admin_id'];
-} else {
+
+require 'classes/Database.php';
+require 'classes/SessionManager.php';
+require 'classes/MessageManager.php';
+require 'classes/UserManager.php';
+require 'classes/DepartmentManager.php';
+require 'classes/TicketManager.php';
+require 'classes/TicketTypeManager.php';
+require 'classes/Utility.php';
+
+
+$sessionManager = new SessionManager();
+$messageManager = new MessageManager();
+
+$sessionManager->startSession();
+
+$admin_id = $sessionManager->getAdminId();
+if (!$admin_id) {
     header('location:index.php');
+    exit;
 }
 
-require("config.php");
-require("functions.php");
+$database = new Database();
+$db = $database->getConnection();
+
+$userManager = new UserManager($db);
+$departmentManager = new DepartmentManager($db);
+$ticketManager = new TicketManager($db);
+$ticketTypeManager = new TicketTypeManager($db);
 
 
 if (isset($_POST['delete_ticket'])) {
     $ticket_id = $_POST['ticket_id'];
-    // Prepare the deletion query
-    $stmt = $conn->prepare("DELETE FROM tickets WHERE ticketId = ?");
+    
+    // Prepare the deletion query for messages
+    $stmt = $db->prepare("
+        DELETE messages
+        FROM messages
+        JOIN conversation ON messages.conversationId = conversation.convoId
+        JOIN tickets ON conversation.ticketId = tickets.ticketId
+        WHERE tickets.ticketId = ?
+    ");
     $stmt->bind_param("i", $ticket_id);
-    $delete_query = $stmt->execute();
-    if ($delete_query) {
-        $_SESSION['message'] = "Ticket deleted successfully";
+    $deleteMessages = $stmt->execute();
+    
+    if ($deleteMessages) {
+        // Prepare the deletion query for conversations
+        $stmt = $db->prepare("
+            DELETE FROM conversation 
+            WHERE ticketId = ?
+        ");
+        $stmt->bind_param("i", $ticket_id);
+        $deleteConversations = $stmt->execute();
+        
+        if ($deleteConversations) {
+            // Prepare the deletion query for tickets
+            $stmt = $db->prepare("DELETE FROM tickets WHERE ticketId = ?");
+            $stmt->bind_param("i", $ticket_id);
+            $deleteTickets = $stmt->execute();
+            
+            if ($deleteTickets) {
+                $sessionManager->setMessage("Ticket deleted successfully");
+            } else {
+                $sessionManager->setMessage("Error deleting ticket");
+            }
+        } else {
+            $sessionManager->setMessage("Error deleting conversations");
+        }
     } else {
-        $_SESSION['message'] = "Failed to delete ticket";
+        $sessionManager->setMessage("Error deleting messages");
     }
+    
     $stmt->close();
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
@@ -28,30 +78,30 @@ if (isset($_POST['delete_ticket'])) {
 
 if (isset($_POST["usr_msg_send"])) {
     $msdId = $_POST["usr_msg"];
-    $stmt = $conn->prepare("INSERT INTO `conversation` (userId, adminId, ticketId) values (?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO `conversation` (userId, adminId, ticketId) values (?, ?, ?)");
     $stmt->bind_param("iii", $_POST["user_Id"], $_POST["admin_Id"], $_POST["ticket_Id"]);
     $insert_covno_query = $stmt->execute();
     $stmt->close();
     
     // Directly using the last inserted ID from the connection
-    $convoId = $conn->insert_id; 
-    $stmt = $conn->prepare("INSERT INTO `messages` (msgContent, senderAdminId, conversationId) values (?, ?, ?)");
+    $convoId = $db->insert_id; 
+    $stmt = $db->prepare("INSERT INTO `messages` (msgContent, senderAdminId, conversationId) values (?, ?, ?)");
     $stmt->bind_param("sii", $_POST["usr_msg"], $_POST["admin_Id"], $convoId);
     $insert_msg_query = $stmt->execute();
     if($insert_msg_query && $insert_covno_query) {
-        $_SESSION["message"] = "Message sent successfully";
+        $sessionManager->setMessage("Message sent successfully");
     } else {
-        $_SESSION["message"] = "Failed to send message";
+        $sessionManager->setMessage("Failed to send message");
     }
     $stmt->close();
 
-    $stmt = $conn->prepare("UPDATE `tickets` SET `status`='Pending',`resolver`=? WHERE ticketId=?");
+    $stmt = $db->prepare("UPDATE `tickets` SET `status`='Pending',`resolver`=? WHERE ticketId=?");
     $stmt->bind_param("ii", $_POST["admin_Id"], $_POST["ticket_Id"]);
     $update_status_query = $stmt->execute();
     if($update_status_query) {
-        $_SESSION["message"] = "Ticket status updated successfully";
+        $sessionManager->setMessage("Ticket status updated successfully");
     } else {
-        $_SESSION["message"] = "Failed to update ticket status";
+        $sessionManager->setMessage("Error updating ticket status");
     }
     $stmt->close();
 
@@ -59,7 +109,7 @@ if (isset($_POST["usr_msg_send"])) {
     exit;
 }
 
-$users = returnAllFrontendUsers($conn);
+$users = $userManager->getAllUsers();
 
 $departmentNames = array();
 
@@ -72,7 +122,7 @@ foreach ($_SESSION['department'] as $department) {
 $ticketTypes = array();
 
 foreach ($departmentNames as $departmentName) {
-    $ticketTypesForDepartment = returnTicketTypesForDepartmentName($conn, $departmentName);
+    $ticketTypesForDepartment = $departmentManager->returnTicketTypesForDepartmentName($departmentName);
     foreach ($ticketTypesForDepartment as $ticketType) {
         array_push($ticketTypes, $ticketType);
     }
@@ -86,7 +136,7 @@ $ticketStatusQuery = "
     AND COLUMN_NAME = 'status';
 ";
 
-$ticketStatusQueryResult = mysqli_query($conn, $ticketStatusQuery);
+$ticketStatusQueryResult = mysqli_query($db, $ticketStatusQuery);
 $enumString = array_shift(mysqli_fetch_all($ticketStatusQueryResult, MYSQLI_ASSOC)[0]);
 
 $start = strpos($enumString, '(') + 1;
@@ -111,7 +161,7 @@ if($_SESSION['department'][0] != 'Super-admin') {
 }
 
 if (!empty($_POST['users'])) {
-    $user = returnUser($conn, $_POST['users']);
+    $user = $userManager->getUserById($_POST['users']);
 
     if (isset($user['userId'])) {
         $userId = $user['userId'];
@@ -136,7 +186,7 @@ if (!empty($_POST['start']) && !empty($_POST['end'])) {
 
 $fullQuery .= " ORDER BY tck.ticketDate;";
 
-$fullQueryResult = mysqli_query($conn, $fullQuery);
+$fullQueryResult = mysqli_query($db, $fullQuery);
 $tickets = mysqli_fetch_all($fullQueryResult, MYSQLI_ASSOC);
 
 if (isset($_POST['clear_filters'])) {
@@ -160,12 +210,7 @@ if (!isset($_POST['types'])) {
     $_POST['enumValues'] = null;
 }
 ?>
-<?php
-if (isset($_SESSION['message'])) {
-    $message[] = $_SESSION['message'];
-    unset($_SESSION['message']);
-}
-?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -271,12 +316,12 @@ if (isset($_SESSION['message'])) {
         <?php
         if (empty($_POST["users"]) && empty($_POST["types"]) && empty($_POST["start"]) &&
             empty($_POST["end"]) && empty($_POST["enumValues"])) { //List of all tickets:
-            if (numberOfTickets($conn) != 0) { ?>
+            if ($ticketManager->numberOfTickets() != 0) { ?>
                 <div class="box-container">
                     <?php
                     foreach ($tickets as $ticket) {
-                        $user = returnUserForSelectedTicket($conn, $ticket["ticketId"]);
-                        $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
+                        $user = $ticketManager->returnUserForSelectedTicket($ticket["ticketId"]);
+                        $ticketType = $ticketTypeManager->returnTicketTypeName($ticket['ticketTypeId'])['ticketTypeName'];
                         $ticketDate = date_create($ticket['ticketDate']); ?>
 
                         <div class="box">
@@ -356,7 +401,7 @@ if (isset($_SESSION['message'])) {
             if (mysqli_num_rows($fullQueryResult) > 0) { ?>
                 <div class="box-container">
                     <?php foreach ($tickets as $ticket) { //List of selected tickets: 
-                            $ticketType = returnTicketTypeName($conn, $ticket['ticketTypeId'])['ticketTypeName'];
+                            $ticketType = $ticketTypeManager->returnTicketTypeName($ticket['ticketTypeId'])['ticketTypeName'];
                             $ticketDate = date_create($ticket['ticketDate']); ?>
 
                         <div class="box">

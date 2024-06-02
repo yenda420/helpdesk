@@ -1,14 +1,23 @@
 <?php
-require('config.php');
-require('functions.php');
+require 'classes/SessionManager.php';
+require 'classes/MessageManager.php';
+require 'classes/SearchManager.php';
+require 'classes/Database.php';
 
-session_start();
+$sessionManager = new SessionManager();
+$messageManager = new MessageManager();
 
-if (isset($_SESSION['admin_id'])) {
-    $admin_id = $_SESSION['admin_id'];
-} else {
+$sessionManager->startSession();
+
+$admin_id = $sessionManager->getAdminId();
+if (!$admin_id) {
     header('location:index.php');
+    exit;
 }
+
+$database = new Database();
+$db = $database->getConnection();
+$searchManager = new SearchManager($db);
 
 if (!isset($_POST['search'])) {
     $_POST['search'] = null;
@@ -97,7 +106,7 @@ if (!empty($_POST['keyword'])) {
                             $resultsFound = false;
 
                             foreach ($keywords as $keyword) {
-                                if (resultsFound($conn, $keyword, $table_associative_array)) {
+                                if ($searchManager->resultsFound($keyword, $table_associative_array)) {
                                     $resultsFound = true;
                                     break;
                                 }
@@ -116,7 +125,7 @@ if (!empty($_POST['keyword'])) {
 
                                 echo '<div class="box-container">';
                                     foreach ($keywords as $keyword) {
-                                        php_search_all_database($conn, $keyword, $table_associative_array);
+                                        $searchManager->php_search_all_database($keyword, $table_associative_array);
                                     }
                                 echo '</div>';
 
