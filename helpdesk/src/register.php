@@ -39,6 +39,7 @@ $message = $sessionManager->getMessage();
     <?php
     if ($message) {
         $messageManager->displayMessages([$message]);
+        $sessionManager->unsetSession('message');
     }
     ?>
 
@@ -48,13 +49,20 @@ $message = $sessionManager->getMessage();
             <input type="text" name="name" placeholder="Name" required class="box">
             <input type="text" name="surname" placeholder="Surname" required class="box">
             <input type="email" name="email" placeholder="Email" required class="box">
-            <input type="password" name="password" placeholder="Create password" required class="box">
-            <input type="password" name="cpassword" placeholder="Confirm password" required class="box">
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Create password" class="box" required>
+                <i class="fas fa-eye" id="togglePassword"></i>
+            </div>
+            <div class="password-container">
+                <input type="password" id="cpassword" name="cpassword" placeholder="Confirm password" class="box"
+                    required>
+                <i class="fas fa-eye" id="toggleConfirmPassword"></i>
+            </div>
             <input type="submit" name="submit" value="Send request" class="btn">
             <p>Have an account? <a href="index.php">Login</a></p>
         </form>
     </div>
-
+<script src="js/passwordEye.js"></script>
 </body>
 
 </html>

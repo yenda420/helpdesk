@@ -15,6 +15,9 @@ class SessionManager {
     public function setSession($key, $value) {
         $_SESSION[$key] = $value;
     }
+    public function unsetSession($key) {
+        unset($_SESSION[$key]);
+    }
 
     public function getSession($key) {
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;

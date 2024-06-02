@@ -78,8 +78,8 @@ if (isset($_POST['accept_request'])) {
                             </div>
                             <form method="POST">
                                 <input type="hidden" name="request_id" value="<?php echo $req['requestId']; ?>">
-                                <button type="submit" name="delete_request" class="delete-btn" onclick="return confirm('Are you sure you want to delete this request?')">Delete</button>
-                                <button type="submit" name="accept_request" class="btn" onclick="return confirm('Are you sure you want to accept this request?')">Accept</button>
+                                <button type="submit" name="delete_request" class="delete-btn" onclick="return confirmDeletingRequest()">Delete</button>
+                                <button type="submit" name="accept_request" class="btn" onclick="return confirmAcceptingRequest()">Accept</button>
                             </form>
                         </div>
                 <?php

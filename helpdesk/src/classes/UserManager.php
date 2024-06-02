@@ -190,28 +190,28 @@ class UserManager
     public function deleteUser($userId)
     {
         $queries = [
+            "DELETE FROM `messages` WHERE senderUserId = ?",
             "DELETE FROM `conversation` WHERE userId = ?",
             "DELETE FROM `tickets` WHERE userId = ?",
-            "DELETE FROM `messages` WHERE senderUserId = ?",
             "DELETE FROM `users` WHERE userId = ?"
         ];
         foreach ($queries as $query) {
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param("i", $userId);
             $stmt->execute();
-            if ($stmt->affected_rows <= 0) {
-                return false;
-            }
         }
-        return true;
+        if($stmt->affected_rows > 0){
+            return true;
+        }
+        else return false;
     }
 
     public function deleteAdmin($adminId)
     {
         $queries = [
+            "DELETE FROM `messages` WHERE senderAdminId = ?",
             "DELETE FROM `conversation` WHERE adminId = ?",
             "DELETE FROM `department_lists` WHERE adminId = ?",
-            "DELETE FROM `messages` WHERE senderAdminId = ?",
             "UPDATE `tickets` SET `resolver` = NULL WHERE resolver = ?",
             "DELETE FROM `admins` WHERE adminId = ?"
         ];
@@ -219,11 +219,11 @@ class UserManager
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param("i", $adminId);
             $stmt->execute();
-            if ($stmt->affected_rows <= 0) {
-                return false;
-            }
         }
-        return true;
+        if($stmt->affected_rows > 0){
+            return true;
+        }
+        else return false;
     }
     public function changeAdminDepartment($admin_id, $department_names)
     {

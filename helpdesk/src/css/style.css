@@ -582,3 +582,14 @@ form div .active {
 .reply-send-btn {
   margin: 0;
 }
+.password-container {
+  position: relative;
+  width: 100%;
+} 
+.fas.fa-eye, .fas.fa-eye-slash {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

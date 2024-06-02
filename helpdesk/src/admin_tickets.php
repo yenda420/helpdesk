@@ -83,7 +83,6 @@ if (isset($_POST["usr_msg_send"])) {
     $insert_covno_query = $stmt->execute();
     $stmt->close();
     
-    // Directly using the last inserted ID from the connection
     $convoId = $db->insert_id; 
     $stmt = $db->prepare("INSERT INTO `messages` (msgContent, senderAdminId, conversationId) values (?, ?, ?)");
     $stmt->bind_param("sii", $_POST["usr_msg"], $_POST["admin_Id"], $convoId);
@@ -98,11 +97,6 @@ if (isset($_POST["usr_msg_send"])) {
     $stmt = $db->prepare("UPDATE `tickets` SET `status`='Pending',`resolver`=? WHERE ticketId=?");
     $stmt->bind_param("ii", $_POST["admin_Id"], $_POST["ticket_Id"]);
     $update_status_query = $stmt->execute();
-    if($update_status_query) {
-        $sessionManager->setMessage("Ticket status updated successfully");
-    } else {
-        $sessionManager->setMessage("Error updating ticket status");
-    }
     $stmt->close();
 
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -401,10 +395,11 @@ if (!isset($_POST['types'])) {
             if (mysqli_num_rows($fullQueryResult) > 0) { ?>
                 <div class="box-container">
                     <?php foreach ($tickets as $ticket) { //List of selected tickets: 
+                            $user = $ticketManager->returnUserForSelectedTicket($ticket["ticketId"]);
                             $ticketType = $ticketTypeManager->returnTicketTypeName($ticket['ticketTypeId'])['ticketTypeName'];
                             $ticketDate = date_create($ticket['ticketDate']); ?>
 
-                        <div class="box">
+<div class="box">
                             <div class="breaking">
                                 <p>ID: <span>
                                         <?= $ticket["ticketId"] ?>
@@ -418,6 +413,21 @@ if (!isset($_POST['types'])) {
                             <div class="breaking">
                                 <p>Status: <span>
                                         <?= $ticket["status"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users name: <span>
+                                        <?= $user["userName"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users surname: <span>
+                                        <?= $user["userSurname"] ?>
+                                    </span></p>
+                            </div>
+                            <div class="breaking">
+                                <p>Users email: <span>
+                                        <?= $user["userEmail"] ?>
                                     </span></p>
                             </div>
                             <div class="breaking">
