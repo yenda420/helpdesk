@@ -34,7 +34,7 @@ The Helpdesk application provides a robust platform for users (clients) to submi
 ## Technology Stack
 
 * **Frontend:** HTML, CSS, JavaScript
-* **Backend:** PHP (Object-Oriented Programming)
+* **Backend:** PHP (Mostly Object-Oriented)
 * **Database:** MySQL
 
 ## Setup and Installation
@@ -43,8 +43,8 @@ To set up and run the Helpdesk application, follow these steps:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [repository_url]
-    cd [project_directory]
+    git clone https://github.com/yenda420/helpdesk.git
+    cd helpdesk
     ```
 2.  **Web Server & PHP:**
     * Ensure you have a web server (e.g., Apache, Nginx) configured to serve PHP applications.
@@ -57,7 +57,7 @@ To set up and run the Helpdesk application, follow these steps:
         ```
         (Replace `your_username` and `your_database_name` accordingly.)
 4.  **Configuration:**
-    * Adjust database connection details within the PHP files (likely in `src/classes/Database.php` or a similar configuration file) to match your MySQL setup.
+    * Adjust database connection details within the PHP files (`src/classes/Database.php`) to match your MySQL setup.
 5.  **Access the Application:**
     * Deploy the project files to your web server's document root.
     * Navigate to the application's URL in your web browser.
@@ -68,4 +68,4 @@ Detailed project documentation, including design specifications and an applicati
 
 ## Development Insights
 
-This project provided valuable experience in web application development, team collaboration, and refactoring a procedural codebase to an OOP structure. While developed some time ago, it represents a solid foundation in building functional web services.
+This project provided valuable experience in web application development, team collaboration, and refactoring a procedural codebase to an OOP structure. While developed some time ago, it effectively showcases my coding progress and evolution since its creation. I would approach its architecture and implementation significantly differently today, yet the application stands as a testament to my foundational learning in building functional web services.
